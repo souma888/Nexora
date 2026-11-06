@@ -9,6 +9,7 @@ const quantities = {
   moment: { name: 'Bending moment', symbol: 'M', unit: 'kN·m' },
   shear: { name: 'Shear force', symbol: 'V', unit: 'kN' },
   deflection: { name: 'Deflection', symbol: 'δ', unit: 'mm' },
+  slope: { name: 'Slope', symbol: 'θ', unit: 'mrad' },
 };
 const equations = {
   point: 'Center load P: Rₐ = Rᵦ = P/2, Mmax = PL/4, δmid = −PL³/(48EI).',
@@ -72,6 +73,13 @@ function drawPlot() {
   const width = svg.clientWidth < 500 ? 410 : 700;
   svg.setAttribute('viewBox', `0 0 ${width} 244`);
   const values = series.map(point => point[plotKey]);
+  const peak = series.reduce((a, b) => Math.abs(a[plotKey]) >= Math.abs(b[plotKey]) ? a : b);
+  const magnitude = Math.abs(peak[plotKey]);
+  const tied = series.filter(point => Math.abs(Math.abs(point[plotKey]) - magnitude) <= magnitude * 1e-12);
+  const position = tied.length === series.length ? 'throughout the span'
+    : tied.length === 2 && tied[0].x === 0 && tied[1].x === input.span ? 'at both supports'
+    : tied.length > 1 ? `first reached at x = ${format(peak.x)} m` : `at x = ${format(peak.x)} m`;
+  byId('plot-peak').textContent = `Peak magnitude ${format(magnitude)} ${unit} · ${position}`;
   const min = Math.min(0, ...values);
   const max = Math.max(0, ...values);
   const left = 70, right = width - 24, top = 19, bottom = 200;
@@ -176,14 +184,22 @@ byId('reset').addEventListener('click', () => {
   syncSetup();
   analyze();
 });
+byId('load-example').addEventListener('click', () => {
+  const selected = readInput().case;
+  form.reset();
+  form.elements.case.value = selected;
+  syncSetup();
+  analyze();
+  byId('results').scrollIntoView();
+});
 for (const button of plotButtons) button.addEventListener('click', () => {
   plotKey = button.dataset.plot;
   for (const option of plotButtons) option.setAttribute('aria-pressed', String(option === button));
   drawPlot();
 });
 byId('export').addEventListener('click', () => {
-  const rows = result.series.map(({ x, shear, moment, deflection }) => [x, shear, moment, deflection].join(','));
-  const csv = ['position_m,shear_kN,moment_kNm,deflection_mm', ...rows].join('\n');
+  const rows = result.series.map(({ x, shear, moment, deflection, slope }) => [x, shear, moment, deflection, slope].join(','));
+  const csv = ['position_m,shear_kN,moment_kNm,deflection_mm,slope_mrad', ...rows].join('\n');
   const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
   const link = document.createElement('a');
   link.href = url;
@@ -194,7 +210,7 @@ byId('export').addEventListener('click', () => {
 function syncNavigation() {
   const section = ['#results', '#model'].includes(location.hash) ? location.hash : '#main';
   if (section === '#model') byId('model').open = true;
-  for (const link of document.querySelectorAll('.nav-link')) {
+  for (const link of document.querySelectorAll('.nav-link[href^="#"]')) {
     if (link.hash === section) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   }

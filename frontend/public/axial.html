@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171517">
+  <title>Axial Stress &amp; Strain · Nexora Engineering Lab</title>
+  <link rel="icon" href="/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/materials.js"></script>
+</head>
+<body data-model="axial">
+  <a class="skip" href="#main">Skip to workspace</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Nexora catalog"><img src="/mark.svg" alt="" width="36" height="36"><strong>NEXORA</strong></a>
+    <span class="top-label mono">ENGINEERING LAB</span>
+    <a class="source" href="/">All labs <span aria-hidden="true">↗</span></a>
+  </header>
+  <main class="standalone" id="main" tabindex="-1">
+    <header class="intro"><div>
+      <p class="breadcrumb mono"><a href="/">CATALOG</a> <span>/</span> <a href="/#mechanical">MECHANICAL</a> <span>/</span> LAB 02</p>
+      <h1>Axial Stress &amp; Strain<span>.</span></h1>
+      <p class="intro-copy">See how a straight bar changes length under a pull or a push.</p>
+    </div></header>
+    <div class="workbench">
+      <section class="panel setup" aria-labelledby="setup-title">
+        <div class="panel-head"><div class="heading"><span class="index">01</span><h2 id="setup-title">Experiment setup</h2></div><button class="quiet" id="reset" type="button">Reset</button></div>
+        <form id="material-form">
+          <label for="material">Material preset</label>
+          <select class="material-select" id="material">
+            <option value="200">Steel · 200 GPa</option>
+            <option value="69">Aluminum · 69 GPa</option>
+            <option value="110">Copper · 110 GPa</option>
+            <option value="custom">Custom modulus</option>
+          </select>
+          <div class="field-grid">
+            <div><label for="force">Axial force <i>F</i></label><div class="field"><input id="force" name="force" type="number" min="-10000" max="10000" step="any" value="50" required><span>kN</span></div></div>
+            <div><label for="length">Length <i>L</i></label><div class="field"><input id="length" name="length" type="number" min=".001" max="100" step="any" value="2" required><span>m</span></div></div>
+            <div><label for="area">Section area <i>A</i></label><div class="field"><input id="area" name="area" type="number" min="1" max="1000000" step="any" value="500" required><span>mm²</span></div></div>
+            <div><label for="modulus">Elastic modulus <i>E</i></label><div class="field"><input id="modulus" name="modulus" type="number" min="1" max="500" step="any" value="200" required><span>GPa</span></div></div>
+          </div>
+          <p class="field-hint">Use positive force for tension or negative force for compression.</p>
+          <button class="run" type="submit"><span aria-hidden="true">▷</span> Run analysis <span class="run-arrow" aria-hidden="true">→</span></button>
+          <p id="status" role="status">Preparing the default example…</p>
+        </form>
+      </section>
+      <section class="panel schematic" aria-labelledby="diagram-title">
+        <div class="panel-head"><div class="heading"><span class="index">02</span><h2 id="diagram-title">Bar response</h2></div><span class="panel-meta mono" id="mode">AXIAL LOAD</span></div>
+        <div class="drawing"><svg id="material-diagram" viewBox="0 0 480 205" role="img" aria-label="Axial bar schematic"></svg></div>
+        <div class="legend mono"><span><i class="red"></i> Applied force</span><span><i class="green"></i> Deformed length</span><span class="schematic-note">NOT TO SCALE</span></div>
+      </section>
+    </div>
+    <section class="results" aria-labelledby="results-title">
+      <div class="section-head heading"><span class="index">03</span><h2 id="results-title">Analysis results</h2></div>
+      <dl class="metrics material-metrics">
+        <div><dt>Normal stress</dt><dd id="stress">—</dd></div>
+        <div><dt>Axial strain</dt><dd id="strain">—</dd></div>
+        <div><dt>Length change</dt><dd id="displacement">—</dd></div>
+      </dl>
+    </section>
+    <details class="panel notes">
+      <summary><span>Worked example &amp; model assumptions</span><span class="disclosure" aria-hidden="true"></span></summary>
+      <div><p>A 50 kN pull on a 500 mm² steel bar gives σ = F/A = 100 MPa. With E = 200 GPa, ε = σ/E = 0.0005. Over 2 m, ΔL = εL = 1 mm of elongation.</p><p>This model assumes centered loading, a uniform cross section and linear elasticity. It excludes buckling, yielding and stress concentrations.</p></div>
+    </details>
+  </main>
+</body>
+</html>

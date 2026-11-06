@@ -121,6 +121,33 @@ summary:hover { background: var(--red-surface); }
 .disclosure { display: block; width: 9px; height: 9px; border: solid var(--red); border-width: 0 2px 2px 0; transform: rotate(45deg); margin-right: 3px; }
 .notes[open] .disclosure { transform: rotate(225deg); }
 footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7px; margin-top: 25px; color: var(--muted); font-size: 11px; }
+.breadcrumb a:hover { text-decoration: underline; }
+.catalog { display: grid; gap: 16px; }
+.discipline { padding: clamp(14px, 2.2vw, 24px); scroll-margin-top: 16px; }
+.discipline:target { border-color: var(--red-border); }
+.discipline > header { display: flex; align-items: flex-start; gap: 10px; }
+.discipline h2 { margin: 0; font-size: clamp(17px, 2vw, 22px); }
+.discipline p, .sim-link p { color: var(--muted); margin: 4px 0 0; font-size: 13px; line-height: 1.55; }
+.sim-grid, .planned-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.sim-grid { margin-top: 14px; }
+.sim-link { display: grid; align-content: start; gap: 7px; min-height: 145px; padding: 15px; border: 1px solid #5b4955; border-radius: 7px; background: #2b232a; }
+.sim-link:hover { border-color: var(--red); background: var(--red-surface); }
+.sim-link .mono, .open-lab { color: #ffc0d0; font-size: 12px; }
+.sim-link strong { font-size: 17px; }
+.sim-link p { margin: 0; }
+.open-lab { margin-top: 3px; font-weight: 600; }
+.planned-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.standalone { max-width: 1200px; }
+.material-select { width: 100%; min-height: 44px; color: var(--text); background: #181519; border: 1px solid #584852; border-radius: 5px; padding: 5px 8px; }
+.material-fields { margin-top: 0; }
+.material-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.field-hint, .plot-peak, #other-angle { color: var(--muted); font-size: 12px; }
+.plot-peak { margin: 8px 0 0; }
+.angle-control { padding: 12px 17px 16px; border-top: 1px solid var(--line); }
+.angle-control label { display: flex; justify-content: space-between; }
+.angle-control input { display: block; width: 100%; min-height: 32px; margin: 0 0 6px; accent-color: var(--crimson-hover); }
+#rotated-stress { color: var(--red); }
+.notes .quiet { margin-bottom: 10px; }
 @media (max-width: 1020px) {
   .shell { grid-template-columns: 166px minmax(0, 1fr); }
 }
@@ -133,6 +160,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7p
 }
 @media (max-width: 680px) {
   .workbench { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .planned-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 620px) {
   .topbar { padding-inline: 16px; gap: 12px; height: 56px; }
@@ -142,8 +170,11 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7p
   .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .metrics div:nth-child(3) { border-left: 0; }
   .metrics div:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .material-metrics div:last-child { grid-column: 1 / -1; }
   .plot { padding: 10px 8px; }
   .plot-switch button { padding-inline: 6px; }
+  .plot-head { flex-wrap: wrap; }
+  .sim-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 370px) {
   .top-label { display: none; }

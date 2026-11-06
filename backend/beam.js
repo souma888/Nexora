@@ -30,34 +30,37 @@ export function solveBeam(input) {
   const fixed = model === 'cantilever';
   const reactionA = fixed ? P : uniform ? P * L / 2 : P / 2;
   const reactionB = fixed ? null : reactionA;
-  const positions = Array.from({ length: 81 }, (_, index) => L * index / 80);
+  const positions = Array.from({ length: 81 }, (_, index) => L * (index / 80));
   // Include both limits at the point-load discontinuity.
   if (model === 'point') positions.splice(40, 0, L / 2);
 
   const series = positions.map((x, index) => {
     const z = Math.min(x, L - x);
-    let shear, moment, deflection;
+    let shear, moment, deflection, slope;
     if (fixed) {
       shear = P;
       moment = -P * (L - x);
       deflection = -P * x ** 2 * (3 * L - x) / (6 * EI);
+      slope = -P * x * (2 * L - x) / (2 * EI);
     } else if (uniform) {
       shear = reactionA - P * x;
       moment = P * x * (L - x) / 2;
       deflection = -P * x * (L - x) * (L ** 2 + L * x - x ** 2) / (24 * EI);
+      slope = -P * (L ** 3 - 6 * L * x ** 2 + 4 * x ** 3) / (24 * EI);
     } else {
       shear = index <= 40 ? reactionA : -reactionA;
       moment = P * z / 2;
       deflection = -P * z * (3 * L ** 2 - 4 * z ** 2) / (48 * EI);
+      slope = Math.sign(x - L / 2) * P * (3 * L ** 2 - 12 * z ** 2) / (48 * EI);
     }
-    return { x, shear: shear / 1000, moment: moment / 1000, deflection: deflection * 1000 };
+    return { x, shear: shear / 1000, moment: moment / 1000, deflection: deflection * 1000, slope: slope * 1000 };
   });
 
   const peak = key => series.reduce((a, b) => Math.abs(a[key]) >= Math.abs(b[key]) ? a : b);
   const displacement = peak('deflection');
   return {
     input,
-    version: '1.0',
+    version: '1.1',
     series,
     summary: {
       reactionA: reactionA / 1000,

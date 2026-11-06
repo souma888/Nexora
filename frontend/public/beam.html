@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171517">
+  <meta name="description" content="Explore shear, bending and deflection in Nexora’s interactive beam laboratory.">
+  <title>Beam Analysis · Nexora Engineering Lab</title>
+  <link rel="icon" href="/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/lab.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to workspace</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Nexora experiment catalog"><img src="/mark.svg" alt="" width="36" height="36"><strong>NEXORA</strong></a>
+    <span class="top-label mono">ENGINEERING LAB</span>
+    <a class="source" href="https://github.com/souma888/Nexora">Source <span aria-hidden="true">↗</span></a>
+  </header>
+  <div class="shell">
+    <aside class="rail">
+      <nav aria-label="Laboratory">
+        <p class="eyebrow">WORKSPACE</p>
+        <a class="nav-link" href="/#civil"><span aria-hidden="true">←</span> Civil engineering</a>
+        <a class="nav-link" href="#main" aria-current="location"><span aria-hidden="true">01</span> Beam analysis</a>
+        <a class="nav-link" href="#results"><span aria-hidden="true">02</span> Results</a>
+        <a class="nav-link" href="#model"><span aria-hidden="true">03</span> Model notes</a>
+      </nav>
+      <div class="rail-foot"><span class="dot"></span> <span class="mono">NEXORA LAB / 01</span></div>
+    </aside>
+    <main id="main" tabindex="-1">
+      <header class="intro">
+        <div>
+          <p class="breadcrumb mono"><a href="/">CATALOG</a> <span>/</span> <a href="/#civil">CIVIL</a> <span>/</span> LAB 01</p>
+          <h1>Beam Analysis<span>.</span></h1>
+          <p class="intro-copy">See how a beam carries load, from support reactions to deflection.</p>
+        </div>
+        <span class="edition mono"><span class="dot"></span> LINEAR ELASTIC</span>
+      </header>
+      <div class="workbench">
+        <section class="panel setup" aria-labelledby="setup-title">
+          <div class="panel-head"><div class="heading"><span class="index">01</span><h2 id="setup-title">Experiment setup</h2></div><button class="quiet" id="reset" type="button">Reset</button></div>
+          <form id="beam-form">
+            <fieldset class="load-cases">
+              <legend>Load case</legend>
+              <div class="case-options">
+                <label><input type="radio" name="case" value="point" checked><span>Center point</span></label>
+                <label><input type="radio" name="case" value="uniform"><span>Uniform</span></label>
+                <label><input type="radio" name="case" value="cantilever"><span>Cantilever tip</span></label>
+              </div>
+            </fieldset>
+            <div class="field-grid">
+              <div><label for="span">Span <i>L</i></label><div class="field"><input id="span" name="span" type="number" min=".25" max="30" step="any" value="6" required><span>m</span></div></div>
+              <div><label for="load">Load <i id="load-symbol">P</i></label><div class="field"><input id="load" name="load" type="number" min=".01" max="500" step="any" value="24" required><span id="load-unit">kN</span></div></div>
+              <div><label for="modulus">Elastic modulus <i>E</i></label><div class="field"><input id="modulus" name="modulus" type="number" min="1" max="500" step="any" value="200" required><span>GPa</span></div></div>
+              <div><label for="inertia">Section inertia <i>I</i></label><div class="field"><input id="inertia" name="inertia" type="number" min="1" max="1000000" step="any" value="8000" required><span>cm⁴</span></div></div>
+            </div>
+            <button class="run" type="submit"><span aria-hidden="true">▷</span> Run analysis <span class="run-arrow" aria-hidden="true">→</span></button>
+            <p id="status" role="status">Preparing the default example…</p>
+          </form>
+        </section>
+        <section class="panel schematic" aria-labelledby="schematic-title">
+          <div class="panel-head"><div class="heading"><span class="index">02</span><h2 id="schematic-title">Beam schematic</h2></div><span class="panel-meta mono" id="support-type">SIMPLY SUPPORTED</span></div>
+          <div class="drawing">
+            <svg id="beam-diagram" viewBox="0 0 580 226" role="img" aria-label="Beam schematic"></svg>
+          </div>
+          <div class="legend mono"><span><i class="red"></i> Applied load</span><span><i class="green"></i> Reaction</span><span class="schematic-note">NOT TO SCALE</span></div>
+        </section>
+      </div>
+      <section id="results" class="results" aria-labelledby="results-title">
+        <div class="section-head"><div class="heading"><span class="index">03</span><h2 id="results-title">Analysis results</h2></div><button id="export" class="quiet" type="button" disabled>↓ Export CSV</button></div>
+        <p class="results-state mono" id="results-state" hidden>Showing the last run. Run analysis to apply your edits.</p>
+        <dl class="metrics">
+          <div><dt>Reaction A</dt><dd id="reaction-a">—</dd></div>
+          <div><dt>Reaction B</dt><dd id="reaction-b">—</dd></div>
+          <div><dt>Peak moment</dt><dd id="peak-moment">—</dd></div>
+          <div><dt>Peak deflection</dt><dd id="peak-deflection">—</dd></div>
+        </dl>
+        <div class="panel plot">
+          <div class="plot-head">
+            <div class="plot-switch" role="group" aria-label="Diagram quantity">
+              <button type="button" data-plot="moment" aria-pressed="true">Moment</button>
+              <button type="button" data-plot="shear" aria-pressed="false">Shear</button>
+              <button type="button" data-plot="deflection" aria-pressed="false">Deflection</button>
+              <button type="button" data-plot="slope" aria-pressed="false">Slope</button>
+            </div>
+            <span class="panel-meta mono" id="plot-label">M(x) / kN·m</span>
+          </div>
+          <svg id="plot" viewBox="0 0 700 244" role="img" aria-label="Analysis diagram"></svg>
+          <p class="plot-peak mono" id="plot-peak"></p>
+        </div>
+      </section>
+      <details class="panel notes">
+        <summary><span>Worked examples</span><span class="disclosure" aria-hidden="true"></span></summary>
+        <div>
+          <p>All three examples use a 6 m span, E = 200 GPa and I = 8,000 cm⁴, giving EI = 16 MN·m².</p>
+          <p><strong>Center point load, 24 kN.</strong> Symmetry gives 12 kN at each support. At midspan, PL/4 = 36 kN·m and −PL³/(48EI) = −6.75 mm.</p>
+          <p><strong>Uniform load, 24 kN/m.</strong> The total load is 144 kN, so each support carries 72 kN. At midspan, wL²/8 = 108 kN·m and −5wL⁴/(384EI) ≈ −25.313 mm.</p>
+          <p><strong>Cantilever tip load, 24 kN.</strong> The fixed support carries 24 kN vertically. The internal moment there is −PL = −144 kN·m, and tip deflection is −PL³/(3EI) = −108 mm.</p>
+          <button type="button" class="quiet" id="load-example">Run example for selected case</button>
+        </div>
+      </details>
+      <details class="panel notes" id="model">
+        <summary><span>Model notes &amp; sign conventions</span><span class="disclosure" aria-hidden="true"></span></summary>
+        <div>
+          <p>The solver uses closed-form Euler–Bernoulli beam equations. The beam is prismatic with constant EI and assumes small deflections and linear elastic material. The specified load acts downward. Self-weight is excluded.</p>
+          <p>Position x increases to the right. Reactions are positive upward, sagging moment is positive, shear follows dM/dx, and downward deflection is negative. Peak values retain the sign at the largest absolute magnitude.</p>
+          <p id="equation"></p>
+        </div>
+      </details>
+      <footer><span class="mono">NEXORA / SOLID MECHANICS</span><span>For education and exploration</span></footer>
+    </main>
+  </div>
+</body>
+</html>

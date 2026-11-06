@@ -4,7 +4,7 @@
 
 Nexora is a planned, open-source, browser-based engineering laboratory where students, educators, and engineers can explore engineering principles through visual simulations, parameter-driven experiments, plots, and transparent calculations.
 
-> **Status:** The initial Beam Analysis lab is runnable. Additional modules below are planned.
+> **Status:** The catalog includes Beam Analysis, Axial Stress &amp; Strain, and Mohr’s Circle. Other disciplines are planned.
 
 ## Vision
 
@@ -79,7 +79,7 @@ Nexora/
 
 With Node.js 24, run `npm run dev` and open <http://127.0.0.1:3000>. Run `npm test` for solver benchmarks and API validation checks.
 
-The starter uses a dependency-free browser frontend and a stateless Node.js API. It supports center point loads, uniform loads and cantilever tip loads with reactions, shear, bending moment and deflection. See [development and Vercel deployment](docs/DEVELOPMENT.md) for setup and the API contract.
+The app uses a dependency-free browser frontend and a stateless Node.js API. Open the catalog, then choose a lab under Civil or Mechanical Engineering. The beam lab supports center point loads, uniform loads, and cantilever tip loads with reactions, shear, bending moment, deflection, and slope. See [development and Vercel deployment](docs/DEVELOPMENT.md) for setup and the API contracts.
 
 ## Project principles
 

@@ -1,3 +1,3 @@
 # Frontend
 
-The Beam Analysis lab lives in `public/`. The browser renders the SVG schematic and plots, sends inputs to `POST /api/beam`, and exports the last run as CSV. Run `npm run dev` from the repository root.
+The catalog and lab pages live in `public/`. Beam Analysis calls `POST /api/beam` and exports the last run as CSV. Axial Stress & Strain and Mohr’s Circle share a client module and call `POST /api/materials`. Run `npm run dev` from the repository root.
