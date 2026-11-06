@@ -55,10 +55,13 @@ function diagram(input) {
     ${arrow(left, 167, 143, 'green')}<text class="reaction-label" x="88" y="164" text-anchor="end">Rₐ</text>
     ${fixed ? '' : arrow(right, 167, 143, 'green') + '<text class="reaction-label" x="492" y="164">Rᵦ</text>'}
     <path d="M100 177v18m380-18v18M100 186h380" stroke="#708478" fill="none"/>
-    <rect x="232" y="175" width="116" height="21" rx="3" fill="#151c17"/>
+    <rect x="232" y="175" width="116" height="21" rx="3" fill="var(--drawing)"/>
     <text x="290" y="190" text-anchor="middle">L = ${format(input.span)} m</text>
     <text x="100" y="218" text-anchor="middle">A</text><text x="480" y="218" text-anchor="middle">B</text>`;
-  byId('beam-diagram').setAttribute('aria-label', `${form.elements.case.selectedOptions[0].textContent}, span ${input.span} metres`);
+  const supportType = fixed ? 'Cantilever' : 'Simply supported';
+  const loadType = uniform ? 'uniform load' : fixed ? 'tip point load' : 'center point load';
+  byId('support-type').textContent = supportType;
+  byId('beam-diagram').setAttribute('aria-label', `${supportType}, ${loadType}, span ${input.span} metres`);
 }
 
 function drawPlot() {
@@ -107,6 +110,7 @@ function renderResults(data) {
   }
   byId('equation').textContent = equations[data.input.case];
   byId('export').disabled = false;
+  byId('results-state').hidden = true;
   drawPlot();
 }
 
@@ -116,6 +120,10 @@ function syncSetup() {
   byId('load-symbol').textContent = uniform ? 'w' : 'P';
   byId('load-unit').textContent = uniform ? 'kN/m' : 'kN';
   diagram(input);
+  const dirty = result && Object.keys(result.input).some(key => result.input[key] !== input[key]);
+  byId('results-state').hidden = !dirty;
+  byId('export').disabled = !result || Boolean(dirty);
+  return dirty;
 }
 
 async function analyze() {
@@ -159,9 +167,9 @@ form.addEventListener('input', () => {
   activeRequest?.abort();
   activeRequest = undefined;
   run.disabled = false;
-  syncSetup();
+  const dirty = syncSetup();
   status.dataset.error = 'false';
-  status.textContent = result ? 'Inputs changed · results are from the last run' : 'Run analysis to see results';
+  status.textContent = dirty ? 'Inputs changed · ready to run' : result ? 'Showing the last analysis' : 'Run analysis to see results';
 });
 byId('reset').addEventListener('click', () => {
   form.reset();
@@ -183,7 +191,17 @@ byId('export').addEventListener('click', () => {
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
-document.querySelector('a[href="#model"]').addEventListener('click', () => { byId('model').open = true; });
+function syncNavigation() {
+  const section = ['#results', '#model'].includes(location.hash) ? location.hash : '#main';
+  if (section === '#model') byId('model').open = true;
+  for (const link of document.querySelectorAll('.nav-link')) {
+    if (link.hash === section) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
+}
+window.addEventListener('hashchange', syncNavigation);
+document.querySelector('.nav-link[href="#model"]').addEventListener('click', () => { byId('model').open = true; });
 window.addEventListener('resize', drawPlot);
+syncNavigation();
 syncSetup();
 analyze();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#121513">
+  <meta name="theme-color" content="#171517">
   <meta name="description" content="Explore shear, bending and deflection in Nexora’s interactive beam laboratory.">
   <title>Beam Analysis · Nexora Engineering Lab</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
@@ -13,7 +13,7 @@
 <body>
   <a class="skip" href="#main">Skip to workspace</a>
   <header class="topbar">
-    <a class="brand" href="/" aria-label="Nexora home"><img src="/mark.svg" alt="" width="32" height="32"><strong>NEXORA</strong></a>
+    <a class="brand" href="#main" aria-label="Nexora workspace"><img src="/mark.svg" alt="" width="36" height="36"><strong>NEXORA</strong></a>
     <span class="top-label mono">ENGINEERING LAB</span>
     <a class="source" href="https://github.com/souma888/Nexora">Source <span aria-hidden="true">↗</span></a>
   </header>
@@ -21,28 +21,33 @@
     <aside class="rail">
       <nav aria-label="Laboratory">
         <p class="eyebrow">WORKSPACE</p>
-        <a class="nav-link active" href="#main" aria-current="page"><span aria-hidden="true">▱</span> Beam analysis</a>
-        <a class="nav-link" href="#results"><span aria-hidden="true">⌁</span> Results</a>
-        <a class="nav-link" href="#model"><span aria-hidden="true">≡</span> Model notes</a>
+        <a class="nav-link" href="#main" aria-current="location"><span aria-hidden="true">01</span> Beam analysis</a>
+        <a class="nav-link" href="#results"><span aria-hidden="true">02</span> Results</a>
+        <a class="nav-link" href="#model"><span aria-hidden="true">03</span> Model notes</a>
       </nav>
       <div class="rail-foot"><span class="dot"></span> <span class="mono">NEXORA LAB / 01</span></div>
     </aside>
     <main id="main" tabindex="-1">
-      <div class="breadcrumb mono">SOLID MECHANICS <span>/</span> LAB 01</div>
-      <div class="intro">
-        <div><h1>Beam Analysis<span>.</span></h1><p>See how a beam carries load, from support reactions to deflection.</p></div>
+      <header class="intro">
+        <div>
+          <p class="breadcrumb mono">SOLID MECHANICS <span>/</span> LAB 01</p>
+          <h1>Beam Analysis<span>.</span></h1>
+          <p class="intro-copy">See how a beam carries load, from support reactions to deflection.</p>
+        </div>
         <span class="edition mono"><span class="dot"></span> LINEAR ELASTIC</span>
-      </div>
+      </header>
       <div class="workbench">
         <section class="panel setup" aria-labelledby="setup-title">
           <div class="panel-head"><div class="heading"><span class="index">01</span><h2 id="setup-title">Experiment setup</h2></div><button class="quiet" id="reset" type="button">Reset</button></div>
           <form id="beam-form">
-            <label for="case">Load case</label>
-            <select id="case" name="case">
-              <option value="point">Simply supported · Center load</option>
-              <option value="uniform">Simply supported · Uniform load</option>
-              <option value="cantilever">Cantilever · Tip load</option>
-            </select>
+            <fieldset class="load-cases">
+              <legend>Load case</legend>
+              <div class="case-options">
+                <label><input type="radio" name="case" value="point" checked><span>Center point</span></label>
+                <label><input type="radio" name="case" value="uniform"><span>Uniform</span></label>
+                <label><input type="radio" name="case" value="cantilever"><span>Cantilever tip</span></label>
+              </div>
+            </fieldset>
             <div class="field-grid">
               <div><label for="span">Span <i>L</i></label><div class="field"><input id="span" name="span" type="number" min=".25" max="30" step="any" value="6" required><span>m</span></div></div>
               <div><label for="load">Load <i id="load-symbol">P</i></label><div class="field"><input id="load" name="load" type="number" min=".01" max="500" step="any" value="24" required><span id="load-unit">kN</span></div></div>
@@ -54,7 +59,7 @@
           </form>
         </section>
         <section class="panel schematic" aria-labelledby="schematic-title">
-          <div class="panel-head"><div class="heading"><span class="index">02</span><h2 id="schematic-title">Beam schematic</h2></div><span class="panel-meta mono">ELEVATION / X–Y</span></div>
+          <div class="panel-head"><div class="heading"><span class="index">02</span><h2 id="schematic-title">Beam schematic</h2></div><span class="panel-meta mono" id="support-type">SIMPLY SUPPORTED</span></div>
           <div class="drawing">
             <svg id="beam-diagram" viewBox="0 0 580 226" role="img" aria-label="Beam schematic"></svg>
           </div>
@@ -62,7 +67,8 @@
         </section>
       </div>
       <section id="results" class="results" aria-labelledby="results-title">
-        <div class="section-head"><div class="heading"><span class="index">03</span><h2 id="results-title">Analysis results</h2></div><button id="export" class="quiet export" disabled>↓ Export CSV</button></div>
+        <div class="section-head"><div class="heading"><span class="index">03</span><h2 id="results-title">Analysis results</h2></div><button id="export" class="quiet" type="button" disabled>↓ Export CSV</button></div>
+        <p class="results-state mono" id="results-state" hidden>Showing the last run. Run analysis to apply your edits.</p>
         <dl class="metrics">
           <div><dt>Reaction A</dt><dd id="reaction-a">—</dd></div>
           <div><dt>Reaction B</dt><dd id="reaction-b">—</dd></div>
@@ -82,7 +88,7 @@
         </div>
       </section>
       <details class="panel notes" id="model">
-        <summary>Model notes &amp; sign conventions</summary>
+        <summary><span>Model notes &amp; sign conventions</span><span class="disclosure" aria-hidden="true"></span></summary>
         <div>
           <p>The solver uses closed-form Euler–Bernoulli beam equations. The beam is prismatic with constant EI and assumes small deflections and linear elastic material. The specified load acts downward. Self-weight is excluded.</p>
           <p>Position x increases to the right. Reactions are positive upward, sagging moment is positive, shear follows dM/dx, and downward deflection is negative. Peak values retain the sign at the largest absolute magnitude.</p>
