@@ -27,6 +27,16 @@ test('discipline sidebar follows direct links, filters, and browser history', as
   await expect(electronics).toHaveAttribute('aria-current', 'location');
   await sidebar.getByRole('link', { name: 'All disciplines' }).click();
   await expect(page.getByRole('status')).toHaveText('19 experiments available');
+  const bounds = await sidebar.boundingBox();
+  expect(bounds.x).toBe(0);
+  if (page.viewportSize().width > 740) {
+    expect(bounds.y).toBe(52);
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await expect.poll(async () => (await sidebar.boundingBox()).y).toBe(0);
+  } else {
+    const main = await page.locator('main').boundingBox();
+    expect(bounds.y + bounds.height).toBeLessThanOrEqual(main.y);
+  }
   await expectNoHorizontalOverflow(page);
 });
 
