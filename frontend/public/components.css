@@ -4,7 +4,7 @@
 .panel-head { min-height: 48px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
 .section-head { margin-bottom: 9px; }
 .section-head.heading { justify-content: flex-start; }
-.heading h2, .plot h2 { margin: 0; font-size: 16px; font-weight: 680; }
+.heading h2, .plot h2 { margin: 0; color: var(--text-accent); font-size: 16px; font-weight: 680; }
 .index, .panel-meta, .edition { color: var(--muted); font-size: 12px; }
 .index { padding: 2px 5px; background: var(--surface-2); border-radius: 4px; font-family: var(--mono); }
 .edition, .validated, .card-tags span { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); border: 1px solid var(--border); border-radius: 20px; padding: 3px 8px; font: 12px Inter, sans-serif; }
@@ -96,17 +96,23 @@ svg .reaction-label { fill: var(--result); }
 .notes[open] .disclosure { transform: rotate(225deg); }
 .catalog-controls { display: grid; grid-template-columns: 2fr 1fr auto; align-items: end; gap: 8px; margin-bottom: 14px; }
 #catalog-status { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 12px; }
-.catalog-sidebar h2 { margin: 0 0 8px; font-size: 14px; }
+.catalog-sidebar h2 { margin: 0 0 8px; color: var(--text-accent); font-size: 14px; }
+[data-discipline="civil"] { --discipline-ink: var(--text-civil); }
+[data-discipline="mechanical"] { --discipline-ink: var(--text-mechanical); }
+[data-discipline="electrical"] { --discipline-ink: var(--text-electrical); }
+[data-discipline="electronics"] { --discipline-ink: var(--text-electronics); }
+[data-discipline="signals"] { --discipline-ink: var(--text-signals); }
 .discipline-links { display: grid; gap: 4px; }
-.discipline-links a { display: flex; align-items: center; min-height: 44px; padding: 6px 8px; border: 1px solid transparent; border-radius: 6px; color: var(--muted); font-size: 13px; }
-.discipline-links a:hover { background: var(--surface-2); color: var(--text); }
-.discipline-links a[aria-current] { border-color: var(--curve); background: var(--selection); color: var(--text); font-weight: 650; }
+.discipline-links a { display: flex; align-items: center; min-height: 44px; padding: 6px 8px; border: 1px solid transparent; border-radius: 6px; color: var(--discipline-ink, var(--text)); font-size: 13px; }
+.discipline-links a:hover { background: var(--surface-2); }
+.discipline-links a[aria-current] { border-color: var(--curve); background: var(--selection); font-weight: 650; }
 .catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .sim-link { display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-1); box-shadow: var(--shadow); transition: transform 160ms, border-color 160ms; }
 .sim-link:hover { border-color: var(--curve); transform: translateY(-3px); }
-.sim-link > strong { font-size: 20px; font-weight: 680; line-height: 1.2; }
+.sim-link > strong { color: var(--discipline-ink, var(--text)); font-size: 20px; font-weight: 680; line-height: 1.2; }
 .sim-link > p { color: var(--muted); margin: 0; }
 .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.card-tags .discipline-tag { color: var(--discipline-ink, var(--text)); background: color-mix(in srgb, currentColor 9%, var(--surface-1)); }
 .thumb { width: 100%; aspect-ratio: 3 / 1; border-radius: 6px; background: var(--plot-bg); border: 1px solid var(--grid); }
 .open-lab { display: flex; align-items: center; justify-content: space-between; padding-top: 6px; color: var(--curve); font-weight: 650; }
 .open-lab svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }

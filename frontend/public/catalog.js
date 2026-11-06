@@ -9,6 +9,7 @@ const grid = document.getElementById('catalog-grid');
 const links = [...discipline.options].map(option => {
   const link = document.createElement('a');
   link.href = `#${option.value || 'all'}`;
+  link.dataset.discipline = option.value;
   link.textContent = option.textContent;
   document.getElementById('discipline-links').append(link);
   return { link, value: option.value };
@@ -67,10 +68,11 @@ const cards = labs.map(lab => {
   const card = document.createElement('a');
   card.className = 'sim-link';
   card.href = lab.href;
+  card.dataset.discipline = lab.groups[0];
   const group = lab.groups.map(key => labGroups[key]).join(' + ');
   const topic = lab.topic ?? 'Solid mechanics';
   card.innerHTML = `${thumbnail(lab)}
-    <div class="card-tags"><span>${group}</span><span>${topic}</span><span>Beginner</span></div>
+    <div class="card-tags"><span class="discipline-tag">${group}</span><span>${topic}</span><span>Beginner</span></div>
     <strong>${lab.title}</strong><p>${lab.description}</p>
     <span class="open-lab">Open lab <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span>`;
   grid.append(card);
