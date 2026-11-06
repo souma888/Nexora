@@ -10,6 +10,7 @@ const header = `
     <span class="top-label">Engineering lab</span>
     <div class="top-actions">
       <a class="source" href="/">All labs</a>
+      <a class="source" href="/#about">About</a>
       <button class="quiet" id="theme-toggle" type="button" aria-label="Switch color theme">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg>
         <span>Theme</span>

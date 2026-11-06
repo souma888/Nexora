@@ -7,6 +7,21 @@ async function expectNoHorizontalOverflow(page) {
   );
 }
 
+test('catalog places the brand in the corner and links to About', async ({ page }) => {
+  const width = page.viewportSize().width > 740 ? 1600 : 320;
+  await page.setViewportSize({ width, height: 850 });
+  await page.goto('/#electronics');
+  const brand = await page.getByRole('link', { name: 'Nexora catalog' }).boundingBox();
+  expect(brand.x).toBe(16);
+  await expect(page.locator('#total-labs')).toHaveText('19');
+  await expect(page.locator('#total-disciplines')).toHaveText('5');
+  await page.getByRole('link', { name: 'About', exact: true }).click();
+  await expect(page).toHaveURL(/#about$/);
+  await expect(page.getByRole('heading', { name: 'About Nexora' })).toBeInViewport();
+  await expect(page.getByLabel('Discipline', { exact: true })).toHaveValue('electronics');
+  await expectNoHorizontalOverflow(page);
+});
+
 test('discipline sidebar follows direct links, filters, and browser history', async ({ page }) => {
   await page.goto('/#civil');
   const sidebar = page.getByRole('navigation', { name: 'Engineering disciplines' });
