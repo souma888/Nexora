@@ -55,6 +55,7 @@
               <div><label for="modulus">Elastic modulus <i>E</i></label><div class="field"><input id="modulus" name="modulus" type="number" min="1" max="500" step="any" value="200" required><span>GPa</span></div></div>
               <div><label for="inertia">Section inertia <i>I</i></label><div class="field"><input id="inertia" name="inertia" type="number" min="1" max="1000000" step="any" value="8000" required><span>cm⁴</span></div></div>
             </div>
+            <p class="prediction"><strong>Predict first.</strong> If you double the span and keep the load and section the same, how will peak deflection change?</p>
             <button class="run" type="submit"><span aria-hidden="true">▷</span> Run analysis <span class="run-arrow" aria-hidden="true">→</span></button>
             <p id="status" role="status">Preparing the default example…</p>
           </form>
@@ -106,6 +107,7 @@
           <p>The solver uses closed-form Euler–Bernoulli beam equations. The beam is prismatic with constant EI and assumes small deflections and linear elastic material. The specified load acts downward. Self-weight is excluded.</p>
           <p>Position x increases to the right. Reactions are positive upward, sagging moment is positive, shear follows dM/dx, and downward deflection is negative. Peak values retain the sign at the largest absolute magnitude.</p>
           <p id="equation"></p>
+          <p>V = dM/dx, EI·d²δ/dx² = M, and θ = dδ/dx. Under a point load with unchanged force and EI, peak deflection grows with L³. Under a uniform load with unchanged load per metre and EI, it grows with L⁴.</p>
         </div>
       </details>
       <footer><span class="mono">NEXORA / SOLID MECHANICS</span><span>For education and exploration</span></footer>

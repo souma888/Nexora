@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { POST } from '../api/materials.js';
+import { GET, POST } from '../api/materials.js';
 
 const run = (model, input) => POST(new Request('http://localhost/api/materials', {
   method: 'POST', body: JSON.stringify({ model, input }),
@@ -35,6 +35,24 @@ test('equal biaxial stress has no unique principal orientation', async () => {
 });
 
 test('materials API rejects invalid geometry and unknown models', async () => {
-  assert.equal((await run('axial', { force: 1, length: 2, area: 0, modulus: 200 })).status, 422);
+  const invalid = await run('axial', { force: 1, length: 2, area: 0, modulus: 200 });
+  assert.equal(invalid.status, 422);
+  assert.equal((await invalid.json()).field, 'area');
   assert.equal((await run('unknown', {})).status, 422);
+});
+
+test('pure negative shear gives symmetric principal stresses and a negative angle', async () => {
+  const data = await run('mohr', { sigmaX: 0, sigmaY: 0, tauXY: -25 }).then(response => response.json());
+  assert.equal(data.summary.principalMax, 25);
+  assert.equal(data.summary.principalMin, -25);
+  assert.equal(data.summary.principalAngle, -45);
+});
+
+test('unloaded axial bar returns zero response with discoverable units', async () => {
+  const { models } = await GET().json();
+  const axial = models.find(model => model.id === 'axial');
+  const data = await run('axial', { force: 0, length: 1, area: 10, modulus: 69 }).then(response => response.json());
+  assert.deepEqual(data.summary, { stress: 0, strain: 0, displacement: 0 });
+  assert.deepEqual(data.units, axial.outputs);
+  assert.deepEqual(data.series, []);
 });

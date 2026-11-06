@@ -8,6 +8,7 @@
   <title>Experiment Catalog · Nexora Engineering Lab</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/catalog.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to catalog</a>
@@ -35,6 +36,19 @@
           <p class="intro-copy">Choose a discipline, set up an experiment, and see how the model responds.</p>
         </div>
       </header>
+      <form class="panel catalog-controls" id="catalog-filters" role="search" hidden>
+        <div><label for="lab-search">Search experiments</label><input id="lab-search" type="search" placeholder="Try deflection or stress"></div>
+        <div><label for="discipline-filter">Discipline</label><select class="material-select" id="discipline-filter">
+          <option value="">All disciplines</option>
+          <option value="civil">Civil engineering</option>
+          <option value="mechanical">Mechanical engineering</option>
+          <option value="electrical">Electrical engineering</option>
+          <option value="electronics">Electronics</option>
+          <option value="signals">Signals &amp; systems</option>
+        </select></div>
+        <button class="quiet" type="reset">Clear filters</button>
+        <p id="catalog-status" role="status"></p>
+      </form>
       <div class="catalog">
         <section class="panel discipline" id="civil" aria-labelledby="civil-title">
           <header><span class="index">01</span><div><h2 id="civil-title">Civil engineering</h2><p>Structural behavior under applied loads.</p></div></header>

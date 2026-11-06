@@ -1,13 +1,23 @@
 # Development
 
-Use Node.js 24. The starter has no external dependencies or required environment variables.
+Use Node.js 24. The app has no runtime dependencies or required environment variables.
 
 ```sh
 npm run dev
 npm test
 ```
 
-Open <http://127.0.0.1:3000>. The local server serves `frontend/public` and invokes the same beam handler used by Vercel.
+Open <http://127.0.0.1:3000>. The local server serves `frontend/public` and invokes the same API handlers used by Vercel.
+
+## Release checks
+
+```sh
+npm ci
+npx playwright install --only-shell chromium
+npm run test:e2e
+```
+
+GitHub Actions runs solver benchmarks and browser tests for both desktop Chromium and an emulated mobile viewport. To run the browser tests against a deployment, set `NEXORA_TEST_URL` to its base URL before running `npm run test:e2e`.
 
 ## Deploy to Vercel
 
@@ -16,6 +26,10 @@ Open <http://127.0.0.1:3000>. The local server serves `frontend/public` and invo
 3. Deploy. Open the catalog, choose **Civil Engineering → Beam Analysis**, and run the default example. It should report 12 kN at each support, 36 kN·m peak moment, and −6.75 mm peak deflection.
 
 Vercel serves the static frontend and runs `api/beam.js` and `api/materials.js` as Node.js Functions in the same deployment. No database setup is required.
+
+## Shared API contract
+
+GET either endpoint to discover its `models`. Each definition gives the model ID, solver version, allowed inputs and bounds, and units for summary and series values. POST responses contain `model`, normalized `input`, solver `version`, `units`, `summary`, and `series`. A model without sampled plot data returns an empty series. Validation errors contain `error` (human-readable message), `code` (stable error category), and `field` (input key or null).
 
 ## Beam API
 

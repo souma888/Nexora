@@ -1,26 +1,19 @@
+import { setMetric, setupWorkbench } from './workbench.js';
+
 const byId = id => document.getElementById(id);
 const model = document.body.dataset.model;
 const form = byId('material-form');
-const status = byId('status');
-const run = form.querySelector('.run');
 const svg = byId('material-diagram');
 const angle = byId('angle');
 const principal = byId('principal-angle');
 const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 4 });
 const fmt = value => Math.abs(value) >= 0.0001 || value === 0 ? formatter.format(value || 0) : value.toExponential(2);
 let result;
-let pending;
 const arrowhead = '<defs><marker id="force-arrow" viewBox="0 0 8 8" markerWidth="5" markerHeight="5" refX="7" refY="4" orient="auto"><path d="M0 0l8 4-8 4z" fill="var(--red)"/></marker></defs>';
 const arrow = (x1, y1, x2, y2) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="var(--red)" stroke-width="2" marker-end="url(#force-arrow)"/>`;
 
 function showValue(id, value, unit = '') {
-  const cell = byId(id);
-  cell.textContent = value === null ? 'Any angle' : fmt(value);
-  if (value !== null && unit) {
-    const label = document.createElement('small');
-    label.textContent = unit;
-    cell.append(' ', label);
-  }
+  setMetric(id, value === null ? 'Any angle' : fmt(value), value === null ? '' : unit);
 }
 
 function drawAxial({ input: { force }, summary }) {
@@ -106,53 +99,13 @@ function render(data) {
   drawMohr();
 }
 
-async function analyze() {
-  pending?.abort();
-  const controller = new AbortController();
-  pending = controller;
-  run.disabled = true;
-  status.dataset.error = 'false';
-  status.textContent = 'Calculating…';
-  const input = Object.fromEntries([...new FormData(form)].map(([key, value]) => [key, Number(value)]));
-  try {
-    const response = await fetch('/api/materials', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, input }), signal: controller.signal,
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-    if (controller.signal.aborted) return;
-    render(data);
-    status.textContent = 'Analysis complete';
-  } catch (error) {
-    if (controller.signal.aborted) return;
-    status.dataset.error = 'true';
-    status.textContent = error instanceof TypeError || error instanceof SyntaxError
-      ? 'The solver is unavailable. Please try again.' : error.message;
-  } finally {
-    if (pending === controller) {
-      pending = undefined;
-      run.disabled = false;
-    }
-  }
-}
-
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  analyze();
-});
-function markEdited() {
-  pending?.abort();
-  pending = undefined;
-  run.disabled = false;
-  status.dataset.error = 'false';
-  status.textContent = result ? 'Inputs changed · showing the last run' : 'Run analysis to see results';
-}
-form.addEventListener('input', markEdited);
-byId('reset').addEventListener('click', () => {
-  form.reset();
-  if (angle) angle.value = 0;
-  analyze();
+const { analyze, edited } = setupWorkbench({
+  form, endpoint: '/api/materials', render,
+  payload() {
+    const input = Object.fromEntries([...new FormData(form)].map(([key, value]) => [key, Number(value)]));
+    return { model, input };
+  },
+  onReset() { if (angle) angle.value = 0; },
 });
 
 if (model === 'axial') {
@@ -161,7 +114,7 @@ if (model === 'axial') {
   material.addEventListener('change', () => {
     if (material.value === 'custom') modulus.focus();
     else modulus.value = material.value;
-    markEdited();
+    edited();
   });
   modulus.addEventListener('input', () => {
     const preset = [...material.options].find(option => Number(option.value) === modulus.valueAsNumber);
@@ -174,4 +127,5 @@ if (model === 'axial') {
     drawMohr();
   });
 }
+byId('load-example').addEventListener('click', () => byId('reset').click());
 analyze();

@@ -40,6 +40,7 @@
             <div><label for="modulus">Elastic modulus <i>E</i></label><div class="field"><input id="modulus" name="modulus" type="number" min="1" max="500" step="any" value="200" required><span>GPa</span></div></div>
           </div>
           <p class="field-hint">Use positive force for tension or negative force for compression.</p>
+          <p class="prediction"><strong>Predict first.</strong> Switch from steel to aluminum at the same force and geometry. Which outputs will change?</p>
           <button class="run" type="submit"><span aria-hidden="true">▷</span> Run analysis <span class="run-arrow" aria-hidden="true">→</span></button>
           <p id="status" role="status">Preparing the default example…</p>
         </form>
@@ -52,6 +53,7 @@
     </div>
     <section class="results" aria-labelledby="results-title">
       <div class="section-head heading"><span class="index">03</span><h2 id="results-title">Analysis results</h2></div>
+      <p class="results-state mono" id="results-state" hidden>Showing the last run. Run analysis to apply your edits.</p>
       <dl class="metrics material-metrics">
         <div><dt>Normal stress</dt><dd id="stress">—</dd></div>
         <div><dt>Axial strain</dt><dd id="strain">—</dd></div>
@@ -60,7 +62,7 @@
     </section>
     <details class="panel notes">
       <summary><span>Worked example &amp; model assumptions</span><span class="disclosure" aria-hidden="true"></span></summary>
-      <div><p>A 50 kN pull on a 500 mm² steel bar gives σ = F/A = 100 MPa. With E = 200 GPa, ε = σ/E = 0.0005. Over 2 m, ΔL = εL = 1 mm of elongation.</p><p>This model assumes centered loading, a uniform cross section and linear elasticity. It excludes buckling, yielding and stress concentrations.</p></div>
+      <div><p>A 50 kN pull on a 500 mm² steel bar gives σ = F/A = 100 MPa. With E = 200 GPa, ε = σ/E = 0.0005. Over 2 m, ΔL = εL = 1 mm of elongation.</p><p>Tension gives positive stress, strain and length change. A lower modulus increases strain and elongation while stress stays fixed. This model assumes centered loading, a uniform cross section and linear elasticity. It excludes buckling, yielding and stress concentrations.</p><button class="quiet" id="load-example" type="button">Run worked example</button></div>
     </details>
   </main>
 </body>

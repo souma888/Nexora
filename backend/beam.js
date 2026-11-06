@@ -1,26 +1,25 @@
-export const cases = {
+import { number } from './contract.js';
+
+const cases = {
   point: 'Simply supported · Center point load',
   uniform: 'Simply supported · Uniform load',
   cantilever: 'Cantilever · Tip point load',
 };
 
-const limits = {
-  span: [0.25, 30, 'Span (m)'],
-  load: [0.01, 500, 'Load'],
-  modulus: [1, 500, 'Elastic modulus (GPa)'],
-  inertia: [1, 1000000, 'Second moment of area (cm⁴)'],
+export const definition = {
+  id: 'beam', version: '1.1',
+  inputs: {
+    case: { label: 'Load case', type: 'enum', options: Object.keys(cases) },
+    span: number('Span', 'm', 0.25, 30),
+    load: { ...number('Load', 'kN', 0.01, 500), unitByCase: { uniform: 'kN/m' } },
+    modulus: number('Elastic modulus', 'GPa', 1, 500),
+    inertia: number('Second moment of area', 'cm⁴', 1, 1000000),
+  },
+  outputs: {
+    summary: { reactionA: 'kN', reactionB: 'kN', moment: 'kN·m', deflection: 'mm', deflectionAt: 'm' },
+    series: { x: 'm', shear: 'kN', moment: 'kN·m', deflection: 'mm', slope: 'mrad' },
+  },
 };
-
-export function validateBeam(input) {
-  if (!input || typeof input.case !== 'string' || !Object.hasOwn(cases, input.case)) {
-    return 'Choose a supported load case.';
-  }
-  for (const [key, [min, max, label]] of Object.entries(limits)) {
-    if (!Number.isFinite(input[key]) || input[key] < min || input[key] > max) {
-      return `${label} must be between ${min} and ${max}.`;
-    }
-  }
-}
 
 export function solveBeam(input) {
   const { case: model, span: L, load, modulus, inertia } = input;
@@ -59,8 +58,6 @@ export function solveBeam(input) {
   const peak = key => series.reduce((a, b) => Math.abs(a[key]) >= Math.abs(b[key]) ? a : b);
   const displacement = peak('deflection');
   return {
-    input,
-    version: '1.1',
     series,
     summary: {
       reactionA: reactionA / 1000,

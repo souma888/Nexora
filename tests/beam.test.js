@@ -35,3 +35,11 @@ test('rejects out-of-domain inputs and unsupported cases', async () => {
   assert.equal((await run({ ...inputs, case: ['point'] })).status, 422);
   assert.equal((await run({ ...inputs, case: 'other' })).status, 422);
 });
+
+test('asymmetric cantilever tip slope and deflection scale with span', async () => {
+  // 10 kN over 2 m at EI = 2 MN·m².
+  const response = await run({ case: 'cantilever', span: 2, load: 10, modulus: 200, inertia: 1000 });
+  const data = await response.json();
+  assert.equal(data.series.at(-1).slope, -10);
+  assert.ok(Math.abs(data.summary.deflection + 40 / 3) < 1e-9);
+});

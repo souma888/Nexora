@@ -1,7 +1,7 @@
+import { setMetric, setupWorkbench } from './workbench.js';
+
 const byId = id => document.getElementById(id);
 const form = byId('beam-form');
-const status = byId('status');
-const run = form.querySelector('.run');
 const plotButtons = document.querySelectorAll('[data-plot]');
 const fmt = new Intl.NumberFormat('en', { maximumFractionDigits: 3 });
 const format = n => n && Math.abs(n) < 0.001 ? n.toExponential(2) : fmt.format(n || 0);
@@ -18,7 +18,6 @@ const equations = {
 };
 let result;
 let plotKey = 'moment';
-let activeRequest;
 
 function readInput() {
   const input = Object.fromEntries(new FormData(form));
@@ -110,15 +109,8 @@ function renderResults(data) {
     ['peak-moment', summary.moment, 'kN·m'],
     ['peak-deflection', summary.deflection, 'mm'],
   ];
-  for (const [id, value, unit] of metrics) {
-    const label = document.createElement('small');
-    label.textContent = unit;
-    byId(id).replaceChildren(value === null ? '—' : format(value) + ' ');
-    if (value !== null) byId(id).append(label);
-  }
+  for (const [id, value, unit] of metrics) setMetric(id, value === null ? '—' : format(value), value === null ? '' : unit);
   byId('equation').textContent = equations[data.input.case];
-  byId('export').disabled = false;
-  byId('results-state').hidden = true;
   drawPlot();
 }
 
@@ -128,67 +120,20 @@ function syncSetup() {
   byId('load-symbol').textContent = uniform ? 'w' : 'P';
   byId('load-unit').textContent = uniform ? 'kN/m' : 'kN';
   diagram(input);
-  const dirty = result && Object.keys(result.input).some(key => result.input[key] !== input[key]);
-  byId('results-state').hidden = !dirty;
-  byId('export').disabled = !result || Boolean(dirty);
-  return dirty;
 }
 
-async function analyze() {
-  activeRequest?.abort();
-  const request = new AbortController();
-  activeRequest = request;
-  status.dataset.error = 'false';
-  status.textContent = 'Calculating…';
-  run.disabled = true;
-  try {
-    const response = await fetch('/api/beam', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(readInput()),
-      signal: request.signal,
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-    if (request.signal.aborted) return;
-    renderResults(data);
-    status.textContent = `Analysis complete · ${data.series.length} plot points`;
-  } catch (error) {
-    if (request.signal.aborted) return;
-    status.dataset.error = 'true';
-    status.textContent = error instanceof TypeError || error instanceof SyntaxError
-      ? 'The solver is unavailable. Please try again.'
-      : error.message;
-  } finally {
-    if (activeRequest === request) {
-      activeRequest = undefined;
-      run.disabled = false;
-    }
-  }
-}
-
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  analyze();
+const { analyze, edited } = setupWorkbench({
+  form, endpoint: '/api/beam', payload: readInput, render: renderResults,
+  onEdit(dirty) { byId('export').disabled = !result || dirty; },
+  onReset: syncSetup,
 });
-form.addEventListener('input', () => {
-  activeRequest?.abort();
-  activeRequest = undefined;
-  run.disabled = false;
-  const dirty = syncSetup();
-  status.dataset.error = 'false';
-  status.textContent = dirty ? 'Inputs changed · ready to run' : result ? 'Showing the last analysis' : 'Run analysis to see results';
-});
-byId('reset').addEventListener('click', () => {
-  form.reset();
-  syncSetup();
-  analyze();
-});
+form.addEventListener('input', syncSetup);
 byId('load-example').addEventListener('click', () => {
   const selected = readInput().case;
   form.reset();
   form.elements.case.value = selected;
   syncSetup();
+  edited();
   analyze();
   byId('results').scrollIntoView();
 });

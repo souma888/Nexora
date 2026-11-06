@@ -87,7 +87,7 @@ The app uses a dependency-free browser frontend and a stateless Node.js API. Ope
 
 ## License
 
-No license has been selected yet. Until one is added, the repository's code and documentation are not automatically licensed for reuse. Choose an appropriate license before accepting external contributions.
+Nexora is available under the [MIT License](LICENSE).
 
 ## Disclaimer
 
