@@ -24,6 +24,12 @@ A beautiful plot is not evidence of a correct engineering solution. Every simula
 - Inverting amplifier: linear response inside its limits and clipping in either direction.
 - Sampling: 8 Hz and 4 Hz cosines agree at each sample instant when sampled at 12 Hz.
 - Moving average: a four-sample window ramps to a unit step in increments of 0.25.
+- Euler buckling and shaft torsion: inverse-square length scaling and fourth-power diameter scaling, respectively.
+- Hydrostatic loading: the resultant on a surface-level rectangular gate acts two-thirds of its height below the surface.
+- Mass–spring motion and RL response: the analytical period and one-time-constant current.
+- RLC resonance and RC filtering: resonant current peak and low-pass gain at cutoff.
+- Bridge rectification: both half-cycles repeat at twice the input frequency above the diode threshold.
+- Pulse convolution and beats: equal-width pulses produce a triangle, and the beat rate is the tone frequency difference.
 
 The lab badge refers to these analytical checks. The browser and the API use the same solvers. Run `npm test` to reproduce the reference cases.
 

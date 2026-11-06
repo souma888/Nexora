@@ -1,6 +1,6 @@
 type Inputs = Record<string, number | string>;
 type Model<Result> = {
-  definition: { id: string; version: string; outputs: unknown };
+  definition: { id: string; version: string; outputs: unknown; prediction?: Prediction };
   solve: (input: Inputs) => Result;
 };
 type Check = (definition: Model<unknown>['definition'], input: Inputs) =>
@@ -34,9 +34,9 @@ const predictions: Record<string, Prediction> = {
   average: [['Fewer samples', 'More samples', 'The same number'], 1, 'A wider window keeps older zero-valued samples in the average longer, so the output takes longer to settle.'],
 };
 
-function predictionControl(form: HTMLFormElement, model: string) {
+function predictionControl(form: HTMLFormElement, model: Model<unknown>['definition']) {
   const prompt = form.querySelector('.prediction');
-  const [choices, correct, explanation] = predictions[model];
+  const [choices, correct, explanation] = model.prediction ?? predictions[model.id];
   const fieldset = document.createElement('fieldset');
   fieldset.className = 'prediction-answers';
   const legend = document.createElement('legend');
@@ -83,7 +83,7 @@ export function setupWorkbench<Result>({
 }) {
   const status = document.getElementById('status')!;
   const sliders = new Map<HTMLInputElement, HTMLInputElement>();
-  const prediction = predictionControl(form, model.definition.id);
+  const prediction = predictionControl(form, model.definition);
   let timer: ReturnType<typeof setTimeout> | undefined;
   let lastInput = '';
   const logScale = (input: HTMLInputElement) =>

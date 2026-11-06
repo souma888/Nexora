@@ -7,6 +7,8 @@ const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 4 });
 const format = value => value !== 0 && (Math.abs(value) < 0.001 || Math.abs(value) >= 100000)
   ? value.toExponential(2) : formatter.format(value || 0);
 const disciplines = {
+  civil: 'Civil engineering',
+  mechanical: 'Mechanical engineering',
   electrical: 'Electrical engineering',
   electronics: 'Electronics',
   signals: 'Signals & systems',

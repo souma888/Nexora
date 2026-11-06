@@ -1,18 +1,6 @@
-import { number } from './contract.js';
-
-const parameter = (label, unit, min, max, initial) => ({
-  ...number(label, unit, min, max), initial,
-});
-const samples = (start, end, evaluate, count = 240) =>
-  Array.from({ length: count + 1 }, (_, i) => {
-    const x = start + (end - start) * i / count;
-    return { x, ...evaluate(x) };
-  });
-const cosine = (frequency, time) => Math.cos(2 * Math.PI * frequency * time);
-
-function experiment(id, definition, solve) {
-  return { definition: { id, version: '1.0', ...definition }, solve };
-}
+import { cosine, experiment, parameter, samples } from './experiment.js';
+import { mechanicalModels } from './mechanical-experiments.js';
+import { systemModels } from './system-experiments.js';
 
 export const models = {
   divider: experiment('divider', {
@@ -161,4 +149,6 @@ export const models = {
       reference: x < 0 ? 0 : amplitude,
     }), window + 6),
   })),
+  ...mechanicalModels,
+  ...systemModels,
 };

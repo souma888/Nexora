@@ -4,7 +4,7 @@
 
 Nexora is a planned, open-source, browser-based engineering laboratory where students, educators, and engineers can explore engineering principles through visual simulations, parameter-driven experiments, plots, and transparent calculations.
 
-> **Status:** Nine labs are available across civil, mechanical, electrical, electronics, and signals and systems. Open the catalog to choose an experiment.
+> **Status:** Nineteen labs are available across civil, mechanical, electrical, electronics, and signals and systems. Open the catalog to choose an experiment.
 
 ## Vision
 
