@@ -6,6 +6,13 @@ const search = document.getElementById('lab-search');
 const discipline = document.getElementById('discipline-filter');
 const status = document.getElementById('catalog-status');
 const grid = document.getElementById('catalog-grid');
+const links = [...discipline.options].map(option => {
+  const link = document.createElement('a');
+  link.href = `#${option.value || 'all'}`;
+  link.textContent = option.textContent;
+  document.getElementById('discipline-links').append(link);
+  return { link, value: option.value };
+});
 const labGroups = {
   civil: 'Civil', mechanical: 'Mechanical', electrical: 'Electrical',
   electronics: 'Electronics', signals: 'Signals & systems',
@@ -71,6 +78,10 @@ const cards = labs.map(lab => {
 });
 
 function filter() {
+  for (const { link, value } of links) {
+    if (value === discipline.value) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
   const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
   let count = 0;
   for (const { card, groups, terms } of cards) {
@@ -83,18 +94,28 @@ function filter() {
 
 function hashFilter() {
   const group = location.hash.slice(1);
-  if (Object.hasOwn(labGroups, group)) discipline.value = group;
+  discipline.value = Object.hasOwn(labGroups, group) ? group : '';
   filter();
 }
+document.querySelector('.skip').addEventListener('click', event => {
+  event.preventDefault();
+  document.getElementById('main').focus();
+});
 form.addEventListener('submit', event => event.preventDefault());
-form.addEventListener('input', filter);
+search.addEventListener('input', filter);
+discipline.addEventListener('change', () => {
+  const hash = `#${discipline.value || 'all'}`;
+  if (location.hash !== hash) history.pushState(null, '', hash);
+  filter();
+});
 form.addEventListener('reset', event => {
   event.preventDefault();
   search.value = '';
   discipline.value = '';
-  if (Object.hasOwn(labGroups, location.hash.slice(1))) history.replaceState(null, '', location.pathname + location.search);
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   filter();
 });
 window.addEventListener('hashchange', hashFilter);
 form.hidden = false;
+document.querySelector('.catalog-sidebar').hidden = false;
 hashFilter();

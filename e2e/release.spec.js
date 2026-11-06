@@ -7,6 +7,29 @@ async function expectNoHorizontalOverflow(page) {
   );
 }
 
+test('discipline sidebar follows direct links, filters, and browser history', async ({ page }) => {
+  await page.goto('/#civil');
+  const sidebar = page.getByRole('navigation', { name: 'Engineering disciplines' });
+  const civil = sidebar.getByRole('link', { name: 'Civil engineering' });
+  const electronics = sidebar.getByRole('link', { name: 'Electronics', exact: true });
+  const filter = page.getByLabel('Discipline', { exact: true });
+  await expect(civil).toHaveAttribute('aria-current', 'location');
+  await electronics.focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#electronics$/);
+  await expect(electronics).toHaveAttribute('aria-current', 'location');
+  await expect(filter).toHaveValue('electronics');
+  await expect(page.getByRole('link', { name: /Half-Wave Rectifier/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Beam Analysis/ })).toBeHidden();
+  await filter.selectOption('signals');
+  await expect(sidebar.getByRole('link', { name: /Signals/ })).toHaveAttribute('aria-current', 'location');
+  await page.goBack();
+  await expect(electronics).toHaveAttribute('aria-current', 'location');
+  await sidebar.getByRole('link', { name: 'All disciplines' }).click();
+  await expect(page.getByRole('status')).toHaveText('19 experiments available');
+  await expectNoHorizontalOverflow(page);
+});
+
 test('catalog filters, searches, and opens the beam lab with the keyboard', async ({ page }) => {
   await page.goto('/');
   await page.keyboard.press('Tab');
