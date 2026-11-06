@@ -9,7 +9,6 @@ const grid = document.getElementById('catalog-grid');
 const links = [...discipline.options].map(option => {
   const link = document.createElement('a');
   link.href = `#${option.value || 'all'}`;
-  link.dataset.discipline = option.value;
   link.textContent = option.textContent;
   document.getElementById('discipline-links').append(link);
   return { link, value: option.value };
@@ -68,7 +67,6 @@ const cards = labs.map(lab => {
   const card = document.createElement('a');
   card.className = 'sim-link';
   card.href = lab.href;
-  card.dataset.discipline = lab.groups[0];
   const group = lab.groups.map(key => labGroups[key]).join(' + ');
   const topic = lab.topic ?? 'Solid mechanics';
   card.innerHTML = `${thumbnail(lab)}
@@ -96,6 +94,7 @@ function filter() {
 
 function hashFilter() {
   const group = location.hash.slice(1);
+  if (group === 'about' || group === 'catalog-filters') return;
   discipline.value = Object.hasOwn(labGroups, group) ? group : '';
   filter();
 }
@@ -120,4 +119,12 @@ form.addEventListener('reset', event => {
 window.addEventListener('hashchange', hashFilter);
 form.hidden = false;
 document.querySelector('.catalog-sidebar').hidden = false;
-hashFilter();
+document.getElementById('total-labs').textContent = labs.length;
+document.getElementById('total-disciplines').textContent = Object.keys(labGroups).length;
+const initialAnchor = location.hash.slice(1);
+if (initialAnchor === 'about' || initialAnchor === 'catalog-filters') {
+  filter();
+  document.getElementById(initialAnchor).scrollIntoView();
+} else {
+  hashFilter();
+}

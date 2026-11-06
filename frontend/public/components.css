@@ -97,29 +97,44 @@ svg .reaction-label { fill: var(--result); }
 .catalog-controls { display: grid; grid-template-columns: 2fr 1fr auto; align-items: end; gap: 8px; margin-bottom: 14px; }
 #catalog-status { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 12px; }
 .catalog-sidebar h2 { margin: 0 0 8px; color: var(--text-accent); font-size: 14px; }
-[data-discipline="civil"] { --discipline-ink: var(--text-civil); }
-[data-discipline="mechanical"] { --discipline-ink: var(--text-mechanical); }
-[data-discipline="electrical"] { --discipline-ink: var(--text-electrical); }
-[data-discipline="electronics"] { --discipline-ink: var(--text-electronics); }
-[data-discipline="signals"] { --discipline-ink: var(--text-signals); }
 .discipline-links { display: grid; gap: 4px; }
-.discipline-links a { display: flex; align-items: center; min-height: 44px; padding: 6px 8px; border: 1px solid transparent; border-radius: 6px; color: var(--discipline-ink, var(--text)); font-size: 13px; }
+.discipline-links a { display: flex; align-items: center; min-height: 44px; padding: 6px 8px; border: 1px solid transparent; border-radius: 6px; color: var(--muted); font-size: 13px; }
 .discipline-links a:hover { background: var(--surface-2); }
-.discipline-links a[aria-current] { border-color: var(--curve); background: var(--selection); font-weight: 650; }
+.discipline-links a[aria-current] { border-color: var(--curve); background: var(--selection); color: var(--curve); font-weight: 650; }
 .catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .sim-link { display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-1); box-shadow: var(--shadow); transition: transform 160ms, border-color 160ms; }
 .sim-link:hover { border-color: var(--curve); transform: translateY(-3px); }
-.sim-link > strong { color: var(--discipline-ink, var(--text)); font-size: 20px; font-weight: 680; line-height: 1.2; }
+.sim-link > strong { color: var(--text); font-size: 20px; font-weight: 680; line-height: 1.2; }
+.sim-link:hover > strong, .sim-link:focus-visible > strong { color: var(--curve); }
 .sim-link > p { color: var(--muted); margin: 0; }
 .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-.card-tags .discipline-tag { color: var(--discipline-ink, var(--text)); background: color-mix(in srgb, currentColor 9%, var(--surface-1)); }
+.card-tags .discipline-tag { color: var(--text-accent); background: color-mix(in srgb, currentColor 9%, var(--surface-1)); }
 .thumb { width: 100%; aspect-ratio: 3 / 1; border-radius: 6px; background: var(--plot-bg); border: 1px solid var(--grid); }
 .open-lab { display: flex; align-items: center; justify-content: space-between; padding-top: 6px; color: var(--curve); font-weight: 650; }
 .open-lab svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
 .coming-soon { margin: 15px 0 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: 7px; color: var(--muted); }
+.intro-link { margin-top: 14px; color: var(--curve); }
+.catalog-overview { padding: 13px 15px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); }
+.catalog-overview > p { margin: 0; color: var(--text-accent); font-size: 12px; }
+.catalog-overview dl { display: grid; grid-template-columns: 1fr 1fr; margin: 10px 0; }
+.catalog-overview dl > div { display: flex; flex-direction: column-reverse; }
+.catalog-overview dl > div + div { padding-left: 14px; border-left: 1px solid var(--border); }
+.catalog-overview dt { color: var(--muted); font-size: 12px; }
+.catalog-overview dd { margin: 0; color: var(--curve); font-size: 25px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.catalog-overview > a, .about-links a { color: var(--curve); font-size: 13px; font-weight: 650; }
+.catalog-overview > a:hover, .about-links a:hover { text-decoration: underline; }
+.catalog-about { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; margin-top: 16px; padding: 22px; scroll-margin-top: 16px; }
+.catalog-about h2, .catalog-about h3 { margin: 0 0 8px; }
+.catalog-about h3 { color: var(--text-accent); }
+.catalog-about p:not(.breadcrumb), .catalog-about li { color: var(--muted); margin: 0 0 9px; }
+.catalog-about ol { padding-left: 19px; margin: 0; }
+.catalog-about li::marker { color: var(--curve); font-weight: 700; }
+.catalog-about li strong { color: var(--text); }
+.about-links { display: flex; flex-wrap: wrap; gap: 8px 16px; }
 @media (max-width: 900px) { .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 740px) {
   .discipline-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .catalog-about { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 16px; }
 }
 @media screen and (min-width: 1080px) {
   .beam-output .results { display: grid; grid-template-columns: 144px minmax(0, 1fr); align-items: start; gap: 8px; }

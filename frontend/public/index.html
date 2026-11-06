@@ -21,11 +21,20 @@
       </nav>
     </aside>
     <main class="catalog-main" id="main" tabindex="-1">
-      <header class="intro">
+      <header class="intro catalog-intro">
         <div>
           <p class="breadcrumb mono">NEXORA / ENGINEERING LAB</p>
           <h1>Experiment catalog<span>.</span></h1>
-          <p class="intro-copy">Choose a discipline, set up an experiment, and see how the model responds.</p>
+          <p class="intro-copy">Explore engineering by changing the inputs and seeing what happens. Start with a beam under load, a circuit in resonance, or two signals that produce a beat.</p>
+          <a class="quiet intro-link" href="#catalog-filters">Browse experiments</a>
+        </div>
+        <div class="catalog-overview">
+          <p class="mono">IN THE LAB</p>
+          <dl>
+            <div><dt>Experiments</dt><dd id="total-labs">—</dd></div>
+            <div><dt>Disciplines</dt><dd id="total-disciplines">—</dd></div>
+          </dl>
+          <a href="#about">How Nexora works <span aria-hidden="true">→</span></a>
         </div>
       </header>
       <form class="panel catalog-controls" id="catalog-filters" role="search" hidden>
@@ -43,6 +52,26 @@
       </form>
       <div class="catalog-grid" id="catalog-grid"></div>
       <p class="coming-soon"><strong>Coming soon</strong> · Trusses, gears, and digital logic.</p>
+      <section class="panel catalog-about" id="about" aria-labelledby="about-title">
+        <div>
+          <p class="breadcrumb mono">ABOUT THE PROJECT</p>
+          <h2 id="about-title">About Nexora</h2>
+          <p>Nexora is a browser-based engineering lab for learning how models behave. Each experiment pairs live controls with plots, equations, and a worked example so you can connect what you see to what you calculate.</p>
+          <p>The models use simplified assumptions that are explained in each lab. Reference cases help you check the results by hand.</p>
+          <div class="about-links">
+            <a href="https://github.com/souma888/Nexora/blob/main/docs/VALIDATION.md">Model validation</a>
+            <a href="https://github.com/souma888/Nexora">View the source</a>
+          </div>
+        </div>
+        <div>
+          <h3>How to use a lab</h3>
+          <ol>
+            <li><strong>Pick a model.</strong> Use the sidebar or search to find an experiment.</li>
+            <li><strong>Make a prediction.</strong> Decide what should happen before moving a slider.</li>
+            <li><strong>Compare the result.</strong> Read the plot, then check the worked example and model notes.</li>
+          </ol>
+        </div>
+      </section>
       <footer><span class="mono">NEXORA / EXPERIMENT CATALOG</span><span>For education and exploration</span></footer>
     </main>
   </div>
