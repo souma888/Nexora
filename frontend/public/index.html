@@ -3,32 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#171517">
+  <meta name="theme-color" content="#0f1013">
   <meta name="description" content="Choose an engineering discipline and run an interactive simulation in the Nexora Engineering Lab.">
   <title>Experiment Catalog · Nexora Engineering Lab</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/shell.ts"></script>
   <script type="module" src="/catalog.js"></script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to catalog</a>
-  <header class="topbar">
-    <a class="brand" href="/" aria-label="Nexora catalog"><img src="/mark.svg" alt="" width="36" height="36"><strong>NEXORA</strong></a>
-    <span class="top-label mono">ENGINEERING LAB</span>
-    <a class="source" href="https://github.com/souma888/Nexora">Source <span aria-hidden="true">↗</span></a>
-  </header>
-  <div class="shell">
-    <aside class="rail">
-      <nav aria-label="Engineering disciplines">
-        <p class="eyebrow">DISCIPLINES</p>
-        <a class="nav-link" href="#civil"><span aria-hidden="true">01</span> Civil</a>
-        <a class="nav-link" href="#mechanical"><span aria-hidden="true">02</span> Mechanical</a>
-        <a class="nav-link" href="#electrical"><span aria-hidden="true">03</span> Electrical</a>
-        <a class="nav-link" href="#electronics"><span aria-hidden="true">04</span> Electronics</a>
-        <a class="nav-link" href="#signals"><span aria-hidden="true">05</span> Signals &amp; systems</a>
-      </nav>
-    </aside>
-    <main id="main" tabindex="-1">
+  <!-- site-header -->
+  <main class="catalog-main" id="main" tabindex="-1">
       <header class="intro">
         <div>
           <p class="breadcrumb mono">NEXORA / ENGINEERING LAB</p>
@@ -49,45 +34,9 @@
         <button class="quiet" type="reset">Clear filters</button>
         <p id="catalog-status" role="status"></p>
       </form>
-      <div class="catalog">
-        <section class="panel discipline" id="civil" aria-labelledby="civil-title">
-          <header><span class="index">01</span><div><h2 id="civil-title">Civil engineering</h2><p>Structural behavior under applied loads.</p></div></header>
-          <div class="sim-grid">
-            <a class="sim-link" href="/beam.html"><span class="mono">LAB 01</span><strong>Beam Analysis</strong><p>Explore reactions, shear, bending moment, deflection, and slope.</p><span class="open-lab">Open lab →</span></a>
-            <a class="sim-link" href="/axial.html"><span class="mono">LAB 02</span><strong>Axial Stress &amp; Strain</strong><p>Calculate how a bar elongates in tension or shortens in compression.</p><span class="open-lab">Open lab →</span></a>
-          </div>
-        </section>
-        <section class="panel discipline" id="mechanical" aria-labelledby="mechanical-title">
-          <header><span class="index">02</span><div><h2 id="mechanical-title">Mechanical engineering</h2><p>Material response and stress transformation.</p></div></header>
-          <div class="sim-grid">
-            <a class="sim-link" href="/axial.html"><span class="mono">LAB 02</span><strong>Axial Stress &amp; Strain</strong><p>Compare how material stiffness affects deformation.</p><span class="open-lab">Open lab →</span></a>
-            <a class="sim-link" href="/mohr.html"><span class="mono">LAB 03</span><strong>Mohr’s Circle</strong><p>Rotate a stress element and locate principal and maximum shear stresses.</p><span class="open-lab">Open lab →</span></a>
-          </div>
-        </section>
-        <section class="panel discipline" id="electrical" aria-labelledby="electrical-title">
-          <header><span class="index">03</span><div><h2 id="electrical-title">Electrical engineering</h2><p>DC circuits and first-order transients.</p></div></header>
-          <div class="sim-grid">
-            <a class="sim-link" href="/simulation.html?lab=divider"><span class="mono">LAB 04</span><strong>Loaded Voltage Divider</strong><p>Compare loaded and unloaded output as you vary resistance.</p><span class="open-lab">Open lab →</span></a>
-            <a class="sim-link" href="/simulation.html?lab=rc"><span class="mono">LAB 05</span><strong>RC Charging</strong><p>Watch capacitor voltage rise after a step and measure the time constant.</p><span class="open-lab">Open lab →</span></a>
-          </div>
-        </section>
-        <section class="panel discipline" id="electronics" aria-labelledby="electronics-title">
-          <header><span class="index">04</span><div><h2 id="electronics-title">Electronics</h2><p>Diode conduction and amplifier feedback.</p></div></header>
-          <div class="sim-grid">
-            <a class="sim-link" href="/simulation.html?lab=rectifier"><span class="mono">LAB 06</span><strong>Diode Half-Wave Rectifier</strong><p>Compare the input sine with the portion passed by a diode.</p><span class="open-lab">Open lab →</span></a>
-            <a class="sim-link" href="/simulation.html?lab=opamp"><span class="mono">LAB 07</span><strong>Inverting Op-Amp</strong><p>Set the gain and see where the output clips.</p><span class="open-lab">Open lab →</span></a>
-          </div>
-        </section>
-        <section class="panel discipline" id="signals" aria-labelledby="signals-title">
-          <header><span class="index">05</span><div><h2 id="signals-title">Signals &amp; systems</h2><p>Sampling and discrete-time filtering.</p></div></header>
-          <div class="sim-grid">
-            <a class="sim-link" href="/simulation.html?lab=sampling"><span class="mono">LAB 08</span><strong>Sampling &amp; Aliasing</strong><p>Change the sample rate and compare the tone with its folded frequency.</p><span class="open-lab">Open lab →</span></a>
-            <a class="sim-link" href="/simulation.html?lab=average"><span class="mono">LAB 09</span><strong>Moving Average Filter</strong><p>Explore smoothing and delay as the averaging window grows.</p><span class="open-lab">Open lab →</span></a>
-          </div>
-        </section>
-      </div>
+      <div class="catalog-grid" id="catalog-grid"></div>
+      <p class="coming-soon"><strong>Coming soon</strong> · Trusses, RLC transients, and digital logic.</p>
       <footer><span class="mono">NEXORA / EXPERIMENT CATALOG</span><span>For education and exploration</span></footer>
-    </main>
-  </div>
+  </main>
 </body>
 </html>

@@ -3,19 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#171517">
+  <meta name="theme-color" content="#0f1013">
   <title>Axial Stress &amp; Strain · Nexora Engineering Lab</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/shell.ts"></script>
   <script type="module" src="/materials.js"></script>
 </head>
-<body data-model="axial">
-  <a class="skip" href="#main">Skip to workspace</a>
-  <header class="topbar">
-    <a class="brand" href="/" aria-label="Nexora catalog"><img src="/mark.svg" alt="" width="36" height="36"><strong>NEXORA</strong></a>
-    <span class="top-label mono">ENGINEERING LAB</span>
-    <a class="source" href="/">All labs <span aria-hidden="true">↗</span></a>
-  </header>
+<body class="lab-page" data-model="axial">
+  <!-- site-header -->
   <main class="standalone" id="main" tabindex="-1">
     <header class="intro"><div>
       <p class="breadcrumb mono"><a href="/">CATALOG</a> <span>/</span> <a href="/#mechanical">MECHANICAL</a> <span>/</span> LAB 02</p>
@@ -26,6 +22,10 @@
       <section class="panel setup" aria-labelledby="setup-title">
         <div class="panel-head"><div class="heading"><span class="index">01</span><h2 id="setup-title">Experiment setup</h2></div><button class="quiet" id="reset" type="button">Reset</button></div>
         <form id="material-form">
+          <div class="unit-controls">
+            <label>Length units <select id="axial-length-units"><option value="m">m</option><option value="ft">ft</option></select></label>
+            <label>Force units <select id="axial-force-units"><option value="kN">kN</option><option value="lbf">lbf</option></select></label>
+          </div>
           <label for="material">Material preset</label>
           <select class="material-select" id="material">
             <option value="200">Steel · 200 GPa</option>
@@ -41,7 +41,6 @@
           </div>
           <p class="field-hint">Use positive force for tension or negative force for compression.</p>
           <p class="prediction"><strong>Predict first.</strong> Switch from steel to aluminum at the same force and geometry. Which outputs will change?</p>
-          <button class="run" type="submit"><span aria-hidden="true">▷</span> Run analysis <span class="run-arrow" aria-hidden="true">→</span></button>
           <p id="status" role="status">Preparing the default example…</p>
         </form>
       </section>
@@ -53,7 +52,6 @@
     </div>
     <section class="results" aria-labelledby="results-title">
       <div class="section-head heading"><span class="index">03</span><h2 id="results-title">Analysis results</h2></div>
-      <p class="results-state mono" id="results-state" hidden>Showing the last run. Run analysis to apply your edits.</p>
       <dl class="metrics material-metrics">
         <div><dt>Normal stress</dt><dd id="stress">—</dd></div>
         <div><dt>Axial strain</dt><dd id="strain">—</dd></div>

@@ -1,18 +1,21 @@
 # Development
 
-Use Node.js 24. The app has no runtime dependencies or required environment variables.
+Use Node.js 24. No environment variables are required.
 
 ```sh
+npm ci
 npm run dev
 npm test
 ```
 
-Open <http://127.0.0.1:3000>. The local server serves `frontend/public` and invokes the same API handlers used by Vercel.
+Open <http://127.0.0.1:3000>. The local server uses Vite for the frontend and invokes the same API handlers used by Vercel. Lab inputs update the shared solvers in the browser.
 
 ## Release checks
 
 ```sh
 npm ci
+npm run typecheck
+npm run build
 npx playwright install --only-shell chromium
 npm run test:e2e
 ```
@@ -22,7 +25,7 @@ GitHub Actions runs solver benchmarks and browser tests for both desktop Chromiu
 ## Deploy to Vercel
 
 1. Commit and push your changes to GitHub.
-2. In Vercel, import the repository with its root directory set to the repository root and the **Other** framework preset. Leave build and output overrides at their defaults so `vercel.json` can set the static output directory.
+2. In Vercel, import the repository with its root directory set to the repository root and the **Other** framework preset. The root `vercel.json` runs `npm run build` and serves `dist`.
 3. Deploy. Open the catalog, choose **Civil Engineering → Beam Analysis**, and run the default example. It should report 12 kN at each support, 36 kN·m peak moment, and −6.75 mm peak deflection.
 
 Vercel serves the static frontend and runs the handlers in `api/` as Node.js Functions in the same deployment. No database setup is required.

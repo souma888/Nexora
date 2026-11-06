@@ -1,26 +1,13 @@
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
 import { Readable } from 'node:stream';
+import { createServer as createViteServer } from 'vite';
 import * as beam from '../api/beam.js';
 import * as materials from '../api/materials.js';
 import * as waves from '../api/waves.js';
 
-const assets = {
-  '/': ['index.html', 'text/html'],
-  '/beam.html': ['beam.html', 'text/html'],
-  '/axial.html': ['axial.html', 'text/html'],
-  '/mohr.html': ['mohr.html', 'text/html'],
-  '/simulation.html': ['simulation.html', 'text/html'],
-  '/simulation.js': ['simulation.js', 'text/javascript'],
-  '/styles.css': ['styles.css', 'text/css'],
-  '/lab.js': ['lab.js', 'text/javascript'],
-  '/materials.js': ['materials.js', 'text/javascript'],
-  '/catalog.js': ['catalog.js', 'text/javascript'],
-  '/workbench.js': ['workbench.js', 'text/javascript'],
-  '/mark.svg': ['mark.svg', 'image/svg+xml'],
-};
 const routes = { '/api/beam': beam, '/api/materials': materials, '/api/waves': waves };
 
+const vite = await createViteServer({ server: { middlewareMode: true, ws: false } });
 const port = Number(process.env.PORT || 3000);
 createServer(async (req, res) => {
   try {
@@ -38,14 +25,7 @@ createServer(async (req, res) => {
       res.end(await response.text());
       return;
     }
-    const asset = Object.hasOwn(assets, url.pathname) && assets[url.pathname];
-    if (!asset) {
-      res.writeHead(404).end('Page not found');
-      return;
-    }
-    const [file, type] = asset;
-    const body = await readFile(new URL(`../frontend/public/${file}`, import.meta.url));
-    res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8` }).end(body);
+    vite.middlewares(req, res, () => res.writeHead(404).end('Page not found'));
   } catch (error) {
     console.error(error);
     res.writeHead(500).end('Internal server error');

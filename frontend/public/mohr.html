@@ -3,19 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#171517">
+  <meta name="theme-color" content="#0f1013">
   <title>Mohr’s Circle · Nexora Engineering Lab</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/shell.ts"></script>
   <script type="module" src="/materials.js"></script>
 </head>
-<body data-model="mohr">
-  <a class="skip" href="#main">Skip to workspace</a>
-  <header class="topbar">
-    <a class="brand" href="/" aria-label="Nexora catalog"><img src="/mark.svg" alt="" width="36" height="36"><strong>NEXORA</strong></a>
-    <span class="top-label mono">ENGINEERING LAB</span>
-    <a class="source" href="/">All labs <span aria-hidden="true">↗</span></a>
-  </header>
+<body class="lab-page" data-model="mohr">
+  <!-- site-header -->
   <main class="standalone" id="main" tabindex="-1">
     <header class="intro"><div>
       <p class="breadcrumb mono"><a href="/">CATALOG</a> <span>/</span> <a href="/#mechanical">MECHANICAL</a> <span>/</span> LAB 03</p>
@@ -32,7 +28,6 @@
             <div><label for="tauXY">Shear stress <i>τxy</i></label><div class="field"><input id="tauXY" name="tauXY" type="number" min="-5000" max="5000" step="any" value="40" required><span>MPa</span></div></div>
           </div>
           <p class="prediction"><strong>Predict first.</strong> If you reverse the sign of the shear stress, what happens to the principal stresses and their orientation?</p>
-          <button class="run" type="submit"><span aria-hidden="true">▷</span> Run analysis <span class="run-arrow" aria-hidden="true">→</span></button>
           <p id="status" role="status">Preparing the default example…</p>
         </form>
         <div class="angle-control">
@@ -49,7 +44,6 @@
     </div>
     <section class="results" aria-labelledby="results-title">
       <div class="section-head heading"><span class="index">03</span><h2 id="results-title">Principal values</h2></div>
-      <p class="results-state mono" id="results-state" hidden>Showing the last run. Run analysis to apply your edits.</p>
       <dl class="metrics">
         <div><dt>Major principal stress</dt><dd id="principalMax">—</dd></div>
         <div><dt>Minor principal stress</dt><dd id="principalMin">—</dd></div>

@@ -12,12 +12,20 @@ A beautiful plot is not evidence of a correct engineering solution. Every simula
 6. Benchmark inputs, expected outputs and tolerances.
 7. Numerical stability, edge cases and known limitations.
 
-## Suggested MVP benchmark cases
+## Automated reference cases
 - Simply supported beam with central point load: reactions, peak moment, peak deflection.
 - Simply supported beam under uniform distributed load.
 - Cantilever beam with end point load: free-end slope and deflection.
 - Axial bar under uniform tensile load: elongation = PL/(AE).
 - Plane stress: principal stresses, principal angle and Mohr's circle radius.
+- Loaded voltage divider: 6 V unloaded and 4 V loaded for the default resistor network.
+- RC charging: zero initial voltage and about 63.2% of the supply after one time constant.
+- Half-wave rectifier: the output stays at zero when the input peak is below the forward drop.
+- Inverting amplifier: linear response inside its limits and clipping in either direction.
+- Sampling: 8 Hz and 4 Hz cosines agree at each sample instant when sampled at 12 Hz.
+- Moving average: a four-sample window ramps to a unit step in increments of 0.25.
+
+The lab badge refers to these analytical checks. The browser and the API use the same solvers. Run `npm test` to reproduce the reference cases.
 
 ## Testing layers
 - **Unit:** pure solver functions, units, input validation.

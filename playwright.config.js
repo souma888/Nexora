@@ -6,6 +6,7 @@ const channel = process.env.NEXORA_BROWSER_CHANNEL;
 
 export default defineConfig({
   testDir: './e2e',
+  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}{ext}',
   workers: 1,
   use: { baseURL, channel },
   webServer: deployed ? undefined : {

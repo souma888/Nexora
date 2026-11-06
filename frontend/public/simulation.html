@@ -3,19 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#171517">
+  <meta name="theme-color" content="#0f1013">
   <title>Simulation · Nexora Engineering Lab</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/shell.ts"></script>
   <script type="module" src="/simulation.js"></script>
 </head>
-<body>
-  <a class="skip" href="#main">Skip to workspace</a>
-  <header class="topbar">
-    <a class="brand" href="/" aria-label="Nexora catalog"><img src="/mark.svg" alt="" width="36" height="36"><strong>NEXORA</strong></a>
-    <span class="top-label mono">ENGINEERING LAB</span>
-    <a class="source" href="/">All labs <span aria-hidden="true">↗</span></a>
-  </header>
+<body class="lab-page">
+  <!-- site-header -->
   <main class="standalone" id="main" tabindex="-1">
     <header class="intro"><div>
       <p class="breadcrumb mono"><a href="/">CATALOG</a> <span>/</span> <a id="discipline" href="/">LAB</a> <span id="lab-number"></span></p>
@@ -30,7 +26,6 @@
           <form id="simulation-form">
             <div class="field-grid material-fields" id="parameters"></div>
             <p class="prediction"><strong>Predict first.</strong> <span id="prediction"></span></p>
-            <button class="run" type="submit"><span aria-hidden="true">▷</span> Run analysis <span class="run-arrow" aria-hidden="true">→</span></button>
             <p id="status" role="status"></p>
           </form>
         </section>
@@ -43,7 +38,6 @@
       </div>
       <section class="results" aria-labelledby="results-title">
         <div class="section-head heading"><span class="index">03</span><h2 id="results-title">Analysis results</h2></div>
-        <p class="results-state mono" id="results-state" hidden>Showing the last run. Run analysis to apply your edits.</p>
         <dl class="metrics material-metrics" id="metrics"></dl>
       </section>
       <details class="panel notes">

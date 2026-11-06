@@ -1,7 +1,8 @@
-import { setMetric, setupWorkbench } from './workbench.js';
+import { readFields, setMetric, setupWorkbench } from './workbench.ts';
+import { models } from '../../backend/waves.js';
+import { validate } from '../../backend/contract.js';
 
 const byId = id => document.getElementById(id);
-const endpoint = '/api/waves';
 const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 4 });
 const format = value => value !== 0 && (Math.abs(value) < 0.001 || Math.abs(value) >= 100000)
   ? value.toExponential(2) : formatter.format(value || 0);
@@ -37,15 +38,15 @@ function drawPlot(definition, { series, units }) {
     const xValue = lowX + (highX - lowX) * index / 4;
     const yValue = lowY + yRange * index / 4;
     const x = xAt(xValue), y = yAt(yValue);
-    return `<path d="M${left} ${y}H${right} M${x} ${top}V${bottom}" stroke="#395143"/>
+    return `<path d="M${left} ${y}H${right} M${x} ${top}V${bottom}" stroke="var(--grid)"/>
       ${tick(left - 8, y + 4, yValue, 'end')}${tick(x, 247, xValue, 'middle')}`;
   }).join('');
   const reference = traces.includes('reference')
-    ? `<polyline points="${points('reference')}" fill="none" stroke="var(--red)" stroke-dasharray="5 4" stroke-width="2"/>` : '';
+    ? `<polyline points="${points('reference')}" fill="none" stroke="var(--muted)" stroke-dasharray="5 4" stroke-width="2"/>` : '';
   const markers = series.filter(point => Number.isFinite(point.sample)).map(point =>
-    `<circle cx="${xAt(point.x)}" cy="${yAt(point.sample)}" r="3.6" fill="#fff0c2" stroke="#18221c"/>`).join('');
-  plot.innerHTML = `${grid}<path d="M${left} ${yAt(0)}H${right}" stroke="#8aa895"/>
-    <polyline points="${points('y')}" fill="none" stroke="var(--green)" stroke-width="2.4" stroke-linejoin="round"/>
+    `<circle cx="${xAt(point.x)}" cy="${yAt(point.sample)}" r="3.6" fill="var(--result)" stroke="var(--plot-bg)"/>`).join('');
+  plot.innerHTML = `${grid}<path d="M${left} ${yAt(0)}H${right}" stroke="var(--muted)"/>
+    <polyline points="${points('y')}" fill="none" stroke="var(--curve)" stroke-width="2.4" stroke-linejoin="round"/>
     ${reference}${markers}`;
   const axis = (label, unit) => unit ? `${label} (${unit})` : label;
   byId('axis-labels').textContent = `${axis(definition.plot.x, units.series.x)} → ${axis(definition.plot.y, units.series.y)}`;
@@ -99,10 +100,7 @@ function initialize(definition) {
   const form = byId('simulation-form');
   let result;
   const { analyze } = setupWorkbench({
-    form, endpoint,
-    payload() {
-      return { model: id, input: Object.fromEntries([...new FormData(form)].map(([key, value]) => [key, Number(value)])) };
-    },
+    form, model: models[id], validate, payload: () => readFields(form),
     render(data) {
       result = data;
       for (const [key, value] of Object.entries(data.summary)) {
@@ -118,14 +116,6 @@ function initialize(definition) {
   analyze();
 }
 
-try {
-  const model = new URLSearchParams(location.search).get('lab');
-  const response = await fetch(endpoint);
-  if (!response.ok) throw new Error('Could not load experiments. Refresh the page to try again.');
-  const { models } = await response.json();
-  const definition = models.find(item => item.id === model);
-  if (!definition) throw new Error('Choose a simulation from the experiment catalog.');
-  initialize(definition);
-} catch (error) {
-  byId('loading').textContent = error instanceof TypeError ? 'Could not load experiments. Refresh the page to try again.' : error.message;
-}
+const model = new URLSearchParams(location.search).get('lab');
+if (Object.hasOwn(models, model)) initialize(models[model].definition);
+else byId('loading').textContent = 'Choose a simulation from the experiment catalog.';

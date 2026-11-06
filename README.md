@@ -77,9 +77,9 @@ Nexora/
 
 ## Getting started
 
-With Node.js 24, run `npm run dev` and open <http://127.0.0.1:3000>. Run `npm test` for solver benchmarks and API validation checks.
+With Node.js 24, run `npm ci`, then `npm run dev` and open <http://127.0.0.1:3000>. Run `npm test` for solver benchmarks and API validation checks.
 
-The app uses a dependency-free browser frontend and a stateless Node.js API. Open the catalog, then choose a lab under Civil or Mechanical Engineering. The beam lab supports center point loads, uniform loads, and cantilever tip loads with reactions, shear, bending moment, deflection, and slope. See [development and Vercel deployment](docs/DEVELOPMENT.md) for setup and the API contracts.
+The browser runs the same solvers as the stateless Node.js API. Vite builds the frontend, with TypeScript for the shared workbench and chart interactions. See [development and Vercel deployment](docs/DEVELOPMENT.md) for setup and the API contracts.
 
 ## Project principles
 
