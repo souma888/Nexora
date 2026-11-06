@@ -3,12 +3,15 @@ import { readFile } from 'node:fs/promises';
 import { Readable } from 'node:stream';
 import * as beam from '../api/beam.js';
 import * as materials from '../api/materials.js';
+import * as waves from '../api/waves.js';
 
 const assets = {
   '/': ['index.html', 'text/html'],
   '/beam.html': ['beam.html', 'text/html'],
   '/axial.html': ['axial.html', 'text/html'],
   '/mohr.html': ['mohr.html', 'text/html'],
+  '/simulation.html': ['simulation.html', 'text/html'],
+  '/simulation.js': ['simulation.js', 'text/javascript'],
   '/styles.css': ['styles.css', 'text/css'],
   '/lab.js': ['lab.js', 'text/javascript'],
   '/materials.js': ['materials.js', 'text/javascript'],
@@ -16,7 +19,7 @@ const assets = {
   '/workbench.js': ['workbench.js', 'text/javascript'],
   '/mark.svg': ['mark.svg', 'image/svg+xml'],
 };
-const routes = { '/api/beam': beam, '/api/materials': materials };
+const routes = { '/api/beam': beam, '/api/materials': materials, '/api/waves': waves };
 
 const port = Number(process.env.PORT || 3000);
 createServer(async (req, res) => {

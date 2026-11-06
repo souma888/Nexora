@@ -129,7 +129,7 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7p
 .discipline > header { display: flex; align-items: flex-start; gap: 10px; }
 .discipline h2 { margin: 0; font-size: clamp(17px, 2vw, 22px); }
 .discipline p, .sim-link p { color: var(--muted); margin: 4px 0 0; font-size: 13px; line-height: 1.55; }
-.sim-grid, .planned-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.sim-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .sim-grid { margin-top: 14px; }
 .sim-link { display: grid; align-content: start; gap: 7px; min-height: 145px; padding: 15px; border: 1px solid #5b4955; border-radius: 7px; background: #2b232a; }
 .sim-link:hover { border-color: var(--red); background: var(--red-surface); }
@@ -137,7 +137,6 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7p
 .sim-link strong { font-size: 17px; }
 .sim-link p { margin: 0; }
 .open-lab { margin-top: 3px; font-weight: 600; }
-.planned-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .standalone { max-width: 1200px; }
 .material-select { width: 100%; min-height: 44px; color: var(--text); background: #181519; border: 1px solid #584852; border-radius: 5px; padding: 5px 8px; }
 .material-fields { margin-top: 0; }
@@ -154,6 +153,9 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7p
 .catalog-controls .quiet { min-height: 44px; }
 #catalog-status { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 13px; }
 .prediction { padding: 9px 10px; border-left: 2px solid var(--red-border); background: var(--red-surface); color: #f4dce5; font-size: 12px; line-height: 1.5; }
+.legend .reference-trace { height: 0; border-top: 2px dashed var(--red); }
+.legend .sample-trace { width: 7px; height: 7px; border-radius: 50%; background: #fff0c2; }
+.wave-axes { margin: 0; padding: 0 17px 12px; color: var(--muted); font-size: 11px; }
 @media (max-width: 1020px) {
   .shell { grid-template-columns: 166px minmax(0, 1fr); }
 }
@@ -166,7 +168,6 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7p
 }
 @media (max-width: 680px) {
   .workbench { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .planned-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 620px) {
   .topbar { padding-inline: 16px; gap: 12px; height: 56px; }

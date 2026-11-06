@@ -7,7 +7,6 @@ const sections = Array.from(document.querySelectorAll('.discipline'), section =>
   title: section.querySelector('h2').textContent.toLowerCase(),
   links: [...section.querySelectorAll('.sim-link')],
 }));
-const planned = document.querySelector('.planned-grid');
 
 function filter() {
   const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
@@ -18,12 +17,11 @@ function filter() {
     for (const link of links) {
       const text = `${title} ${link.textContent}`.toLowerCase();
       link.hidden = !selected || !words.every(word => text.includes(word));
-      if (!link.hidden) labs.add(link.pathname);
+      if (!link.hidden) labs.add(link.pathname + link.search);
     }
     section.hidden = !selected || (links.length ? links.every(link => link.hidden) : words.length > 0);
     hasSection ||= !section.hidden;
   }
-  planned.hidden = [...planned.children].every(section => section.hidden);
   status.textContent = labs.size ? `${labs.size} ${labs.size === 1 ? 'experiment' : 'experiments'} available`
     : hasSection ? 'No experiments available in this discipline yet.' : 'No matching experiments. Try a different search or discipline.';
 }

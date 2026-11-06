@@ -25,7 +25,7 @@ GitHub Actions runs solver benchmarks and browser tests for both desktop Chromiu
 2. In Vercel, import the repository with its root directory set to the repository root and the **Other** framework preset. Leave build and output overrides at their defaults so `vercel.json` can set the static output directory.
 3. Deploy. Open the catalog, choose **Civil Engineering → Beam Analysis**, and run the default example. It should report 12 kN at each support, 36 kN·m peak moment, and −6.75 mm peak deflection.
 
-Vercel serves the static frontend and runs `api/beam.js` and `api/materials.js` as Node.js Functions in the same deployment. No database setup is required.
+Vercel serves the static frontend and runs the handlers in `api/` as Node.js Functions in the same deployment. No database setup is required.
 
 ## Shared API contract
 
@@ -47,3 +47,7 @@ Send `POST /api/materials` with a `model` and an `input` object:
 
 - `axial` takes `force` (kN), `length` (m), `area` (mm²), and `modulus` (GPa). The summary gives normal stress (MPa), strain (dimensionless), and displacement (mm).
 - `mohr` takes `sigmaX`, `sigmaY`, and `tauXY` in MPa. The summary gives center, radius, principal stresses (MPa), and the major principal angle (degrees counterclockwise from x). Equal biaxial stress returns a null angle.
+
+## Circuits and signals API
+
+Send `POST /api/waves` with a `model` and an `input` object. Model IDs are `divider`, `rc`, `rectifier`, `opamp`, `sampling`, and `average`. Use `GET /api/waves` for each model’s inputs, defaults, limits, and output units. The returned plot rows contain `x` and `y`, with a `reference` trace or sparse `sample` markers where relevant.

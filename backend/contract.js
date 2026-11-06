@@ -8,6 +8,8 @@ export function validate(definition, input) {
       if (!field.options.includes(value)) return { key, message: `Choose a supported ${field.label.toLowerCase()}.` };
     } else if (!Number.isFinite(value) || value < field.min || value > field.max) {
       return { key, message: `${field.label} must be between ${field.min} and ${field.max}.` };
+    } else if (field.integer && !Number.isInteger(value)) {
+      return { key, message: `${field.label} must be a whole number.` };
     }
     values[key] = value;
   }

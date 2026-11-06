@@ -64,3 +64,32 @@ test('axial preset and Mohr rotation use the solver results', async ({ page }) =
   await expect(page.locator('#rotated-stress')).toContainText('τx′y′ 0 MPa');
   await expectNoHorizontalOverflow(page);
 });
+
+test('electrical, electronics, and signals labs open from the catalog and run', async ({ page }) => {
+  const labs = [
+    ['electrical', 'Loaded Voltage Divider', 'loaded', '4 V'],
+    ['electrical', 'RC Charging', 'tau', '1,000 ms'],
+    ['electronics', 'Diode Half-Wave Rectifier', 'peak', '4.3 V'],
+    ['electronics', 'Inverting Op-Amp', 'output', '-5 V'],
+    ['signals', 'Sampling & Aliasing', 'alias', '4 Hz'],
+    ['signals', 'Moving Average Filter', 'delay', '1.5 samples'],
+  ];
+  for (const [discipline, name, metric, expected] of labs) {
+    await page.goto('/');
+    await page.getByLabel('Discipline', { exact: true }).selectOption(discipline);
+    await expect(page.getByRole('status')).toHaveText('2 experiments available');
+    await page.getByRole('link', { name: new RegExp(name) }).click();
+    await expect(page.locator(`#metric-${metric}`)).toHaveText(expected);
+    await expect(page.locator('#wave-plot')).toBeVisible();
+    await expect(page.locator('#wave-plot polyline').last()).toHaveAttribute('points', /\d,\d/);
+    await expectNoHorizontalOverflow(page);
+    if (metric === 'alias') {
+      await page.getByLabel('Sample rate').fill('20');
+      await expect(page.locator('#results-state')).toBeVisible();
+      await page.getByRole('button', { name: /Run analysis/ }).click();
+      await expect(page.locator('#metric-alias')).toHaveText('8 Hz');
+      await page.getByRole('button', { name: 'Reset' }).click();
+      await expect(page.locator('#metric-alias')).toHaveText('4 Hz');
+    }
+  }
+});
