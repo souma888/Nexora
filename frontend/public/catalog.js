@@ -30,6 +30,12 @@ const labs = [
   ...Object.values(models).map(({ definition, solve }) => ({
     href: `/simulation.html?lab=${definition.id}`, title: definition.title, groups: [definition.discipline],
     description: definition.description,
+    topic: {
+      buckling: 'Structural stability', hydrostatic: 'Fluid statics', torsion: 'Solid mechanics',
+      oscillator: 'Dynamics',
+    }[definition.id] ?? {
+      electrical: 'Circuit analysis', electronics: 'Analog electronics', signals: 'Signal processing',
+    }[definition.discipline],
     graphic: solve(Object.fromEntries(Object.entries(definition.inputs).map(([key, input]) => [key, input.initial]))).series,
   })),
 ];
@@ -55,7 +61,7 @@ const cards = labs.map(lab => {
   card.className = 'sim-link';
   card.href = lab.href;
   const group = lab.groups.map(key => labGroups[key]).join(' + ');
-  const topic = ['civil', 'mechanical'].includes(lab.groups[0]) ? 'Solid mechanics' : 'Circuits & signals';
+  const topic = lab.topic ?? 'Solid mechanics';
   card.innerHTML = `${thumbnail(lab)}
     <div class="card-tags"><span>${group}</span><span>${topic}</span><span>Beginner</span></div>
     <strong>${lab.title}</strong><p>${lab.description}</p>

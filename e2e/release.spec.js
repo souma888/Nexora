@@ -94,7 +94,7 @@ test('electrical, electronics, and signals labs open from the catalog and run', 
   for (const [discipline, name, metric, expected] of labs) {
     await page.goto('/');
     await page.getByLabel('Discipline', { exact: true }).selectOption(discipline);
-    await expect(page.getByRole('status')).toHaveText('2 experiments available');
+    await expect(page.getByRole('status')).toHaveText('4 experiments available');
     await page.getByRole('link', { name: new RegExp(name) }).click();
     await expect(page.locator(`#metric-${metric}`)).toHaveText(expected);
     await expect(page.locator('#wave-plot')).toBeVisible();
@@ -112,7 +112,7 @@ test('electrical, electronics, and signals labs open from the catalog and run', 
 test('catalog thumbnail, persistent theme, and print layout', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
   await page.goto('/');
-  await expect(page.getByRole('status')).toHaveText('9 experiments available');
+  await expect(page.getByRole('status')).toHaveText('19 experiments available');
   await expect(page.getByRole('link', { name: /Axial Stress/ })).toHaveCount(1);
   const thumbnail = page.getByRole('link', { name: /Beam Analysis/ }).locator('.thumb');
   await expect(thumbnail).toHaveScreenshot('beam-thumbnail.png', { maxDiffPixelRatio: 0.035 });
@@ -126,3 +126,31 @@ test('catalog thumbnail, persistent theme, and print layout', async ({ page }) =
   await expect(page.getByRole('navigation', { name: 'Lab sections' })).toBeHidden();
   await expect(page.locator('#plot')).toBeVisible();
 });
+
+const addedLabs = [
+  ['civil', 'Euler Column Buckling', 'critical', '493.4802 kN'],
+  ['civil', 'Hydrostatic Gate Loading', 'force', '58.86 kN'],
+  ['mechanical', 'Circular Shaft Torsion', 'twist', '0.5699 °'],
+  ['mechanical', 'Mass–Spring Oscillation', 'period', '0.6283 s'],
+  ['electrical', 'RL Step Response', 'tau', '10 ms'],
+  ['electrical', 'Series RLC Resonance', 'peak', '0.5 A'],
+  ['electronics', 'RC Low-Pass Filter', 'gain', '0.7071 V/V'],
+  ['electronics', 'Full-Wave Bridge Rectifier', 'ripple', '100 Hz'],
+  ['signals', 'Rectangular Pulse Convolution', 'duration', '4 s'],
+  ['signals', 'Signal Superposition & Beats', 'beat', '2 Hz'],
+];
+for (const [discipline, name, metric, expected] of addedLabs) {
+  test(`${name} opens from its discipline and renders a result`, async ({ page }) => {
+    await page.goto(`/#${discipline}`);
+    await page.getByRole('link', { name: new RegExp(name) }).click();
+    await expect(page.locator(`#metric-${metric}`)).toHaveText(expected);
+    await expect(page.locator('#wave-plot polyline').first()).toHaveAttribute('points', /\d,\d/);
+    await expectNoHorizontalOverflow(page);
+    if (metric === 'critical') {
+      await page.getByText('It drops to one quarter', { exact: true }).click();
+      await page.getByLabel('Column length', { exact: true }).fill('4');
+      await expect(page.locator('#metric-critical')).toHaveText('123.3701 kN');
+      await expect(page.locator('.prediction-feedback')).toContainText('Correct.');
+    }
+  });
+}

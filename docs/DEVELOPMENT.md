@@ -51,6 +51,6 @@ Send `POST /api/materials` with a `model` and an `input` object:
 - `axial` takes `force` (kN), `length` (m), `area` (mm²), and `modulus` (GPa). The summary gives normal stress (MPa), strain (dimensionless), and displacement (mm).
 - `mohr` takes `sigmaX`, `sigmaY`, and `tauXY` in MPa. The summary gives center, radius, principal stresses (MPa), and the major principal angle (degrees counterclockwise from x). Equal biaxial stress returns a null angle.
 
-## Circuits and signals API
+## Plotted simulations API
 
-Send `POST /api/waves` with a `model` and an `input` object. Model IDs are `divider`, `rc`, `rectifier`, `opamp`, `sampling`, and `average`. Use `GET /api/waves` for each model’s inputs, defaults, limits, and output units. The returned plot rows contain `x` and `y`, with a `reference` trace or sparse `sample` markers where relevant.
+Send `POST /api/waves` with a `model` and an `input` object. Use `GET /api/waves` for the full list of model IDs and each model’s inputs, defaults, limits, and output units. The returned plot rows contain `x` and `y`, with a `reference` trace or sparse `sample` markers where relevant.
