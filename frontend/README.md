@@ -1,5 +1,3 @@
-# Frontend (planned)
+# Frontend
 
-Proposed React + TypeScript + Vite application for Nexora's experiment catalog, interactive inputs, visualizations and guided explanations.
-
-**Not scaffolded yet.** No package.json or runnable app exists. Proposed feature-first structure: `src/features/`, `src/components/`, `src/lib/`, `src/pages/`.
+The Beam Analysis lab lives in `public/`. The browser renders the SVG schematic and plots, sends inputs to `POST /api/beam`, and exports the last run as CSV. Run `npm run dev` from the repository root.

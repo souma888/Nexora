@@ -1,29 +1,28 @@
-# Development and Setup Plan
+# Development
 
-## Current state
-Documentation-only repository initialization. There is **no executable frontend or backend yet**; do not expect `npm run dev` or `uvicorn` to work until scaffolding is added.
+Use Node.js 24. The starter has no external dependencies or required environment variables.
 
-## Proposed prerequisites
-- Node.js current LTS and npm
-- Python 3.11+ with virtual environments
-- Git
-- PostgreSQL only when persistence is introduced
+```sh
+npm run dev
+npm test
+```
 
-## Proposed local workflow (after scaffolding)
-1. Clone: `git clone https://github.com/souma888/Nexora.git`
-2. Install frontend dependencies in `frontend/`.
-3. Create a Python virtual environment for `backend/` and install declared dependencies.
-4. Copy `.env.example` to a local ignored `.env` and fill required values.
-5. Start backend and frontend separately using commands documented when they exist.
-6. Run tests and formatting before opening a PR.
+Open <http://127.0.0.1:3000>. The local server serves `frontend/public` and invokes the same beam handler used by Vercel.
 
-## Planned engineering workflow
-1. Write a benchmark and define input/output schemas.
-2. Implement a pure solver.
-3. Add API validation and error handling.
-4. Build diagrams and parameter controls.
-5. Add explanation, limitations and test coverage.
-6. Review numerical results before release.
+## Deploy to Vercel
 
-## Structure
-`frontend/`, `backend/`, and `tests/` contain placeholder documentation until code is created. The structure is intentionally not presented as a functioning application.
+1. Commit and push your changes to GitHub.
+2. In Vercel, import the repository with its root directory set to the repository root and the **Other** framework preset. Leave build and output overrides at their defaults so `vercel.json` can set the static output directory.
+3. Deploy. Open the deployment URL and run the default beam example. It should report 12 kN at each support, 36 kN·m peak moment, and −6.75 mm peak deflection.
+
+Vercel serves the static frontend and runs `api/beam.js` as a Node.js Function in the same deployment. No database setup is required.
+
+## Beam API
+
+Send `POST /api/beam` with a JSON body:
+
+```json
+{ "case": "point", "span": 6, "load": 24, "modulus": 200, "inertia": 8000 }
+```
+
+Supported cases are `point` (center point load), `uniform` (uniform load along the full span), and `cantilever` (tip point load). Inputs use m, kN (kN/m for uniform), GPa, and cm⁴. Responses contain validated inputs, the solver version, a summary, and sampled x, shear, moment and deflection values in m, kN, kN·m and mm. Malformed JSON returns 400 and invalid model inputs return 422.

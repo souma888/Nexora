@@ -1,5 +1,3 @@
-# Cross-system and reference tests (planned)
+# Reference tests
 
-This directory will hold end-to-end tests and independent engineering benchmark cases. Unit tests should live close to the corresponding frontend/backend code.
-
-No test runner or benchmark dataset has been initialized yet.
+Run `npm test` from the repository root. The beam tests exercise the API handler against closed-form values for the three supported load cases and verify that the API rejects unsupported or out-of-range inputs.
