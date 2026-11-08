@@ -1,18 +1,12 @@
 import { models } from '../../backend/waves.js';
 import { solveBeam } from '../../backend/beam.js';
+import { setActiveDiscipline } from './shell.ts';
 
 const form = document.getElementById('catalog-filters');
 const search = document.getElementById('lab-search');
 const discipline = document.getElementById('discipline-filter');
 const status = document.getElementById('catalog-status');
 const grid = document.getElementById('catalog-grid');
-const links = [...discipline.options].map(option => {
-  const link = document.createElement('a');
-  link.href = `#${option.value || 'all'}`;
-  link.textContent = option.textContent;
-  document.getElementById('discipline-links').append(link);
-  return { link, value: option.value };
-});
 const labGroups = {
   civil: 'Civil', mechanical: 'Mechanical', electrical: 'Electrical',
   electronics: 'Electronics', signals: 'Signals & systems',
@@ -78,10 +72,7 @@ const cards = labs.map(lab => {
 });
 
 function filter() {
-  for (const { link, value } of links) {
-    if (value === discipline.value) link.setAttribute('aria-current', 'location');
-    else link.removeAttribute('aria-current');
-  }
+  setActiveDiscipline(discipline.value);
   const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
   let count = 0;
   for (const { card, groups, terms } of cards) {
@@ -118,7 +109,6 @@ form.addEventListener('reset', event => {
 });
 window.addEventListener('hashchange', hashFilter);
 form.hidden = false;
-document.querySelector('.catalog-sidebar').hidden = false;
 document.getElementById('total-labs').textContent = labs.length;
 document.getElementById('total-disciplines').textContent = Object.keys(labGroups).length;
 const initialAnchor = location.hash.slice(1);

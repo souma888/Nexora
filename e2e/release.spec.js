@@ -7,6 +7,34 @@ async function expectNoHorizontalOverflow(page) {
   );
 }
 
+test('discipline navigation remains available inside every lab template', async ({ page }) => {
+  const labs = [
+    ['/beam.html', 'civil'],
+    ['/axial.html', 'mechanical'],
+    ['/mohr.html', 'mechanical'],
+    ['/simulation.html?lab=rectifier', 'electronics'],
+  ];
+  for (const [path, active] of labs) {
+    await page.goto(path);
+    const nav = page.getByRole('navigation', { name: 'Engineering disciplines' });
+    await expect(nav).toBeVisible();
+    await expect(nav.getByRole('link')).toHaveCount(6);
+    await expect(nav.locator(`[data-discipline="${active}"]`)).toHaveAttribute('aria-current', 'location');
+    const bounds = await nav.boundingBox();
+    expect(bounds.x).toBe(0);
+    if (page.viewportSize().width > 740) {
+      await page.evaluate(() => window.scrollTo(0, 400));
+      await expect.poll(async () => (await nav.boundingBox()).y).toBe(0);
+    }
+    await expectNoHorizontalOverflow(page);
+  }
+  await page.getByRole('navigation', { name: 'Engineering disciplines' })
+    .getByRole('link', { name: 'Electrical engineering', exact: true }).click();
+  await expect(page).toHaveURL(/\/#electrical$/);
+  await expect(page.getByLabel('Discipline', { exact: true })).toHaveValue('electrical');
+  await expect(page.getByRole('status')).toHaveText('4 experiments available');
+});
+
 test('catalog places the brand in the corner and links to About', async ({ page }) => {
   const width = page.viewportSize().width > 740 ? 1600 : 320;
   await page.setViewportSize({ width, height: 850 });

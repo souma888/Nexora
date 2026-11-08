@@ -1,4 +1,5 @@
 import { readFields, setMetric, setupWorkbench } from './workbench.ts';
+import { setActiveDiscipline } from './shell.ts';
 import { models } from '../../backend/waves.js';
 import { validate } from '../../backend/contract.js';
 
@@ -60,6 +61,7 @@ function initialize(definition) {
   byId('title').replaceChildren(title, element('span', '.'));
   byId('discipline').textContent = disciplines[discipline];
   byId('discipline').href = `/#${discipline}`;
+  setActiveDiscipline(discipline);
   byId('lab-number').textContent = ` / LAB ${lab}`;
   for (const key of ['description', 'example', 'equation', 'limits']) byId(key).textContent = definition[key];
   byId('prediction').textContent = definition.predict;

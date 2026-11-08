@@ -17,7 +17,16 @@ toggle?.addEventListener('click', () => {
 systemTheme.addEventListener('change', applyTheme);
 applyTheme();
 
+export function setActiveDiscipline(discipline: string) {
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('.discipline-links a')) {
+    if (link.dataset.discipline === discipline) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
+}
+
 if (document.body.classList.contains('lab-page')) {
+  const discipline = document.body.dataset.discipline;
+  if (discipline) setActiveDiscipline(discipline);
   const nav = document.createElement('nav');
   nav.className = 'lab-nav';
   nav.setAttribute('aria-label', 'Lab sections');
