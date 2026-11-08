@@ -10,7 +10,7 @@
   <script type="module" src="/shell.ts"></script>
   <script type="module" src="/materials.js"></script>
 </head>
-<body class="lab-page" data-model="axial">
+<body class="lab-page" data-model="axial" data-discipline="mechanical">
   <!-- site-header -->
   <main class="standalone" id="main" tabindex="-1">
     <header class="intro"><div>
@@ -63,5 +63,6 @@
       <div><p>A 50 kN pull on a 500 mm² steel bar gives σ = F/A = 100 MPa. With E = 200 GPa, ε = σ/E = 0.0005. Over 2 m, ΔL = εL = 1 mm of elongation.</p><p>Tension gives positive stress, strain and length change. A lower modulus increases strain and elongation while stress stays fixed. This model assumes centered loading, a uniform cross section and linear elasticity. It excludes buckling, yielding and stress concentrations.</p><button class="quiet" id="load-example" type="button">Run worked example</button></div>
     </details>
   </main>
+  <!-- site-layout-end -->
 </body>
 </html>

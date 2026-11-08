@@ -10,7 +10,7 @@
   <script type="module" src="/shell.ts"></script>
   <script type="module" src="/materials.js"></script>
 </head>
-<body class="lab-page" data-model="mohr">
+<body class="lab-page" data-model="mohr" data-discipline="mechanical">
   <!-- site-header -->
   <main class="standalone" id="main" tabindex="-1">
     <header class="intro"><div>
@@ -57,5 +57,6 @@
       <div><p>Use C = (σx + σy)/2 and D = (σx − σy)/2. Then R = √(D² + τxy²), σ₁,₂ = C ± R, and θ₁ = atan2(τxy, D)/2. Reversing shear preserves R and reflects the principal orientation.</p><p>The model assumes plane stress at a point. Out-of-plane stresses and three-dimensional maximum shear are outside this lab’s scope.</p><button class="quiet" id="load-example" type="button">Run worked example</button></div>
     </details>
   </main>
+  <!-- site-layout-end -->
 </body>
 </html>

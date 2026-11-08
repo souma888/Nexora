@@ -16,7 +16,21 @@ const header = `
         <span>Theme</span>
       </button>
     </div>
-  </header>`;
+  </header>
+  <div class="site-layout">
+    <aside class="discipline-rail">
+      <nav class="discipline-nav" aria-label="Engineering disciplines">
+        <h2>Disciplines</h2>
+        <div class="discipline-links">
+          <a href="/#all" data-discipline="">All disciplines</a>
+          <a href="/#civil" data-discipline="civil">Civil engineering</a>
+          <a href="/#mechanical" data-discipline="mechanical">Mechanical engineering</a>
+          <a href="/#electrical" data-discipline="electrical">Electrical engineering</a>
+          <a href="/#electronics" data-discipline="electronics">Electronics</a>
+          <a href="/#signals" data-discipline="signals">Signals &amp; systems</a>
+        </div>
+      </nav>
+    </aside>`;
 
 export default defineConfig({
   root,
@@ -26,7 +40,7 @@ export default defineConfig({
     name: 'nexora-shell',
     transformIndexHtml: {
       order: 'pre',
-      handler: html => html.replace('<!-- site-header -->', header),
+      handler: html => html.replace('<!-- site-header -->', header).replace('<!-- site-layout-end -->', '</div>'),
     },
   }],
   build: {
