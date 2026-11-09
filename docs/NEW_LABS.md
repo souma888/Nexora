@@ -1,6 +1,6 @@
 # Control systems and algorithms
 
-This release adds 30 labs to the existing 19. Both new sections are available from the shared sidebar, including while inside any experiment. Catalog search matches each lab's title, description, section, and subject tag.
+The initial control-system/algorithm release added 30 labs to the existing 19. The subsequent [DSA expansion](DSA_LABS.md) adds another 30, bringing the total to 79. Both sections are available from the shared sidebar, including while inside any experiment. Catalog search matches each lab's title, description, section, and subject tag.
 
 ## Control Systems — 15 labs
 

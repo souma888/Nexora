@@ -1,5 +1,6 @@
 import { algorithms, runAlgorithm } from '../../backend/algorithms.js';
 import { coordinates, workedExamples } from '../../backend/algorithm-definitions.js';
+import { renderAdditional } from './algorithm-views.js';
 
 const $ = id => document.getElementById(id);
 const id = new URLSearchParams(location.search).get('lab');
@@ -85,7 +86,8 @@ function render() {
   }
   for (const key of ['comparisons', 'writes', 'visits']) $(key).textContent = frame.stats[key];
   $('result-text').textContent = position === trace.frames.length - 1 ? trace.result.text : 'Trace in progress. Advance to the final step to reveal the outcome.';
-  if (frame.array) bars(frame);
+  if (frame.view) renderAdditional(frame, $('visual'), table, $('state-caption'));
+  else if (frame.array) bars(frame);
   else if (frame.edges) graph(frame);
   else if (frame.table) knapsack(frame);
   else {
@@ -123,14 +125,15 @@ function initialize() {
   $('algorithm-picker').addEventListener('change', event => { location.href = `/algorithms.html?lab=${event.target.value}`; });
   const labels = { values: definition.kind === 'dp' ? 'Item values' : 'Array values', target: 'Target value', edges: 'Directed edges (from,to,weight)', start: 'Start node', goal: 'Goal node', weights: 'Item weights', capacity: 'Capacity', a: 'Integer a', b: 'Integer b' };
   for (const [key, value] of Object.entries(definition.defaults)) {
-    const row = node('div'), label = node('label', labels[key]); label.htmlFor = `algo-${key}`;
-    const input = node(key === 'edges' ? 'textarea' : 'input');
+    const schema = definition.inputs[key];
+    const row = node('div'), label = node('label', schema.label ?? labels[key]); label.htmlFor = `algo-${key}`;
+    const input = node(key === 'edges' || schema.type === 'commands' ? 'textarea' : 'input');
     input.id = `algo-${key}`; input.name = key; input.className = 'algorithm-input'; input.value = value;
     if (typeof value === 'number') { input.type = 'number'; input.step = 1; }
     input.setAttribute('aria-describedby', 'input-help'); fields[key] = input; row.append(label, input); $('algorithm-fields').append(row);
   }
-  $('input-help').textContent = { sort: '1–16 integers, −99 to 99. Separate values with commas.', search: '1–16 integers, −99 to 99. Binary search sorts a copy first.', graph: `Six nodes (0–5), up to 24 directed edges. Separate edges with semicolons. Weights ${id === 'bellman' ? '−9' : '0'} to 20. An empty edge list is allowed.`, dp: 'Up to 8 items. Weights 1–30, values 0–99, capacity 1–30. Lists must have equal lengths.', number: 'Nonnegative integers up to 1,000,000; at least one must be nonzero.' }[definition.kind];
-  const presets = { 'Default input': definition.defaults, 'Worked example': workedExamples[id] ?? definition.defaults };
+  $('input-help').textContent = definition.help ?? { sort: '1–16 integers, −99 to 99. Separate values with commas.', search: '1–16 integers, −99 to 99. Binary search sorts a copy first.', graph: `Six nodes (0–5), up to 24 directed edges. Separate edges with semicolons. Weights ${id === 'bellman' ? '−9' : '0'} to 20. An empty edge list is allowed.`, dp: 'Up to 8 items. Weights 1–30, values 0–99, capacity 1–30. Lists must have equal lengths.', number: 'Nonnegative integers up to 1,000,000; at least one must be nonzero.' }[definition.kind];
+  const presets = { 'Default input': definition.defaults, 'Worked example': workedExamples[id] ?? definition.workedExample ?? definition.defaults };
   if (definition.kind === 'sort' || definition.kind === 'search') Object.assign(presets, {
     'Already sorted': { values: '1, 2, 3, 4, 5, 6, 7, 8', target: 5 }, 'Reverse sorted': { values: '8, 7, 6, 5, 4, 3, 2, 1', target: 5 }, 'Duplicates & negatives': { values: '3, -2, 3, 0, -2, 7', target: -2 }, 'Target absent': { values: '1, 3, 5, 7', target: 6 },
   });
@@ -139,7 +142,8 @@ function initialize() {
     ...(id === 'bellman' ? { 'Negative edge': { edges: '0,1,4; 0,2,5; 1,2,-2', start: 0, goal: 2 }, 'Negative cycle': { edges: '0,1,1; 1,2,-3; 2,1,1; 2,5,1', start: 0, goal: 5 } } : {}),
   });
   else if (definition.kind === 'dp') Object.assign(presets, { 'Nothing fits': { weights: '5, 6', values: '9, 12', capacity: 3 }, 'Greedy trap': { weights: '2, 3, 4', values: '3, 4, 5', capacity: 6 } });
-  else Object.assign(presets, { 'Coprime': { a: 55, b: 34 }, 'One zero': { a: 24, b: 0 } });
+  else if (definition.kind === 'number') Object.assign(presets, { 'Coprime': { a: 55, b: 34 }, 'One zero': { a: 24, b: 0 } });
+  Object.assign(presets, definition.presets ?? {});
   for (const name of Object.keys(presets)) $('preset').append(node('option', name));
   $('preset').addEventListener('change', () => load(presets[$('preset').value]));
   // Rotate choices so the correct answer is not always in the same visual position.

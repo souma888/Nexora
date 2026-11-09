@@ -1,3 +1,6 @@
+import { additionalAlgorithms, validateAdditional } from './advanced-definitions.js';
+import { integer, list, invalid } from './algorithm-input.js';
+export { AlgorithmInputError } from './algorithm-input.js';
 const array = { values: '38, 12, 27, 8, 43, 19, 5, 31' };
 const graph = { edges: '0,1,4; 0,2,2; 2,1,1; 1,3,5; 2,3,8; 2,4,10; 3,4,2; 4,5,3; 3,5,6', start: 0, goal: 5 };
 const define = (id, title, kind, description, complexity, space, lines, invariant, example, predict, answer, defaults = array) => ({
@@ -96,12 +99,14 @@ export const algorithms = {
     'gcd(a,b) = gcd(b, a mod b). The nonzero divisor decreases each iteration. One zero input is allowed; gcd(0,0) is excluded.',
     '48 = 2×18 + 12; 18 = 1×12 + 6; 12 = 2×6 + 0, so gcd(48,18) = 6.',
     'What happens to the GCD after a remainder step?', ['It stays the same', 'It halves', 'It becomes the remainder'], { a: 48, b: 18 }),
+  ...additionalAlgorithms,
 };
 
 export const coordinates = [[55, 100], [195, 45], [195, 160], [345, 45], [345, 160], [490, 100]];
 
 // Discoverable API schema; the pure validator below enforces these same bounds.
 for (const definition of Object.values(algorithms)) {
+  if (definition.engine === 'extended') continue;
   const integerSchema = (min, max) => ({ type: 'integer', min, max, unit: '' });
   const listSchema = (maxItems, min, max) => ({ type: 'string', format: 'comma-separated-integers', minItems: 1, maxItems, itemMin: min, itemMax: max, unit: '' });
   definition.inputs = definition.kind === 'sort' || definition.kind === 'search'
@@ -122,24 +127,9 @@ export const workedExamples = {
   bellman: { edges: '0,1,4; 0,2,5; 1,2,-2', start: 0, goal: 2 },
 };
 
-export class AlgorithmInputError extends Error {
-  constructor(field, message) { super(message); this.field = field; }
-}
-const invalid = (field, message) => { throw new AlgorithmInputError(field, message); };
-function integer(value, field, min, max) {
-  if ((typeof value === 'string' && !value.trim()) || value === null || !['string', 'number'].includes(typeof value)) invalid(field, `${field} must be an integer from ${min} to ${max}.`);
-  const result = Number(value);
-  if (!Number.isInteger(result) || result < min || result > max) invalid(field, `${field} must be an integer from ${min} to ${max}.`);
-  return result;
-}
-function list(value, field, maxLength = 16, min = -99, max = 99) {
-  if (typeof value !== 'string' || value.length > 300) invalid(field, `${field}: enter a comma-separated list of integers.`);
-  const parts = value.split(',').map(s => s.trim());
-  if (parts.length < 1 || parts.length > maxLength) invalid(field, `${field}: use 1–${maxLength} integers.`);
-  return parts.map(part => integer(part, field, min, max));
-}
 export function validateAlgorithm(id, input) {
   if (!Object.hasOwn(algorithms, id)) invalid('model', 'Choose a supported algorithm.');
+  if (algorithms[id].engine === 'extended') return validateAdditional(algorithms[id], input);
   const { kind } = algorithms[id];
   if (kind === 'sort' || kind === 'search') {
     const values = list(input?.values, 'values');

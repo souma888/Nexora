@@ -11,7 +11,7 @@ const grid = document.getElementById('catalog-grid');
 const labGroups = {
   civil: 'Civil', mechanical: 'Mechanical', electrical: 'Electrical',
   electronics: 'Electronics', signals: 'Signals & systems',
-  control: 'Control systems', algorithms: 'Data structures & algorithms',
+  control: 'Control systems', algorithms: 'Data Structures & Algorithms',
 };
 const beam = solveBeam({ case: 'point', span: 6, load: 24, modulus: 200, inertia: 8000 });
 const labs = [
@@ -44,11 +44,17 @@ const labs = [
   ...Object.values(algorithms).map(definition => ({
     href: `/algorithms.html?lab=${definition.id}`, title: definition.title, groups: ['algorithms'],
     description: definition.description,
-    topic: { sort: 'Sorting', search: 'Searching', graph: 'Graphs & paths', dp: 'Dynamic programming', number: 'Number theory' }[definition.kind],
-    level: ['graph', 'dp'].includes(definition.kind) ? 'Intermediate' : 'Beginner',
-    drawing: definition.kind === 'graph'
+    topic: definition.topic ?? { sort: 'Sorting', search: 'Searching', graph: 'Graphs & paths', dp: 'Dynamic programming', number: 'Number theory' }[definition.kind],
+    level: ['graph', 'dp', 'tree', 'graph-extra', 'dp-extra', 'string'].includes(definition.kind) ? 'Intermediate' : 'Beginner',
+    drawing: definition.kind === 'tree'
+      ? '<path d="M150 18l-60 40m60-40 60 40" fill="none" stroke="var(--curve)" stroke-width="2"/>' + [[150,18],[90,58],[210,58]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="9" fill="var(--surface-1)" stroke="var(--result)" stroke-width="2"/>`).join('')
+      : definition.kind === 'structure'
+        ? [65,125,185].map((x,i) => `<rect x="${x}" y="25" width="42" height="32" rx="4" fill="none" stroke="var(--curve)" stroke-width="2"/>${i < 2 ? `<path d="M${x+44} 41h14m-4-4 4 4-4 4" fill="none" stroke="var(--result)"/>` : ''}`).join('')
+      : ['graph', 'graph-extra'].includes(definition.kind)
       ? '<path d="M70 41l70-22 65 22-65 22Zm70-22v44m-70-22h135" fill="none" stroke="var(--curve)" stroke-width="2"/>' + [[70,41],[140,19],[140,63],[205,41]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="5" fill="var(--result)"/>`).join('')
-      : definition.kind === 'dp'
+      : definition.kind === 'string'
+        ? '<text x="150" y="32" text-anchor="middle" style="fill:var(--muted);font-size:17px">A B A B A B C</text><text x="165" y="59" text-anchor="middle" style="fill:var(--result);font-size:17px">A B A B C</text>'
+      : ['dp', 'dp-extra'].includes(definition.kind)
         ? '<path d="M90 12h120v58H90Zm0 19h120M90 50h120m-90-38v58m30-58v58m30-58v58" fill="none" stroke="var(--curve)" stroke-width="2"/><rect x="151" y="32" width="28" height="17" fill="var(--result)" opacity=".6"/>'
         : definition.kind === 'number'
           ? '<text x="150" y="48" text-anchor="middle" style="fill:var(--result);font-size:22px">48 mod 18 = 12</text>'
