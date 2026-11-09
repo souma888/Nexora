@@ -1,8 +1,12 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
+import { disciplines } from './backend/disciplines.js';
 
 const root = resolve('frontend/public');
 const pages = ['index', 'beam', 'axial', 'mohr', 'simulation', 'algorithms'];
+const escape = label => label.replaceAll('&', '&amp;');
+const links = Object.entries(disciplines).map(([id, label]) => `<a href="/#${id}" data-discipline="${id}">${escape(label)}</a>`).join('');
+const options = Object.entries(disciplines).map(([id, label]) => `<option value="${id}">${escape(label)}</option>`).join('');
 const header = `
   <a class="skip" href="#main">Skip to content</a>
   <header class="topbar">
@@ -23,13 +27,7 @@ const header = `
         <h2>Disciplines</h2>
         <div class="discipline-links">
           <a href="/#all" data-discipline="">All disciplines</a>
-          <a href="/#civil" data-discipline="civil">Civil engineering</a>
-          <a href="/#mechanical" data-discipline="mechanical">Mechanical engineering</a>
-          <a href="/#electrical" data-discipline="electrical">Electrical engineering</a>
-          <a href="/#electronics" data-discipline="electronics">Electronics</a>
-          <a href="/#signals" data-discipline="signals">Signals &amp; systems</a>
-          <a href="/#control" data-discipline="control">Control systems</a>
-          <a href="/#algorithms" data-discipline="algorithms">Data Structures &amp; Algorithms</a>
+          ${links}
         </div>
       </nav>
     </aside>`;
@@ -42,7 +40,7 @@ export default defineConfig({
     name: 'nexora-shell',
     transformIndexHtml: {
       order: 'pre',
-      handler: html => html.replace('<!-- site-header -->', header).replace('<!-- site-layout-end -->', '</div>'),
+      handler: html => html.replace('<!-- site-header -->', header).replace('<!-- discipline-options -->', options).replace('<!-- site-layout-end -->', '</div>'),
     },
   }],
   build: {

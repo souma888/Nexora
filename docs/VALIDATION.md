@@ -78,3 +78,7 @@ Display a clear educational-use disclaimer. Do not imply that simplified models 
 ## Additional Data Structures & Algorithms release
 
 The section contains 45 labs after adding 30 more. Independent structure/algorithm reference cases, domains, command syntax, numerical/index conventions, and sources are documented in [DSA_LABS.md](DSA_LABS.md). All additions use the same versioned browser/API solvers and error contract. The reference-case badge for these labs covers the automated checks described there; it does not claim exhaustive correctness over every possible operation sequence.
+
+## New physical, digital and computational sections
+
+The 30 newer engineering labs and enhanced Bode view bring Nexora to 109 labs across 12 sections. [ENGINEERING_SECTIONS.md](ENGINEERING_SECTIONS.md) records their equations, model domains, reference values, tolerances, warnings and teaching sources. `tests/engineering-sections.test.js` provides conservation, truth-table, geometry, numerical convergence and material-response benchmarks. Browser/API checks and schematic snapshots run on desktop and mobile. The reference badge refers to those reproducible cases, including explicit failure/domain conditions, rather than claiming exhaustive or professional design validation.

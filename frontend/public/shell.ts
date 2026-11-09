@@ -19,7 +19,16 @@ applyTheme();
 
 export function setActiveDiscipline(discipline: string) {
   for (const link of document.querySelectorAll<HTMLAnchorElement>('.discipline-links a')) {
-    if (link.dataset.discipline === discipline) link.setAttribute('aria-current', 'location');
+    if (link.dataset.discipline === discipline) {
+      link.setAttribute('aria-current', 'location');
+      const list = link.closest<HTMLElement>('.discipline-links');
+      if (list && matchMedia('(max-width: 740px)').matches) {
+        const top = link.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop;
+        if (top < list.scrollTop || top + link.offsetHeight > list.scrollTop + list.clientHeight) {
+          list.scrollTop = Math.max(0, top - list.clientHeight / 2 + link.offsetHeight / 2);
+        }
+      }
+    }
     else link.removeAttribute('aria-current');
   }
 }

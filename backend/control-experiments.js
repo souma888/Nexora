@@ -155,7 +155,8 @@ export const controlModels = {
       'Positive K and τ, ideal continuous-time first-order system. Frequency ticks represent log10(rad/s).'],
     ({ tau, gain }) => ({
       summary: { corner: 1 / tau, atCorner: 20 * Math.log10(gain) - 10 * Math.log10(2), phase: -45 },
-      series: samples(-2 - Math.log10(tau), 2 - Math.log10(tau), x => ({ y: 20 * Math.log10(gain) - 10 * Math.log10(1 + (10 ** x * tau) ** 2) })),
+      series: samples(-2 - Math.log10(tau), 2 - Math.log10(tau), x => ({ y: 20 * Math.log10(gain) - 10 * Math.log10(1 + (10 ** x * tau) ** 2), phase: -Math.atan(10 ** x * tau) * 180 / Math.PI })),
+      visualization: { type: 'phase', tau },
     }), { x: 'log₁₀ angular frequency', xUnit: '', y: 'Magnitude', yUnit: 'dB', traces: { y: 'Magnitude' }, metrics: { corner: 'Corner frequency', atCorner: 'Magnitude at corner', phase: 'Phase at corner' }, units: { corner: 'rad/s', atCorner: 'dB', phase: '°' } }),
   lead: lab('lead', 'Lead Compensator',
     { ratio: p('Pole-to-zero frequency ratio', '', 1.1, 20, 5), zero: p('Zero frequency', 'rad/s', 0.1, 10, 1) },
@@ -231,3 +232,4 @@ export const controlModels = {
 Object.values(controlModels).forEach(({ definition }, index) => {
   definition.lab = `CS${String(index + 1).padStart(2, '0')}`;
 });
+controlModels.bode.definition.outputs.series.phase = '°';

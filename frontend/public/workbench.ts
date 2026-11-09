@@ -19,7 +19,7 @@ export function setMetric(id: string, value: string, unit = '') {
 
 export const readFields = (form: HTMLFormElement): Inputs =>
   Object.fromEntries([...new FormData(form)].filter(([key]) => key !== 'prediction-choice')
-    .map(([key, value]) => [key, key === 'case' ? String(value) : Number(value)]));
+    .map(([key, value]) => [key, key === 'case' || (form.elements.namedItem(key) as HTMLElement | null)?.dataset.valueType === 'string' ? String(value) : Number(value)]));
 
 type Prediction = [choices: string[], correct: number, explanation: string];
 const predictions: Record<string, Prediction> = {
@@ -72,7 +72,7 @@ function predictionControl(form: HTMLFormElement, model: Model<unknown>['definit
 }
 
 export function setupWorkbench<Result>({
-  form, model, validate, payload, render, onReset,
+  form, model, validate, payload, render, onReset, onInvalid,
 }: {
   form: HTMLFormElement;
   model: Model<Result>;
@@ -80,6 +80,7 @@ export function setupWorkbench<Result>({
   payload: () => Inputs;
   render: (data: Result & { input: Inputs; units: unknown }) => void;
   onReset?: () => void;
+  onInvalid?: () => void;
 }) {
   const status = document.getElementById('status')!;
   const sliders = new Map<HTMLInputElement, HTMLInputElement>();
@@ -89,6 +90,7 @@ export function setupWorkbench<Result>({
   const logScale = (input: HTMLInputElement) =>
     input.step === 'any' && Number(input.min) > 0 && Number(input.max) / Number(input.min) >= 1000;
   for (const input of form.querySelectorAll<HTMLInputElement>('.field input[type="number"]')) {
+    if (input.dataset.widget === 'bit') continue;
     const slider = document.createElement('input');
     slider.type = 'range';
     slider.className = 'parameter-slider';
@@ -122,7 +124,8 @@ export function setupWorkbench<Result>({
     const { values, message } = validate(model.definition, payload());
     if (!values || [...sliders.keys()].some(input => !input.validity.valid)) {
       status.dataset.error = 'true';
-      status.textContent = message ?? 'Enter values within the allowed ranges. The last valid result is still shown.';
+      status.textContent = `${message ?? 'Enter values within the allowed ranges.'} The last valid result is still shown.`;
+      onInvalid?.();
       return;
     }
     status.dataset.error = 'false';

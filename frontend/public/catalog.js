@@ -2,17 +2,14 @@ import { models } from '../../backend/waves.js';
 import { solveBeam } from '../../backend/beam.js';
 import { setActiveDiscipline } from './shell.ts';
 import { algorithms } from '../../backend/algorithm-definitions.js';
+import { disciplines } from '../../backend/disciplines.js';
 
 const form = document.getElementById('catalog-filters');
 const search = document.getElementById('lab-search');
 const discipline = document.getElementById('discipline-filter');
 const status = document.getElementById('catalog-status');
 const grid = document.getElementById('catalog-grid');
-const labGroups = {
-  civil: 'Civil', mechanical: 'Mechanical', electrical: 'Electrical',
-  electronics: 'Electronics', signals: 'Signals & systems',
-  control: 'Control systems', algorithms: 'Data Structures & Algorithms',
-};
+const labGroups = disciplines;
 const beam = solveBeam({ case: 'point', span: 6, load: 24, modulus: 200, inertia: 8000 });
 const labs = [
   {
@@ -33,13 +30,14 @@ const labs = [
   ...Object.values(models).map(({ definition, solve }) => ({
     href: `/simulation.html?lab=${definition.id}`, title: definition.title, groups: [definition.discipline],
     description: definition.description,
-    topic: {
+    topic: definition.topic ?? {
       buckling: 'Structural stability', hydrostatic: 'Fluid statics', torsion: 'Solid mechanics',
       oscillator: 'Dynamics',
     }[definition.id] ?? {
       electrical: 'Circuit analysis', electronics: 'Analog electronics', signals: 'Signal processing', control: 'Feedback & dynamics',
     }[definition.discipline],
     graphic: solve(Object.fromEntries(Object.entries(definition.inputs).map(([key, input]) => [key, input.initial]))).series,
+    step: definition.plot.step,
   })),
   ...Object.values(algorithms).map(definition => ({
     href: `/algorithms.html?lab=${definition.id}`, title: definition.title, groups: ['algorithms'],
@@ -62,13 +60,16 @@ const labs = [
   })),
 ];
 
-function thumbnail({ drawing, graphic }) {
+function thumbnail({ drawing, graphic, step }) {
   if (!drawing) {
     const xMin = Math.min(...graphic.map(p => p.x)), xMax = Math.max(...graphic.map(p => p.x));
     const ys = graphic.flatMap(point => [point.y, point.reference].filter(Number.isFinite));
     const min = Math.min(0, ...ys), max = Math.max(0, ...ys);
-    const trace = key => graphic.map(point =>
-      `${20 + 260 * (point.x - xMin) / (xMax - xMin || 1)},${68 - 56 * (point[key] - min) / (max - min || 1)}`).join(' ');
+    const trace = key => graphic.flatMap((point, i) => {
+      if (!Number.isFinite(point[key])) return [];
+      const x = 20 + 260 * (point.x - xMin) / (xMax - xMin || 1), y = v => 68 - 56 * (v - min) / (max - min || 1);
+      return step && i && Number.isFinite(graphic[i - 1][key]) ? [`${x},${y(graphic[i - 1][key])}`, `${x},${y(point[key])}`] : [`${x},${y(point[key])}`];
+    }).join(' ');
     const reference = Number.isFinite(graphic[0].reference)
       ? `<polyline points="${trace('reference')}" fill="none" stroke="var(--muted)" stroke-dasharray="4 4"/>` : '';
     drawing = graphic.some(p => Number.isFinite(p.locus))

@@ -1,0 +1,8 @@
+// One registry drives the sidebar, catalog filter, cards, and lab breadcrumbs.
+export const disciplines = {
+  civil: 'Civil engineering', mechanical: 'Mechanical engineering', electrical: 'Electrical engineering',
+  electronics: 'Electronics', signals: 'Signals & systems', control: 'Control Systems',
+  algorithms: 'Data Structures & Algorithms', thermofluids: 'Thermofluids',
+  digital: 'Digital Logic & Computer Engineering', robotics: 'Robotics & Mechatronics',
+  computational: 'Computational Engineering', materials: 'Materials Science',
+};

@@ -55,6 +55,10 @@ Send `POST /api/materials` with a `model` and an `input` object:
 
 Send `POST /api/waves` with a `model` and an `input` object. Use `GET /api/waves` for the full list of model IDs and each model’s inputs, defaults, limits, and output units. The returned plot rows contain `x` and `y`, with a `reference` trace or sparse `sample` markers where relevant.
 
+The five newer engineering sections add 30 models to this contract. Input schemas support `enum` selectors, numeric `widget: "bit"`, and bounded `integer-list` strings, plus cross-field `rules` and conditional `visibleWhen`. Inactive conditional inputs use their defaults. Numeric outputs can be null for an infeasible geometric state. Additional response fields are `warnings` (model-domain messages), `table` (`caption`, `headers`, `rows`, optional `selected` or `followProbe`), and `visualization` (typed schematic data and optional preview `frames`). Curves can include an `other` trace; step plots hold the previous value until each event. Missing curve samples break the path instead of connecting across an infeasible interval. Bode series additionally declare `phase` in degrees.
+
+The browser and API validate the same relationships, including throat/pipe diameters, hot/cold temperature order, binary register width, JK sequence length and root brackets. Invalid inputs keep the last valid browser result clearly labelled and pause preview controls. These labs require no new environment variables or database. See [the engineering release guide](ENGINEERING_SECTIONS.md) for the inventory, numerical conventions and independent cases.
+
 The 15 Control Systems models use this endpoint too. Phase/magnitude sweeps explicitly use log10 angular frequency as their horizontal coordinate. Pole-locus plots use `locus` points for the gain sweep and `sample` points for the selected roots. The plot inspector is operable with the mouse or arrow keys.
 
 ## Algorithm traces API

@@ -2,6 +2,11 @@ import { cosine, experiment, parameter, samples } from './experiment.js';
 import { mechanicalModels } from './mechanical-experiments.js';
 import { systemModels } from './system-experiments.js';
 import { controlModels } from './control-experiments.js';
+import { thermofluidModels } from './thermofluids.js';
+import { digitalModels } from './digital.js';
+import { roboticModels } from './robotics.js';
+import { computationalModels } from './computational.js';
+import { materialScienceModels } from './material-science.js';
 
 export const models = {
   divider: experiment('divider', {
@@ -153,4 +158,9 @@ export const models = {
   ...mechanicalModels,
   ...systemModels,
   ...controlModels,
+  ...thermofluidModels,
+  ...digitalModels,
+  ...roboticModels,
+  ...computationalModels,
+  ...materialScienceModels,
 };
