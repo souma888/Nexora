@@ -1,6 +1,18 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 14px; }
+body { margin: 0; min-height: 100dvh; isolation: isolate; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 14px; }
+/* A quiet drafting surface beneath the application, with no animated paint layers. */
+body::before, body::after { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+body::before {
+  background:
+    radial-gradient(ellipse at 88% 0%, var(--ambient-crimson), transparent 62%),
+    radial-gradient(ellipse at 12% 85%, var(--ambient-forest), transparent 60%);
+}
+body::after {
+  background-image: linear-gradient(var(--canvas-line) 1px, transparent 1px), linear-gradient(90deg, var(--canvas-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(#000, #0008 55%, transparent);
+}
 a { color: inherit; text-decoration: none; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
@@ -9,7 +21,7 @@ button:disabled { cursor: default; opacity: .55; }
 .mono, svg text { font-family: var(--mono); }
 .skip { position: fixed; top: 8px; left: 8px; padding: 10px; z-index: 5; background: var(--surface-2); transform: translateY(-160%); }
 .skip:focus { transform: none; }
-.topbar { height: 52px; display: flex; align-items: center; gap: 16px; padding: 0 16px; border-bottom: 1px solid var(--border); background: var(--surface-1); }
+.topbar { height: 52px; display: flex; align-items: center; gap: 16px; padding: 0 16px; border-bottom: 1px solid var(--border); background: linear-gradient(110deg, var(--ambient-crimson), transparent 35%), var(--surface-1); }
 .brand, .top-actions { display: flex; align-items: center; gap: 8px; }
 .brand { letter-spacing: .12em; }
 .top-label { color: var(--muted); font-size: 12px; }
@@ -18,7 +30,7 @@ button:disabled { cursor: default; opacity: .55; }
 .workspace, .standalone, .catalog-main { width: min(100%, 1360px); margin-inline: auto; padding: 22px clamp(14px, 2.7vw, 36px) 28px; }
 .site-layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); min-height: calc(100dvh - 52px); }
 .site-layout > main { min-width: 0; }
-.discipline-rail { background: var(--surface-1); border-right: 1px solid var(--border); }
+.discipline-rail { background: linear-gradient(170deg, var(--ambient-forest), transparent 380px), var(--surface-1); border-right: 1px solid var(--border); }
 .discipline-nav { position: sticky; top: 0; max-height: 100dvh; overflow-y: auto; padding: 22px 12px 12px; }
 .intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
 .breadcrumb { margin: 0 0 5px; color: var(--text-accent); font-size: 12px; font-weight: 600; letter-spacing: .045em; }
@@ -26,7 +38,7 @@ button:disabled { cursor: default; opacity: .55; }
 .intro h1 { margin: 0; font-size: clamp(28px, 4vw, 40px); line-height: 1.12; font-weight: 740; letter-spacing: -.025em; }
 .intro h1 span { color: var(--curve); }
 .intro-copy { color: var(--muted); margin: 6px 0 0; font-size: 14px; }
-.catalog-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 290px); align-items: center; gap: 24px; padding: 24px; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 17px; }
+.catalog-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 290px); align-items: center; gap: 24px; padding: 24px; background: radial-gradient(ellipse at 0% 0%, var(--ambient-crimson), transparent 65%), radial-gradient(ellipse at 100% 100%, var(--ambient-forest), transparent 60%), var(--surface-1); border: 1px solid var(--border); border-radius: 12px; box-shadow: inset 0 1px 0 var(--surface-edge), var(--shadow); margin-bottom: 17px; }
 .catalog-intro .intro-copy { max-width: 60ch; }
 .lab-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--border); }
 .lab-nav a { padding: 6px 2px; border-bottom: 2px solid transparent; color: var(--muted); font-weight: 600; }
@@ -50,6 +62,9 @@ button:disabled { cursor: default; opacity: .55; }
   .standalone, .catalog-main { padding-top: 16px; }
 }
 @media print {
+  body { background: white; }
+  body::before, body::after { display: none; }
+  .catalog-intro { background: white; box-shadow: none; }
   .site-layout { display: block; }
   .discipline-rail { display: none; }
   .topbar, .lab-nav, .skip, .quiet, .prediction-answers, .parameter-slider, .shape-control, .angle-control, #status { display: none !important; }

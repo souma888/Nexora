@@ -12,7 +12,7 @@
 }
 :root {
   color-scheme: dark;
-  --bg: #0f1013;
+  --bg: #13171a;
   --surface-1: #16181d;
   --surface-2: #1d2027;
   --border: #2a2e38;
@@ -29,6 +29,10 @@
   --grid: #252a33;
   --shadow: 0 12px 28px #0003;
   --selection: color-mix(in srgb, var(--curve) 14%, var(--surface-2));
+  --ambient-crimson: light-dark(#b52c4814, #8e2b4445);
+  --ambient-forest: light-dark(#285e4614, #285e464d);
+  --canvas-line: light-dark(#3146400c, #b5c2b20a);
+  --surface-edge: light-dark(#ffffffb3, #ffffff0a);
   --mono: 'JetBrains Mono', monospace;
   font-family: Inter, system-ui, sans-serif;
 }
