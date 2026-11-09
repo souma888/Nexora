@@ -13,6 +13,7 @@ const disciplines = {
   electrical: 'Electrical engineering',
   electronics: 'Electronics',
   signals: 'Signals & systems',
+  control: 'Control systems',
 };
 
 function element(tag, text) {
@@ -26,14 +27,14 @@ function drawPlot(definition, { series, units }) {
   const width = plot.clientWidth < 420 ? 380 : 480;
   plot.setAttribute('viewBox', `0 0 ${width} 265`);
   const left = 69, right = width - 36, top = 22, bottom = 226;
-  const lowX = series[0].x;
-  const highX = series.at(-1).x;
+  const lowX = Math.min(...series.map(point => point.x));
+  const highX = Math.max(...series.map(point => point.x));
   const traces = Object.keys(definition.plot.traces);
   const values = series.flatMap(point => traces.map(trace => point[trace]).filter(Number.isFinite));
   const lowY = Math.min(0, ...values);
   const highY = Math.max(0, ...values);
   const yRange = highY - lowY || 1;
-  const xAt = x => left + (x - lowX) / (highX - lowX) * (right - left);
+  const xAt = x => left + (x - lowX) / (highX - lowX || 1) * (right - left);
   const yAt = y => bottom - (y - lowY) / yRange * (bottom - top);
   const points = key => series.map(point => `${xAt(point.x).toFixed(2)},${yAt(point[key]).toFixed(2)}`).join(' ');
   const tick = (x, y, value, anchor) => `<text x="${x}" y="${y}" text-anchor="${anchor}">${format(value)}</text>`;
@@ -46,13 +47,31 @@ function drawPlot(definition, { series, units }) {
   }).join('');
   const reference = traces.includes('reference')
     ? `<polyline points="${points('reference')}" fill="none" stroke="var(--muted)" stroke-dasharray="5 4" stroke-width="2"/>` : '';
+  const locus = series.filter(point => Number.isFinite(point.locus)).map(point =>
+    `<circle cx="${xAt(point.x)}" cy="${yAt(point.locus)}" r="1.7" fill="var(--curve)"/>`).join('');
   const markers = series.filter(point => Number.isFinite(point.sample)).map(point =>
     `<circle cx="${xAt(point.x)}" cy="${yAt(point.sample)}" r="3.6" fill="var(--result)" stroke="var(--plot-bg)"/>`).join('');
   plot.innerHTML = `${grid}<path d="M${left} ${yAt(0)}H${right}" stroke="var(--muted)"/>
-    <polyline points="${points('y')}" fill="none" stroke="var(--curve)" stroke-width="2.4" stroke-linejoin="round"/>
-    ${reference}${markers}`;
+    ${traces.includes('y') ? `<polyline points="${points('y')}" fill="none" stroke="var(--curve)" stroke-width="2.4" stroke-linejoin="round"/>` : ''}
+    ${reference}${locus}${markers}<path id="wave-crosshair" class="crosshair"/>`;
   const axis = (label, unit) => unit ? `${label} (${unit})` : label;
   byId('axis-labels').textContent = `${axis(definition.plot.x, units.series.x)} → ${axis(definition.plot.y, units.series.y)}`;
+  const probe = byId('wave-probe');
+  probe.max = series.length - 1;
+  const inspect = () => {
+    const point = series[Number(probe.value)];
+    byId('wave-readout').textContent = [`${definition.plot.x} = ${format(point.x)} ${units.series.x}`, ...traces.filter(key => Number.isFinite(point[key])).map(key => `${definition.plot.traces[key]} = ${format(point[key])} ${units.series[key] ?? units.series.y}`)].join(' · ');
+    byId('wave-crosshair').setAttribute('d', `M${xAt(point.x)} ${top}V${bottom}`);
+  };
+  probe.oninput = inspect;
+  plot.onpointermove = event => {
+    const x = (event.clientX - plot.getBoundingClientRect().left) / plot.getBoundingClientRect().width * width;
+    const target = lowX + (x - left) / (right - left) * (highX - lowX);
+    let closest = 0;
+    series.forEach((p, i) => { if (Math.abs(p.x - target) < Math.abs(series[closest].x - target)) closest = i; });
+    probe.value = closest; inspect();
+  };
+  inspect();
 }
 
 function initialize(definition) {
@@ -97,7 +116,7 @@ function initialize(definition) {
   for (const [key, name] of Object.entries(plot.traces)) {
     const item = element('span');
     const swatch = element('i');
-    swatch.className = { y: 'green', reference: 'reference-trace', sample: 'sample-trace' }[key];
+    swatch.className = { y: 'green', reference: 'reference-trace', sample: 'sample-trace', locus: 'curve-swatch' }[key];
     item.append(swatch, name);
     byId('traces').append(item);
   }
@@ -105,6 +124,7 @@ function initialize(definition) {
   let result;
   const { analyze } = setupWorkbench({
     form, model: models[id], validate, payload: () => readFields(form),
+    onReset() { byId('wave-probe').value = '0'; },
     render(data) {
       result = data;
       for (const [key, value] of Object.entries(data.summary)) {
@@ -113,7 +133,12 @@ function initialize(definition) {
       drawPlot(definition, data);
     },
   });
-  new ResizeObserver(() => { if (result) drawPlot(definition, result); }).observe(byId('wave-plot').parentElement);
+  let plotWidth = 0;
+  new ResizeObserver(([entry]) => {
+    if (Math.abs(entry.contentRect.width - plotWidth) < 0.5) return;
+    plotWidth = entry.contentRect.width;
+    requestAnimationFrame(() => { if (result) drawPlot(definition, result); });
+  }).observe(byId('wave-plot').parentElement);
   byId('load-example').addEventListener('click', () => byId('reset').click());
   byId('loading').hidden = true;
   byId('experiment').hidden = false;

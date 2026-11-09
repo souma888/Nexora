@@ -141,8 +141,11 @@ byId('export').addEventListener('click', () => {
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
-new ResizeObserver(() => {
-  if (result) drawBeamCharts(result.series);
+let plotWidth = 0;
+new ResizeObserver(([entry]) => {
+  if (Math.abs(entry.contentRect.width - plotWidth) < 0.5) return;
+  plotWidth = entry.contentRect.width;
+  requestAnimationFrame(() => { if (result) drawBeamCharts(result.series); });
 }).observe(byId('plot').parentElement);
 syncUnits(false);
 analyze();

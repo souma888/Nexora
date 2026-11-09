@@ -18,7 +18,7 @@ test('discipline navigation remains available inside every lab template', async 
     await page.goto(path);
     const nav = page.getByRole('navigation', { name: 'Engineering disciplines' });
     await expect(nav).toBeVisible();
-    await expect(nav.getByRole('link')).toHaveCount(6);
+    await expect(nav.getByRole('link')).toHaveCount(8);
     await expect(nav.locator(`[data-discipline="${active}"]`)).toHaveAttribute('aria-current', 'location');
     const bounds = await nav.boundingBox();
     expect(bounds.x).toBe(0);
@@ -41,8 +41,8 @@ test('catalog places the brand in the corner and links to About', async ({ page 
   await page.goto('/#electronics');
   const brand = await page.getByRole('link', { name: 'Nexora catalog' }).boundingBox();
   expect(brand.x).toBe(16);
-  await expect(page.locator('#total-labs')).toHaveText('19');
-  await expect(page.locator('#total-disciplines')).toHaveText('5');
+  await expect(page.locator('#total-labs')).toHaveText('49');
+  await expect(page.locator('#total-disciplines')).toHaveText('7');
   await page.getByRole('link', { name: 'About', exact: true }).click();
   await expect(page).toHaveURL(/#about$/);
   await expect(page.getByRole('heading', { name: 'About Nexora' })).toBeInViewport();
@@ -69,7 +69,7 @@ test('discipline sidebar follows direct links, filters, and browser history', as
   await page.goBack();
   await expect(electronics).toHaveAttribute('aria-current', 'location');
   await sidebar.getByRole('link', { name: 'All disciplines' }).click();
-  await expect(page.getByRole('status')).toHaveText('19 experiments available');
+  await expect(page.getByRole('status')).toHaveText('49 experiments available');
   const bounds = await sidebar.boundingBox();
   expect(bounds.x).toBe(0);
   if (page.viewportSize().width > 740) {
@@ -188,7 +188,7 @@ test('electrical, electronics, and signals labs open from the catalog and run', 
 test('catalog thumbnail, persistent theme, and print layout', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
   await page.goto('/');
-  await expect(page.getByRole('status')).toHaveText('19 experiments available');
+  await expect(page.getByRole('status')).toHaveText('49 experiments available');
   await expect(page.getByRole('link', { name: /Axial Stress/ })).toHaveCount(1);
   const thumbnail = page.getByRole('link', { name: /Beam Analysis/ }).locator('.thumb');
   await expect(thumbnail).toHaveScreenshot('beam-thumbnail.png', { maxDiffPixelRatio: 0.035 });

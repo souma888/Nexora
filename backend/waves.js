@@ -1,6 +1,7 @@
 import { cosine, experiment, parameter, samples } from './experiment.js';
 import { mechanicalModels } from './mechanical-experiments.js';
 import { systemModels } from './system-experiments.js';
+import { controlModels } from './control-experiments.js';
 
 export const models = {
   divider: experiment('divider', {
@@ -151,4 +152,5 @@ export const models = {
   })),
   ...mechanicalModels,
   ...systemModels,
+  ...controlModels,
 };

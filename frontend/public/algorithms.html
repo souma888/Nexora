@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1013">
+  <title>Algorithm Lab · Nexora</title>
+  <link rel="icon" href="/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/algorithms.css">
+  <script type="module" src="/shell.ts"></script>
+  <script type="module" src="/algorithms.js"></script>
+</head>
+<body class="lab-page" data-discipline="algorithms">
+  <!-- site-header -->
+  <main class="standalone" id="main" tabindex="-1">
+    <header class="intro"><div>
+      <p class="breadcrumb mono"><a href="/">CATALOG</a> / <a href="/#algorithms">DATA STRUCTURES &amp; ALGORITHMS</a></p>
+      <h1 id="title">Algorithm lab</h1>
+      <p class="intro-copy" id="description"></p>
+    </div></header>
+    <p id="loading" role="status">Loading algorithm…</p>
+    <div id="algorithm-lab" hidden>
+      <div class="workbench">
+        <section class="panel setup" aria-labelledby="setup-title">
+          <div class="panel-head"><div class="heading"><span class="index">01</span><h2 id="setup-title">Experiment setup</h2></div><button class="quiet" id="reset" type="button">Reset</button></div>
+          <form id="algorithm-form">
+            <label for="algorithm-picker">Algorithm</label><select class="material-select" id="algorithm-picker"></select>
+            <div id="algorithm-fields"></div>
+            <p class="field-hint" id="input-help"></p>
+            <label for="preset">Input preset</label><select class="material-select" id="preset"></select>
+            <fieldset class="prediction-answers">
+              <legend class="prediction" id="predict"></legend>
+              <div id="answers"></div>
+            </fieldset>
+            <p class="prediction-feedback" id="feedback"></p>
+            <p id="status" role="status"></p>
+          </form>
+        </section>
+        <section class="panel algorithm-stage" aria-labelledby="visual-title">
+          <div class="panel-head"><div class="heading"><span class="index">02</span><h2 id="visual-title">Execution trace</h2></div><span class="edition" id="step-count"></span></div>
+          <div class="algorithm-visual scroll-region" id="visual" tabindex="0" role="region" aria-label="Algorithm visualization"></div>
+          <div class="legend mono"><span><i class="red"></i>Active step</span><span><i class="sample-trace"></i>Completed / visited / chosen</span><span><i class="curve-swatch"></i>Remaining state</span></div>
+          <p class="wave-axes">Scroll wide diagrams and tables sideways when needed. The state table lists every value.</p>
+          <div class="playback" aria-label="Playback controls">
+            <div class="playback-buttons">
+              <button class="quiet" id="previous" type="button" aria-label="Previous step"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14m12-14-9 7 9 7Z"/></svg></button>
+              <button class="quiet play-button" id="play" type="button">Play trace</button>
+              <button class="quiet" id="next" type="button" aria-label="Next step"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 5l9 7-9 7Z"/></svg></button>
+              <label for="speed">Pace</label><select class="material-select" id="speed"><option value="1200">Slow</option><option value="600" selected>Normal</option><option value="160">Fast</option></select>
+            </div>
+            <label for="timeline">Trace position <span class="field-hint">Use arrow keys to inspect individual steps</span></label>
+            <input type="range" id="timeline" min="0" max="0" value="0" step="1">
+            <p id="step-message" role="status"></p>
+          </div>
+          <div class="algorithm-code"><h3>Pseudocode</h3><ol id="pseudocode"></ol></div>
+        </section>
+      </div>
+      <section class="results" aria-labelledby="results-title">
+        <div class="section-head heading"><span class="index">03</span><h2 id="results-title">State at this step</h2></div>
+        <dl class="metrics material-metrics"><div><dt>Comparisons / checks</dt><dd id="comparisons">0</dd></div><div><dt>Writes / updates</dt><dd id="writes">0</dd></div><div><dt>Nodes settled / visited</dt><dd id="visits">0</dd></div></dl>
+        <p id="result-text" class="algorithm-result"></p>
+        <p class="field-hint" id="state-caption"></p>
+        <div class="panel table-wrap scroll-region" role="region" aria-label="Algorithm state table" tabindex="0"><table id="state-table"></table></div>
+      </section>
+      <details class="panel notes" open>
+        <summary><span>Worked example &amp; algorithm notes</span><span class="disclosure" aria-hidden="true"></span></summary>
+        <div><p><strong>Time:</strong> <span id="time-complexity"></span>. <strong>Space:</strong> <span id="space-complexity"></span>.</p><p id="invariant"></p><p id="example"></p><p>Traces use bounded teaching inputs. Reported counters describe this implementation: comparisons include value comparisons or frontier/edge checks; writes include array/buffer writes or state updates. Trace snapshots and display overhead are excluded from the complexity bounds.</p><button class="quiet" id="load-example" type="button">Load worked example</button></div>
+      </details>
+    </div>
+    <footer><span class="mono">NEXORA / ALGORITHM LAB</span><span>Explore the reasoning, one step at a time</span></footer>
+  </main>
+  <!-- site-layout-end -->
+</body>
+</html>
