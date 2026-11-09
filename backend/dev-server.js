@@ -4,12 +4,12 @@ import { createServer as createViteServer } from 'vite';
 import * as beam from '../api/beam.js';
 import * as materials from '../api/materials.js';
 import * as waves from '../api/waves.js';
+import * as algorithms from '../api/algorithms.js';
 
-const routes = { '/api/beam': beam, '/api/materials': materials, '/api/waves': waves };
+const routes = { '/api/beam': beam, '/api/materials': materials, '/api/waves': waves, '/api/algorithms': algorithms };
 
-const vite = await createViteServer({ server: { middlewareMode: true, ws: false } });
 const port = Number(process.env.PORT || 3000);
-createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
     if (Object.hasOwn(routes, url.pathname)) {
@@ -30,4 +30,6 @@ createServer(async (req, res) => {
     console.error(error);
     res.writeHead(500).end('Internal server error');
   }
-}).listen(port, '127.0.0.1', () => console.log(`Nexora · http://127.0.0.1:${port}`));
+});
+const vite = await createViteServer({ server: { middlewareMode: true, hmr: { server } } });
+server.listen(port, '127.0.0.1', () => console.log(`Nexora · http://127.0.0.1:${port}`));

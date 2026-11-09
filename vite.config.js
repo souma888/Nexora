@@ -2,7 +2,7 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 const root = resolve('frontend/public');
-const pages = ['index', 'beam', 'axial', 'mohr', 'simulation'];
+const pages = ['index', 'beam', 'axial', 'mohr', 'simulation', 'algorithms'];
 const header = `
   <a class="skip" href="#main">Skip to content</a>
   <header class="topbar">
@@ -28,6 +28,8 @@ const header = `
           <a href="/#electrical" data-discipline="electrical">Electrical engineering</a>
           <a href="/#electronics" data-discipline="electronics">Electronics</a>
           <a href="/#signals" data-discipline="signals">Signals &amp; systems</a>
+          <a href="/#control" data-discipline="control">Control systems</a>
+          <a href="/#algorithms" data-discipline="algorithms">Data structures &amp; algorithms</a>
         </div>
       </nav>
     </aside>`;

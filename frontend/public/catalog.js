@@ -1,6 +1,7 @@
 import { models } from '../../backend/waves.js';
 import { solveBeam } from '../../backend/beam.js';
 import { setActiveDiscipline } from './shell.ts';
+import { algorithms } from '../../backend/algorithm-definitions.js';
 
 const form = document.getElementById('catalog-filters');
 const search = document.getElementById('lab-search');
@@ -10,6 +11,7 @@ const grid = document.getElementById('catalog-grid');
 const labGroups = {
   civil: 'Civil', mechanical: 'Mechanical', electrical: 'Electrical',
   electronics: 'Electronics', signals: 'Signals & systems',
+  control: 'Control systems', algorithms: 'Data structures & algorithms',
 };
 const beam = solveBeam({ case: 'point', span: 6, load: 24, modulus: 200, inertia: 8000 });
 const labs = [
@@ -35,22 +37,37 @@ const labs = [
       buckling: 'Structural stability', hydrostatic: 'Fluid statics', torsion: 'Solid mechanics',
       oscillator: 'Dynamics',
     }[definition.id] ?? {
-      electrical: 'Circuit analysis', electronics: 'Analog electronics', signals: 'Signal processing',
+      electrical: 'Circuit analysis', electronics: 'Analog electronics', signals: 'Signal processing', control: 'Feedback & dynamics',
     }[definition.discipline],
     graphic: solve(Object.fromEntries(Object.entries(definition.inputs).map(([key, input]) => [key, input.initial]))).series,
+  })),
+  ...Object.values(algorithms).map(definition => ({
+    href: `/algorithms.html?lab=${definition.id}`, title: definition.title, groups: ['algorithms'],
+    description: definition.description,
+    topic: { sort: 'Sorting', search: 'Searching', graph: 'Graphs & paths', dp: 'Dynamic programming', number: 'Number theory' }[definition.kind],
+    level: ['graph', 'dp'].includes(definition.kind) ? 'Intermediate' : 'Beginner',
+    drawing: definition.kind === 'graph'
+      ? '<path d="M70 41l70-22 65 22-65 22Zm70-22v44m-70-22h135" fill="none" stroke="var(--curve)" stroke-width="2"/>' + [[70,41],[140,19],[140,63],[205,41]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="5" fill="var(--result)"/>`).join('')
+      : definition.kind === 'dp'
+        ? '<path d="M90 12h120v58H90Zm0 19h120M90 50h120m-90-38v58m30-58v58m30-58v58" fill="none" stroke="var(--curve)" stroke-width="2"/><rect x="151" y="32" width="28" height="17" fill="var(--result)" opacity=".6"/>'
+        : definition.kind === 'number'
+          ? '<text x="150" y="48" text-anchor="middle" style="fill:var(--result);font-size:22px">48 mod 18 = 12</text>'
+          : [38,12,27,8,43,19,5,31].map((v,i) => `<rect x="${45+i*27}" y="${68-v}" width="18" height="${v}" rx="2" fill="${i === 2 ? 'var(--load)' : 'var(--curve)'}"/>`).join(''),
   })),
 ];
 
 function thumbnail({ drawing, graphic }) {
   if (!drawing) {
-    const xMin = graphic[0].x, xMax = graphic.at(-1).x;
+    const xMin = Math.min(...graphic.map(p => p.x)), xMax = Math.max(...graphic.map(p => p.x));
     const ys = graphic.flatMap(point => [point.y, point.reference].filter(Number.isFinite));
     const min = Math.min(0, ...ys), max = Math.max(0, ...ys);
     const trace = key => graphic.map(point =>
-      `${20 + 260 * (point.x - xMin) / (xMax - xMin)},${68 - 56 * (point[key] - min) / (max - min || 1)}`).join(' ');
+      `${20 + 260 * (point.x - xMin) / (xMax - xMin || 1)},${68 - 56 * (point[key] - min) / (max - min || 1)}`).join(' ');
     const reference = Number.isFinite(graphic[0].reference)
       ? `<polyline points="${trace('reference')}" fill="none" stroke="var(--muted)" stroke-dasharray="4 4"/>` : '';
-    drawing = `<polyline points="${trace('y')}" fill="none" stroke="var(--curve)" stroke-width="2"/>${reference}`;
+    drawing = graphic.some(p => Number.isFinite(p.locus))
+      ? graphic.map(p => `<circle cx="${20 + 260 * (p.x-xMin)/(xMax-xMin || 1)}" cy="${68 - 56 * (p.y-min)/(max-min || 1)}" r="1.2" fill="var(--curve)"/>`).join('')
+      : `<polyline points="${trace('y')}" fill="none" stroke="var(--curve)" stroke-width="2"/>${reference}`;
   }
   return `<svg class="thumb" viewBox="0 0 300 82" aria-hidden="true">
     <path d="M20 18h260M20 41h260M20 64h260M40 10v62M95 10v62M150 10v62M205 10v62M260 10v62" fill="none" stroke="var(--grid)"/>
@@ -64,7 +81,7 @@ const cards = labs.map(lab => {
   const group = lab.groups.map(key => labGroups[key]).join(' + ');
   const topic = lab.topic ?? 'Solid mechanics';
   card.innerHTML = `${thumbnail(lab)}
-    <div class="card-tags"><span class="discipline-tag">${group}</span><span>${topic}</span><span>Beginner</span></div>
+    <div class="card-tags"><span class="discipline-tag">${group}</span><span>${topic}</span><span>${lab.level ?? 'Beginner'}</span></div>
     <strong>${lab.title}</strong><p>${lab.description}</p>
     <span class="open-lab">Open lab <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span>`;
   grid.append(card);

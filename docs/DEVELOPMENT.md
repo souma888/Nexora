@@ -54,3 +54,15 @@ Send `POST /api/materials` with a `model` and an `input` object:
 ## Plotted simulations API
 
 Send `POST /api/waves` with a `model` and an `input` object. Use `GET /api/waves` for the full list of model IDs and each model’s inputs, defaults, limits, and output units. The returned plot rows contain `x` and `y`, with a `reference` trace or sparse `sample` markers where relevant.
+
+The 15 Control Systems models use this endpoint too. Phase/magnitude sweeps explicitly use log10 angular frequency as their horizontal coordinate. Pole-locus plots use `locus` points for the gain sweep and `sample` points for the selected roots. The plot inspector is operable with the mouse or arrow keys.
+
+## Algorithm traces API
+
+`GET /api/algorithms` discovers 15 algorithm definitions, default inputs, input schemas, pseudocode, complexity, invariants, and worked-example notes. `POST /api/algorithms` accepts `{ "model": "bubble", "input": { "values": "3, 1, 2" } }`. Responses contain `model`, `version`, normalized `input`, immutable `frames`, final `result`, and operation `stats`.
+
+Each frame includes a zero-based pseudocode `line`, explanatory `message`, cumulative `stats`, and algorithm-specific state: arrays/active indexes, graph edges/distances/parents/frontier, a knapsack table/current cell, or Euclidean division history. JSON `null` for a graph distance represents infinity (unreachable or not yet discovered). Result distance is also null when a reachable negative cycle prevents reporting finite shortest paths; inspect `negativeCycle` and `path` to distinguish those cases.
+
+Inputs are bounded to keep teaching traces small: arrays contain 1–16 integers (−99 to 99); directed graphs have six nodes and at most 24 distinct edges; knapsack uses up to eight items and capacity 30; GCD inputs are at most 1,000,000. Dijkstra/A* reject negative weights; Bellman–Ford accepts them. Empty graph edge lists, duplicates in arrays, and one zero GCD input are supported. Invalid inputs return 422 with the same `error`, `code`, `field` shape as the engineering endpoints. Malformed JSON returns 400.
+
+The algorithm workbench uses the same pure engine locally. Select a preset or edit inputs, answer the prediction, then play, pause, step backward/forward, or scrub the timeline with arrow keys. The state table is an accessible alternative to the SVG. Tables/graphs scroll inside their own panels on small screens.

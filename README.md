@@ -4,7 +4,7 @@
 
 Nexora is a planned, open-source, browser-based engineering laboratory where students, educators, and engineers can explore engineering principles through visual simulations, parameter-driven experiments, plots, and transparent calculations.
 
-> **Status:** Nineteen labs are available across civil, mechanical, electrical, electronics, and signals and systems. Open the catalog to choose an experiment.
+> **Status:** 49 labs are available across seven sections, including Control Systems and Data Structures & Algorithms. Open the catalog to choose an experiment.
 
 ## Vision
 
@@ -19,7 +19,9 @@ Bring multiple engineering disciplines into one cohesive platform: explore a mod
 | Electrical | DC/AC circuits, transient RLC response, transformers, magnetic circuits |
 | Electronics | Diodes, transistor characteristics, op-amp circuits, filters |
 | Signals & systems | Convolution, Fourier/Laplace transforms, sampling, time/frequency responses |
-| Future expansions | Control systems, fluid mechanics, heat transfer, robotics, numerical methods |
+| Control systems | PID tuning, motor/cruise/tank/temperature feedback, inverted pendulum, antiwindup, Bode, lead/lag, pole locus, Nyquist, discrete feedback |
+| Data structures & algorithms | Six sorting algorithms, linear/binary search, BFS/DFS, Dijkstra, Bellman–Ford, A*, knapsack, Euclidean GCD |
+| Future expansions | Fluid mechanics, heat transfer, robotics, numerical methods |
 
 Modules will be introduced incrementally; this table is a proposed scope, not a commitment to deliver everything in v1.
 
