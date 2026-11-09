@@ -8,7 +8,7 @@ test('Data Structures & Algorithms uses consistent capitalization in navigation 
   await page.goto('/#algorithms');
   await expect(page.getByRole('navigation', { name: 'Engineering disciplines' }).getByRole('link', { name: 'Data Structures & Algorithms', exact: true })).toHaveAttribute('aria-current', 'location');
   await expect(page.locator('#discipline-filter option:checked')).toHaveText('Data Structures & Algorithms');
-  await expect(page.locator('#catalog-status')).toHaveText('45 experiments available');
+  await expect(page.locator('#catalog-status')).toHaveText('55 experiments available');
   await page.getByRole('searchbox').fill('AVL');
   await expect(page.locator('#catalog-status')).toHaveText('1 experiment available');
   await page.getByRole('link', { name: /AVL Tree Rotations/ }).click();

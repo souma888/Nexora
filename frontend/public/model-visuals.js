@@ -1,3 +1,4 @@
+import { computerVisual } from './computer-visuals.js';
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const f = (value, digits=3) => typeof value === 'number' ? value !== 0 && (Math.abs(value)<0.0001 || Math.abs(value)>=1e6) ? value.toExponential(3) : new Intl.NumberFormat('en', { maximumFractionDigits: digits }).format(value) : value ?? '—';
 const text = (x, y, value, fill = 'var(--text)', anchor = 'middle') => `<text x="${x}" y="${y}" text-anchor="${anchor}" style="fill:${fill}">${escape(f(value))}</text>`;
@@ -14,7 +15,9 @@ export function renderModelVisual(host, definition, data, index) {
   let drawing = '', height = 260;
   const frame = v.frames?.[Math.min(index, v.frames.length - 1)];
   const defs = '<defs><marker id="model-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker></defs>';
-  if (v.type === 'flow') {
+  if (['word','cpu','pages','predictor'].includes(v.type)) {
+    const result=computerVisual(v,frame,{box,path,arrow,text});drawing=result.drawing;height=result.height;
+  } else if (v.type === 'flow') {
     const scale = Math.max(v.inlet, v.outlet), a = Math.max(14, 70 * v.inlet / scale), b = Math.max(14, 70 * v.outlet / scale);
     drawing = path(`M35 ${125-a}H150L300 ${125-b}H485M35 ${125+a}H150L300 ${125+b}H485`, 'var(--curve)', 3) + arrow(55,125,460,125) + text(115,30,v.left) + text(400,30,v.right) + text(260,230,v.detail,'var(--muted)');
   } else if (v.type === 'layers') {
@@ -97,7 +100,7 @@ export function renderModelVisual(host, definition, data, index) {
     const series=data.series,first=series[0].x,last=series.at(-1).x,sx=x=>65+390*(x-first)/(last-first),sy=y=>50+150*(-y)/90;
     drawing=path('M65 50V200H455','var(--muted)')+path(series.map((p,i)=>`${i?'L':'M'}${sx(p.x)} ${sy(p.phase)}`).join(''),'var(--result)',2)+[0,-45,-90].map(n=>text(45,sy(n)+5,`${n}°`,'var(--muted)')).join('')+text(260,25,'Bode phase response')+text(260,235,`log₁₀ω · phase at probe ${f(series[index].phase)}°`,'var(--muted)')+`<circle cx="${sx(series[index].x)}" cy="${sy(series[index].phase)}" r="4" fill="var(--result)"/>`;
   }
-  const wide=['adder','fsm','cache'].includes(v.type);
+  const wide=['adder','fsm','cache','word','cpu','pages','predictor'].includes(v.type);
   host.innerHTML=`<svg viewBox="0 0 520 ${height}" class="${wide?'wide-model':''}" role="img" aria-label="${escape(definition.title)} interactive schematic">${defs}${drawing}</svg>`;
 }
 

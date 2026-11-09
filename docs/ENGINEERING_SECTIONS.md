@@ -1,6 +1,6 @@
 # Engineering sections release
 
-Nexora now has 109 labs in 12 sections. Five new sections contain 30 new experiments; the existing 15 Control Systems labs cover PID, second-order response, motor control, pendulum stabilization and Bode analysis. Bode analysis now includes a phase-response diagram synchronized with the magnitude inspector. One discipline registry drives every sidebar, catalog filter and lab breadcrumb.
+Nexora has 129 labs in 12 sections after the [latest computing additions](COMPUTING_LABS.md). This document covers the earlier 30-experiment release across five new sections; the existing 15 Control Systems labs cover PID, second-order response, motor control, pendulum stabilization and Bode analysis. Bode analysis includes a phase-response diagram synchronized with the magnitude inspector. One discipline registry drives every sidebar, catalog filter and lab breadcrumb.
 
 ## Inventory
 

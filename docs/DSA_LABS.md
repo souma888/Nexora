@@ -1,6 +1,6 @@
 # Data Structures & Algorithms: 30 additional labs
 
-The section now contains 45 labs; Nexora contains 79 experiments in total. The sidebar, catalog tags, and discipline selector consistently display **Data Structures & Algorithms**.
+This document covers the earlier batch of 30 additions. The section currently contains 55 labs, and Nexora contains 129 experiments in total; see [the next 20 computing labs](COMPUTING_LABS.md) for the newest additions. The sidebar, catalog tags, and discipline selector consistently display **Data Structures & Algorithms**.
 
 ## New inventory
 
@@ -50,7 +50,7 @@ Circular capacity is 1–8. Head and rear use modulo capacity; size distinguishe
 
 `tests/data-structures.test.js` checks pointer identities, queue wraparound/overflow, all four AVL rotation patterns, heap order, duplicate/negative hash keys, union–find membership, trie terminals, Fenwick blocks and segment sums. `tests/additional-algorithms.test.js` compares sorting with an independent ordering, MST weight with exhaustive spanning-tree enumeration, Floyd distances with exhaustive simple paths, string searches with naive matching, and DP results with exhaustive subsets or breadth-first search. A deliberate Rabin–Karp collision verifies character checking. Sieve results are compared with trial division.
 
-Browser tests open all 45 DSA labs from the catalog on desktop/mobile and compare their displayed outcomes with real API calls. Additional checks cover scripts, validation, reset, keyboard rotation playback, range edits, string edits, capitalization and visual snapshots for trees, hash chains and prefix tables.
+Browser tests open all 55 DSA labs from the catalog on desktop/mobile and compare their displayed outcomes with real API calls. Additional checks cover scripts, validation, reset, keyboard rotation playback, range edits, string edits, capitalization and visual snapshots for trees, hash chains and prefix tables.
 
 - [MIT 6.006 lecture notes](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/lecture-notes/) — search trees, hashing, graph algorithms and dynamic programming.
 - [Princeton Algorithms: Minimum Spanning Trees](https://algs4.cs.princeton.edu/43mst/index.php) — cut/cycle reasoning and Prim/Kruskal.

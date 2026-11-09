@@ -153,7 +153,13 @@ function initialize() {
     label.append(radio, node('span', definition.answer[i])); $('answers').append(label);
   });
   $('algorithm-form').addEventListener('submit', event => event.preventDefault());
-  for (const field of Object.values(fields)) field.addEventListener('input', () => { pause(); clearTimeout(debounce); debounce = setTimeout(() => regenerate(true), 120); });
+  for (const field of Object.values(fields)) field.addEventListener('input', () => {
+    pause(); clearTimeout(debounce);
+    $('status').textContent = 'Updating trace…'; $('status').removeAttribute('data-error');
+    $('result-text').textContent = 'Updating trace for the new input…';
+    for (const key of ['play', 'previous', 'next', 'timeline']) $(key).disabled = true;
+    debounce = setTimeout(() => regenerate(true), 120);
+  });
   const reset = () => { clearTimeout(debounce); $('preset').selectedIndex = 0; for (const radio of document.querySelectorAll('[name="prediction-choice"]')) radio.checked = false; load(definition.defaults); };
   $('reset').addEventListener('click', reset);
   $('load-example').addEventListener('click', () => { clearTimeout(debounce); $('preset').value = 'Worked example'; load(presets['Worked example']); });

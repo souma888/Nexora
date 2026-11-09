@@ -21,15 +21,18 @@ export function validate(definition, input) {
   }
   for (const rule of definition.rules ?? []) {
     if (rule.when && values[rule.when.key] !== rule.when.is) continue;
-    let valid = true;
+    let valid = true, field = rule.field;
     if (rule.type === 'less') valid = values[rule.left] < values[rule.right];
     if (rule.type === 'same-length') valid = values[rule.left].split(',').length === values[rule.right].split(',').length;
     if (rule.type === 'counter-range') valid = values.initial < 2 ** values.bits;
+    if (rule.type === 'fits-width') { const limit=2**values[rule.width],invalid=rule.fields.find(key=>rule.signed?values[key]<-limit/2||values[key]>=limit/2:values[key]<0||values[key]>=limit);valid=invalid===undefined;field=invalid??field; }
+    if (rule.type === 'crc-position') valid=values.error<=values.message.split(',').length+values.generator.length-1;
+    if (rule.type === 'one-bit-state') valid=values.predictor!=='one'||values.initial<=1;
     if (rule.type === 'root-bracket') {
       const fn = x => values.function === 'cubic' ? x ** 3 - x - 2 : Math.cos(x) - x;
       valid = fn(values.lower) * fn(values.upper) <= 0;
     }
-    if (!valid) return { key: rule.field, message: rule.message };
+    if (!valid) return { key: field, message: rule.message };
   }
   return { values };
 }
