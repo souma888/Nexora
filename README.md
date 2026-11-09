@@ -4,7 +4,7 @@
 
 Nexora is an open-source, browser-based engineering laboratory where students, educators, and engineers explore engineering principles through visual simulations, parameter-driven experiments, plots, and transparent calculations.
 
-> **Status:** 109 labs are available across 12 sections. The latest release adds 30 Thermofluids, Digital Logic & Computer Engineering, Robotics & Mechatronics, Computational Engineering, and Materials Science experiments, and expands the Bode workbench with phase response.
+> **Status:** 129 labs are available across 12 sections. The latest additions are 10 Data Structures & Algorithms labs and 10 Computer Engineering labs, with step-by-step algorithm traces, arithmetic registers, error-control codes, scheduling, paging, and branch prediction.
 
 ## Vision
 
@@ -20,9 +20,9 @@ Bring multiple engineering disciplines into one cohesive platform: explore a mod
 | Electronics | Diodes, transistor characteristics, op-amp circuits, filters |
 | Signals & systems | Convolution, Fourier/Laplace transforms, sampling, time/frequency responses |
 | Control systems | PID tuning, motor/cruise/tank/temperature feedback, inverted pendulum, antiwindup, Bode, lead/lag, pole locus, Nyquist, discrete feedback |
-| Data Structures & Algorithms | 45 labs: sorting/searching, stacks/queues/lists, BST/AVL/heaps, hashing, union–find, tries, range-query trees, graph algorithms, string matching, dynamic programming and number theory |
+| Data Structures & Algorithms | 55 labs: sorting/searching, stacks/queues/lists, BST/AVL/heaps, hashing, union–find, tries, range-query trees, graph algorithms, string matching, dynamic programming, number theory, two pointers, sliding windows, Quickselect, Huffman coding, Tarjan SCCs and N-Queens |
 | Thermofluids | Bernoulli, Venturi, pipe losses, composite-wall conduction, transient cooling, heat exchangers, ideal-gas processes, Carnot efficiency, refrigeration COP |
-| Digital Logic & Computer Engineering | Logic gates, full adder, D/T/JK flip-flops, counters, Moore sequence detector, cache mapping with LRU |
+| Digital Logic & Computer Engineering | 16 labs: logic gates, full adder, flip-flops, counters, sequence detector, cache mapping, ALU flags, two’s complement, Booth multiplication, restoring division, Hamming codes, CRC, shift registers, round robin, page replacement and branch prediction |
 | Robotics & Mechatronics | Two-link forward/inverse kinematics, four-bar linkage, differential drive, holonomic trajectory tracking |
 | Computational Engineering | Bisection/Newton roots, Euler/RK4 integration, interpolation, seeded Monte Carlo, mesh convergence |
 | Materials Science | Bilinear plasticity, Basquin fatigue, Kelvin–Voigt creep/recovery, thermal expansion/restraint, composite stiffness bounds |
@@ -64,6 +64,7 @@ These are design choices to evaluate, not installed dependencies.
 - [Roadmap](docs/ROADMAP.md)
 - [Engineering validation](docs/VALIDATION.md)
 - [30 additional Data Structures & Algorithms labs](docs/DSA_LABS.md)
+- [20 more DSA and Computer Engineering labs](docs/COMPUTING_LABS.md)
 - [New engineering sections and reference cases](docs/ENGINEERING_SECTIONS.md)
 - [Development setup](docs/DEVELOPMENT.md)
 - [Contributing](CONTRIBUTING.md)

@@ -1,4 +1,5 @@
 import { additionalAlgorithms, validateAdditional } from './advanced-definitions.js';
+import { dsaMore } from './dsa-more-definitions.js';
 import { integer, list, invalid } from './algorithm-input.js';
 export { AlgorithmInputError } from './algorithm-input.js';
 const array = { values: '38, 12, 27, 8, 43, 19, 5, 31' };
@@ -100,6 +101,7 @@ export const algorithms = {
     '48 = 2×18 + 12; 18 = 1×12 + 6; 12 = 2×6 + 0, so gcd(48,18) = 6.',
     'What happens to the GCD after a remainder step?', ['It stays the same', 'It halves', 'It becomes the remainder'], { a: 48, b: 18 }),
   ...additionalAlgorithms,
+  ...dsaMore,
 };
 
 export const coordinates = [[55, 100], [195, 45], [195, 160], [345, 45], [345, 160], [490, 100]];

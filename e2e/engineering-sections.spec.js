@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { thermofluidModels } from '../backend/thermofluids.js';
 import { digitalModels } from '../backend/digital.js';
+import { computerModels } from '../backend/computer-engineering.js';
 import { roboticModels } from '../backend/robotics.js';
 import { computationalModels } from '../backend/computational.js';
 import { materialScienceModels } from '../backend/material-science.js';
-const models={...thermofluidModels,...digitalModels,...roboticModels,...computationalModels,...materialScienceModels};
-const counts={thermofluids:9,digital:6,robotics:5,computational:5,materials:5};
+const models={...thermofluidModels,...digitalModels,...computerModels,...roboticModels,...computationalModels,...materialScienceModels};
+const counts={thermofluids:9,digital:16,robotics:5,computational:5,materials:5};
 const format=value=>value===null?'—':value!==0&&(Math.abs(value)<0.001||Math.abs(value)>=100000)?value.toExponential(2):new Intl.NumberFormat('en',{maximumFractionDigits:4}).format(value||0);
 const noOverflow=async page=>expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width);
 

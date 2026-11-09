@@ -7,6 +7,7 @@ import { digitalModels } from './digital.js';
 import { roboticModels } from './robotics.js';
 import { computationalModels } from './computational.js';
 import { materialScienceModels } from './material-science.js';
+import { computerModels } from './computer-engineering.js';
 
 export const models = {
   divider: experiment('divider', {
@@ -163,4 +164,5 @@ export const models = {
   ...roboticModels,
   ...computationalModels,
   ...materialScienceModels,
+  ...computerModels,
 };

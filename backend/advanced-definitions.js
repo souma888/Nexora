@@ -1,13 +1,13 @@
 import { integer, list, invalid } from './algorithm-input.js';
 
-const nums = (label = 'Array values', min = -99, max = 99, maxItems = 16) => ({ label, type: 'list', min, max, maxItems });
-const int = (label, min, max) => ({ label, type: 'integer', min, max });
+export const nums = (label = 'Array values', min = -99, max = 99, maxItems = 16) => ({ label, type: 'list', min, max, maxItems });
+export const int = (label, min, max) => ({ label, type: 'integer', min, max });
 const text = (label, maxLength = 48, pattern = '^[A-Za-z0-9 ]+$') => ({ label, type: 'text', maxLength, pattern });
 const commands = ops => ({ label: 'Operations', type: 'commands', commands: ops, maxItems: 24 });
-const edges = (directed, min = 0) => ({ label: `${directed ? 'Directed' : 'Undirected'} edges (from,to,weight)`, type: 'edges', directed, min, max: 20, maxItems: 24 });
+export const edges = (directed, min = 0) => ({ label: `${directed ? 'Directed' : 'Undirected'} edges (from,to,weight)`, type: 'edges', directed, min, max: 20, maxItems: 24 });
 const values = '8, 3, 10, 1, 6, 14, 4, 7';
 const network = '0,1,4; 0,2,2; 1,2,1; 1,3,5; 2,3,8; 2,4,10; 3,4,2; 4,5,3; 3,5,6';
-const make = (id, title, kind, topic, defaults, inputs, description, complexity, space, lines, invariant, example, predict, answer, presets = {}) => ({
+export const make = (id, title, kind, topic, defaults, inputs, description, complexity, space, lines, invariant, example, predict, answer, presets = {}) => ({
   id, title, kind, topic, discipline: 'algorithms', engine: 'extended', version: '1.0', defaults,
   inputs: Object.fromEntries(Object.entries(inputs).map(([key, schema]) => [key, { ...schema, initial: defaults[key] }])),
   description, complexity, space, lines, invariant, example, predict, answer, presets,
@@ -269,5 +269,9 @@ export function validateAdditional(definition, raw) {
   if (definition.id === 'dsu' && result.operations.some(c => c.args.some(v => v < 0 || v >= result.size))) invalid('operations', `Element indexes must be 0–${result.size - 1}.`);
   for (const key of ['index', 'query', 'left', 'right']) if (key in result && result[key] >= result.values.length) invalid(key, `${key} must be smaller than the array length (${result.values.length}).`);
   if ('left' in result && result.left > result.right) invalid('right', 'Range end must be at least the start.');
+  for (const rule of definition.constraints ?? []) {
+    if (rule.type === 'length-bound' && result[rule.key] > result[rule.array].length) invalid(rule.key, `${rule.key} must not exceed the array length.`);
+    if (rule.type === 'minimum-length' && result[rule.key].length < rule.minimum) invalid(rule.key, `Enter at least ${rule.minimum} values.`);
+  }
   return result;
 }

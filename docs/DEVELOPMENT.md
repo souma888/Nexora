@@ -63,7 +63,7 @@ The 15 Control Systems models use this endpoint too. Phase/magnitude sweeps expl
 
 ## Algorithm traces API
 
-`GET /api/algorithms` discovers 45 algorithm/data-structure definitions, default inputs, input schemas, pseudocode, complexity, invariants, and worked-example notes. `POST /api/algorithms` accepts `{ "model": "bubble", "input": { "values": "3, 1, 2" } }`. Responses contain `model`, `version`, normalized `input`, immutable `frames`, final `result`, and operation `stats`.
+`GET /api/algorithms` discovers 55 algorithm/data-structure definitions, default inputs, input schemas, pseudocode, complexity, invariants, and worked-example notes. `POST /api/algorithms` accepts `{ "model": "bubble", "input": { "values": "3, 1, 2" } }`. Responses contain `model`, `version`, normalized `input`, immutable `frames`, final `result`, and operation `stats`.
 
 Each frame includes a zero-based pseudocode `line`, explanatory `message`, cumulative `stats`, and algorithm-specific state: arrays/active indexes, graph edges/distances/parents/frontier, a knapsack table/current cell, or Euclidean division history. JSON `null` for a graph distance represents infinity (unreachable or not yet discovered). Result distance is also null when a reachable negative cycle prevents reporting finite shortest paths; inspect `negativeCycle` and `path` to distinguish those cases.
 

@@ -31,7 +31,7 @@ export function renderAdditional(frame, visual, table, caption) {
     width = Math.max(520, cursor * 100 + 30); height = Math.max(250, 110 + maxDepth * 100);
     const dx = (width - Math.max(100, cursor * 100 + 30)) / 2;
     for (const [id, [x, y]] of positions) positions.set(id, [x + dx, y]);
-    drawing = view.edges.map(([from, to]) => { const [x, y] = positions.get(from), [a, b] = positions.get(to); return `<path d="M${x} ${y + 22}L${a} ${b - 22}" stroke="var(--border)" stroke-width="2"/>`; }).join('');
+    drawing = view.edges.map(([from, to, edgeLabel]) => { const [x, y] = positions.get(from), [a, b] = positions.get(to); return `<path d="M${x} ${y + 22}L${a} ${b - 22}" stroke="var(--border)" stroke-width="2"/>${edgeLabel===undefined?'':label((x+a)/2+(a<x?-9:9),(y+b)/2,edgeLabel,'var(--muted)')}`; }).join('');
     drawing += view.nodes.map(item => {
       const [x, y] = positions.get(item.id);
       return `<circle cx="${x}" cy="${y}" r="23" fill="var(--surface-1)" stroke="${color(item)}" stroke-width="2"/>${label(x, y + 5, item.label, color(item))}${label(x, y + 45, item.detail, 'var(--muted)')}`;
@@ -49,7 +49,7 @@ export function renderAdditional(frame, visual, table, caption) {
       const offset = view.directed && view.edges.some(other => other.from === e.to && other.to === e.from) ? 7 : 0, ox = -dy * offset, oy = dx * offset;
       return `<path d="M${x+dx*23+ox} ${y+dy*23+oy}L${a-dx*25+ox} ${b-dy*25+oy}" stroke="${stroke}" stroke-width="${selected ? 3 : 1.6}" ${view.directed ? 'marker-end="url(#advanced-arrow)"' : ''}/>${label((x+a)/2+ox, (y+b)/2-7+oy, e.weight, stroke)}`;
     }).join('');
-    drawing += coordinates.map(([x,y], i) => `<circle cx="${x}" cy="${y}" r="21" fill="var(--surface-1)" stroke="${view.active.includes(i) ? 'var(--load)' : view.visited.includes(i) ? 'var(--result)' : 'var(--curve)'}" stroke-width="2"/>${label(x,y+5,i)}`).join('');
+    drawing += coordinates.map(([x,y], i) => `<circle cx="${x}" cy="${y}" r="21" fill="var(--surface-1)" stroke="${view.active.includes(i) ? 'var(--load)' : view.visited.includes(i) ? 'var(--result)' : 'var(--curve)'}" stroke-width="2"/>${label(x,y+5,i)}${view.groups?.[i]===null||view.groups?.[i]===undefined?'':label(x,y+39,`C${view.groups[i]}`,'var(--result)')}`).join('');
   } else if (view.type === 'text') {
     width = Math.max(520, 34 * Math.max(view.text.length, view.pattern.length + view.offset) + 40); height = 250;
     const chars = (s, y, offset, active, isText) => [...s].map((c,i) => {
