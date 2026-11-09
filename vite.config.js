@@ -29,7 +29,7 @@ const header = `
           <a href="/#electronics" data-discipline="electronics">Electronics</a>
           <a href="/#signals" data-discipline="signals">Signals &amp; systems</a>
           <a href="/#control" data-discipline="control">Control systems</a>
-          <a href="/#algorithms" data-discipline="algorithms">Data structures &amp; algorithms</a>
+          <a href="/#algorithms" data-discipline="algorithms">Data Structures &amp; Algorithms</a>
         </div>
       </nav>
     </aside>`;

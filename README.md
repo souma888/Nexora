@@ -4,7 +4,7 @@
 
 Nexora is a planned, open-source, browser-based engineering laboratory where students, educators, and engineers can explore engineering principles through visual simulations, parameter-driven experiments, plots, and transparent calculations.
 
-> **Status:** 49 labs are available across seven sections, including Control Systems and Data Structures & Algorithms. Open the catalog to choose an experiment.
+> **Status:** 79 labs are available across seven sections, including 45 Data Structures & Algorithms labs. Open the catalog to choose an experiment.
 
 ## Vision
 
@@ -20,7 +20,7 @@ Bring multiple engineering disciplines into one cohesive platform: explore a mod
 | Electronics | Diodes, transistor characteristics, op-amp circuits, filters |
 | Signals & systems | Convolution, Fourier/Laplace transforms, sampling, time/frequency responses |
 | Control systems | PID tuning, motor/cruise/tank/temperature feedback, inverted pendulum, antiwindup, Bode, lead/lag, pole locus, Nyquist, discrete feedback |
-| Data structures & algorithms | Six sorting algorithms, linear/binary search, BFS/DFS, Dijkstra, Bellman–Ford, A*, knapsack, Euclidean GCD |
+| Data Structures & Algorithms | 45 labs: sorting/searching, stacks/queues/lists, BST/AVL/heaps, hashing, union–find, tries, range-query trees, graph algorithms, string matching, dynamic programming and number theory |
 | Future expansions | Fluid mechanics, heat transfer, robotics, numerical methods |
 
 Modules will be introduced incrementally; this table is a proposed scope, not a commitment to deliver everything in v1.
@@ -59,6 +59,7 @@ These are design choices to evaluate, not installed dependencies.
 - [Feature specification](docs/FEATURES.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Engineering validation](docs/VALIDATION.md)
+- [30 additional Data Structures & Algorithms labs](docs/DSA_LABS.md)
 - [Development setup](docs/DEVELOPMENT.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)

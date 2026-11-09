@@ -7,6 +7,8 @@ textarea.algorithm-input { min-height: 102px; resize: vertical; line-height: 1.6
 .algorithm-visual { background: var(--plot-bg); padding: 16px 10px; min-height: 250px; display: grid; align-items: center; }
 .algorithm-visual svg { display: block; width: 100%; min-width: 480px; max-height: 310px; }
 .algorithm-visual .item-diagram { min-width: 0; max-height: none; }
+.algorithm-visual:has(.advanced-diagram) { max-height: 480px; justify-items: start; }
+.algorithm-visual .advanced-diagram { width: 100%; max-height: none; flex-shrink: 0; }
 .scroll-region { overflow: auto; max-width: 100%; }
 .playback { padding: 14px; border-top: 1px solid var(--border); }
 .playback-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 12px; }
@@ -36,3 +38,7 @@ textarea.algorithm-input { min-height: 102px; resize: vertical; line-height: 1.6
   .playback > label span { display: block; margin-left: 0; }
 }
 @media print { .playback, #algorithm-picker, #preset { display: none; } .scroll-region { overflow: visible; } .algorithm-visual svg { min-width: 0; } }
+@media print {
+  .algorithm-visual:has(.advanced-diagram) { max-height: none; display: block; }
+  .algorithm-visual .advanced-diagram { min-width: 0 !important; max-width: 100%; height: auto !important; }
+}

@@ -33,7 +33,7 @@ for (const [id, definition] of Object.entries(algorithms)) {
   test(`algorithm: ${definition.title} opens, scrubs, and returns the API result`, async ({ page }) => {
     const errors = monitor(page);
     await page.goto('/#algorithms');
-    await expect(page.getByRole('status')).toHaveText('15 experiments available');
+    await expect(page.getByRole('status')).toHaveText('45 experiments available');
     await page.locator(`.sim-link[href="/algorithms.html?lab=${id}"]`).click();
     await expect(page.locator('#algorithm-lab')).toBeVisible();
     await expect(page.locator('a[data-discipline="algorithms"]')).toHaveAttribute('aria-current', 'location');
