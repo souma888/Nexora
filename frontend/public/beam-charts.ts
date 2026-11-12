@@ -37,7 +37,8 @@ function inspect(index: number) {
 
 export function drawBeamCharts(points: Sample[]) {
   series = points;
-  const width = svg.clientWidth < 450 ? 380 : 640;
+  // Keep plot labels at a readable scale without a size jump near 450px.
+  const width = Math.max(380, Math.min(640, Math.round(svg.clientWidth)));
   right = width - 34;
   svg.setAttribute('viewBox', `0 0 ${width} 524`);
   const span = series.at(-1)!.x;

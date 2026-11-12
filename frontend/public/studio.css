@@ -62,20 +62,20 @@
 .nav-group { margin: 18px 8px 4px; color: var(--muted); font: 12px var(--mono); letter-spacing: .1em; }
 .nav-group:first-of-type { margin-top: 9px; }
 @media (min-width:741px) { .discipline-nav { max-height: calc(100dvh - 16px); } }
-body[data-workbench="control"] .intro { border-bottom: 1px solid var(--border); padding: 0 0 18px; }
-body[data-workbench="control"] .intro h1 { font-size: clamp(28px,3vw,38px); }
-body[data-workbench="control"] .drawing { background-image: none; padding: 10px 12px 0; }
-body[data-workbench="control"] #wave-plot polyline { stroke: var(--result); animation: instrument-in 220ms ease-out; }
-body[data-workbench="control"] #wave-plot polyline[stroke-dasharray] { stroke: var(--muted); }
-body[data-workbench="control"] .legend .green { background: var(--result); }
-body[data-workbench="control"] #experiment { display: grid; grid-template-columns: minmax(270px,330px) minmax(0,1fr); gap: 16px; align-items: start; }
-body[data-workbench="control"] #experiment .workbench { display: contents; }
-body[data-workbench="control"] .setup { grid-column: 1; grid-row: 1 / span 2; }
-body[data-workbench="control"] .schematic { grid-column: 2; grid-row: 1; border-top: 2px solid var(--brand); }
-body[data-workbench="control"] .results { grid-column: 2; grid-row: 2; margin: 0; }
-body[data-workbench="control"] .notes, body[data-workbench="control"] #model-warnings, body[data-workbench="control"] #model-table { grid-column: 1 / -1; margin: 0; }
-body[data-workbench="control"] .metrics { gap: 10px; margin: 0; }
-body[data-workbench="control"] .parameter-slider { accent-color: var(--brand); }
+body[data-workbench] .intro { border-bottom: 1px solid var(--border); padding: 0 0 18px; }
+body[data-workbench] .intro h1 { font-size: clamp(28px,3vw,38px); }
+body[data-workbench] .drawing { background-image: none; padding: 10px 12px 0; }
+body[data-workbench] #wave-plot polyline { stroke: var(--result); animation: instrument-in 220ms ease-out; }
+body[data-workbench] #wave-plot polyline[stroke-dasharray] { stroke: var(--muted); }
+body[data-workbench] .legend .green { background: var(--result); }
+body[data-workbench] #experiment { display: grid; grid-template-columns: minmax(270px,330px) minmax(0,1fr); gap: 16px; align-items: start; }
+body[data-workbench] #experiment .workbench { display: contents; }
+body[data-workbench] .setup { grid-column: 1; grid-row: 1 / span 2; }
+body[data-workbench] .schematic { grid-column: 2; grid-row: 1; border-top: 2px solid var(--brand); }
+body[data-workbench] .results { grid-column: 2; grid-row: 2; margin: 0; }
+body[data-workbench] .notes, body[data-workbench] #model-warnings, body[data-workbench] #model-table { grid-column: 1 / -1; margin: 0; }
+body[data-workbench] .metrics { gap: 10px; margin: 0; }
+body[data-workbench] .parameter-slider { accent-color: var(--brand); }
 @keyframes instrument-in { from { opacity: .3; } to { opacity: 1; } }
 @media (max-width:1100px) { .console-body { grid-template-columns: minmax(0,1fr); } .console-controls { border-left: 0; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; align-items: center; } .console-controls input { margin: 0; } .console-controls > p { margin: 0; } .studio-feature { gap: 20px; } }
 @media (max-width:740px) {
@@ -91,10 +91,10 @@ body[data-workbench="control"] .parameter-slider { accent-color: var(--brand); }
   .studio-paths strong { font-size: 18px; }
   .studio-catalog-title { flex-wrap: wrap; }
   .nav-group { display: none; }
-  body[data-workbench="control"] #experiment { display: block; }
-  body[data-workbench="control"] #experiment .workbench { display: grid; }
-  body[data-workbench="control"] .setup, body[data-workbench="control"] .schematic { grid-column: auto; grid-row: auto; }
-  body[data-workbench="control"] .results,body[data-workbench="control"] .notes { margin-top: 16px; }
+  body[data-workbench] #experiment { display: block; }
+  body[data-workbench] #experiment .workbench { display: grid; }
+  body[data-workbench] .setup, body[data-workbench] .schematic { grid-column: auto; grid-row: auto; }
+  body[data-workbench] .results,body[data-workbench] .notes { margin-top: 16px; }
 }
-@media (prefers-reduced-motion:reduce) { .robot-assembly, .studio-primary, .studio-paths a { transition: none; } .console-curve, body[data-workbench="control"] #wave-plot polyline { animation: none; } .studio-artwork:hover .robot-assembly { transform: none; } }
-@media print { #studio { display: none; } body[data-workbench="control"] #experiment { display: block; } body[data-workbench="control"] #experiment .workbench { display: block; } }
+@media (prefers-reduced-motion:reduce) { .robot-assembly, .studio-primary, .studio-paths a { transition: none; } .console-curve, body[data-workbench] #wave-plot polyline { animation: none; } .studio-artwork:hover .robot-assembly { transform: none; } }
+@media print { #studio { display: none; } body[data-workbench] #experiment { display: block; } body[data-workbench] #experiment .workbench { display: block; } }

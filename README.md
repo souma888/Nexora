@@ -68,6 +68,7 @@ These are design choices to evaluate, not installed dependencies.
 - [New engineering sections and reference cases](docs/ENGINEERING_SECTIONS.md)
 - [Development setup](docs/DEVELOPMENT.md)
 - [Homepage and Control Systems design preview / revert instructions](docs/CONTROL_STUDIO_PREVIEW.md)
+- [Site-wide Engineering Studio and Instrument Panel design](docs/SITE_WIDE_STUDIO.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 

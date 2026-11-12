@@ -12,8 +12,18 @@ export function subjectArt(kind) {
     pendulum: '<path d="M88 64h108M115 55v9m52-9v9"/><rect x="102" y="43" width="78" height="12" rx="3"/><path d="M140 43l29-30"/><circle cx="171" cy="11" r="6"/><path d="M111 18q13-12 28-6m-6-4 6 4-6 5" class="art-result"/>',
     robot: '<path d="M115 70h85l-8-12h-68ZM150 58V41l-31-17 10-12 44 24v22M130 13l47-8 3 12-47 9m45-9 18 10m-4-14 10 8-5 10"/><circle cx="127" cy="19" r="10"/><circle cx="161" cy="41" r="9"/>',
     bars: [29,46,17,39,60,23,51,34].map((h,i)=>`<rect x="${45+i*27}" y="${73-h}" width="16" height="${h}" rx="2" class="${i===4?'art-load':''}"/>`).join(''),
+    wave: '<path d="M25 42h250M35 42q18-55 36 0t36 0t36 0t36 0t36 0t36 0"/><path d="M71 15v54m36-54v54m36-54v54m36-54v54m36-54v54" class="art-result" stroke-dasharray="2 5"/>',
+    flow: '<path d="M24 15h70l45 17h30l45-17h62M24 67h70l45-17h30l45 17h62M42 41h203m-9-7 9 7-9 7"/><path d="M101 16V6h110v9m-70 17V6" class="art-load"/>',
+    chip: '<rect x="106" y="12" width="88" height="58" rx="6"/><rect x="126" y="28" width="48" height="26" rx="2"/><path d="M89 24h17m-17 17h17m-17 17h17m88-34h17m-17 17h17m-17 17h17m-81-46V3m22 9V3m22 9V3m-44 67v9m22-9v9m22-9v9"/><path d="m143 33-5 8 5 8m14-16 5 8-5 8" class="art-result"/>',
+    lattice: '<path d="m93 22 55-16 57 17-3 42-52 12-57-16Zm0 0 57 23 55-22m-55 22v32m-57-16 55-23 54 27M148 6v32"/>'+[[93,22],[148,6],[205,23],[202,65],[150,77],[93,61],[150,45]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="var(--plot-bg)" class="art-result"/>`).join(''),
+    network: '<path d="m50 42 70-25 62 28 65-29m-197 26 70 26 62-23 65 23m-127-51v51m62-23v25"/>'+[[50,42],[120,17],[120,68],[182,45],[247,16],[247,68]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="10" fill="var(--plot-bg)" class="${i===3?'art-load':'art-result'}"/>`).join(''),
+    numerical: '<path d="M40 8v61h225M55 55Q110-18 165 42T255 26"/><path d="m57 55 42-29 44-3 43 24 42-3 26-18" class="art-result"/>'+[[57,55],[99,26],[143,23],[186,47],[228,44],[254,26]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3" class="art-load"/>`).join(''),
   };
   return `<svg viewBox="0 0 300 82" aria-hidden="true" class="subject-art"><g ${line}>${drawings[kind]??drawings.feedback}</g></svg>`;
+}
+export function disciplineHero(kind,label){
+  if(kind==='robot'||kind==='motor')return robotHero;
+  return `<div class="discipline-illustration"><div class="illustration-heading"><span>EXPERIMENT STUDIO</span><span>01 / ${label}</span></div><div class="illustration-object">${subjectArt(kind)}</div><div class="illustration-scale"><span>MODEL</span><span>↔</span><span>RESPONSE</span></div><p>Change a parameter. Follow the result.</p></div>`;
 }
 export function controlArt(id) {
   if(id==='poles')return 'poles';
