@@ -1,11 +1,12 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { disciplines } from './backend/disciplines.js';
+import { navigationGroups, disciplineIcon } from './backend/discipline-navigation.js';
 
 const root = resolve('frontend/public');
 const pages = ['index', 'beam', 'axial', 'mohr', 'simulation', 'algorithms'];
 const escape = label => label.replaceAll('&', '&amp;');
-const links = Object.entries(disciplines).map(([id, label]) => `<a href="/#${id}" data-discipline="${id}">${escape(label)}</a>`).join('');
+const links = navigationGroups.map(([name,ids])=>`<p class="nav-group">${name}</p>`+ids.map(id=>`<a href="/#${id}" data-discipline="${id}">${disciplineIcon(id)}<span>${escape(disciplines[id])}</span></a>`).join('')).join('');
 const options = Object.entries(disciplines).map(([id, label]) => `<option value="${id}">${escape(label)}</option>`).join('');
 const header = `
   <a class="skip" href="#main">Skip to content</a>
@@ -26,7 +27,7 @@ const header = `
       <nav class="discipline-nav" aria-label="Engineering disciplines">
         <h2>Disciplines</h2>
         <div class="discipline-links">
-          <a href="/#all" data-discipline="">All disciplines</a>
+          <a href="/#all" data-discipline="">${disciplineIcon('all')}<span>All disciplines</span></a>
           ${links}
         </div>
       </nav>

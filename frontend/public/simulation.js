@@ -82,6 +82,7 @@ function drawPlot(definition, data) {
 
 function initialize(definition) {
   const { id, title, discipline, lab, inputs, metrics, plot } = definition;
+  document.body.dataset.workbench=discipline;
   document.title = `${title} · Nexora Engineering Lab`;
   byId('title').replaceChildren(title, element('span', '.'));
   byId('discipline').textContent = disciplines[discipline];
@@ -189,6 +190,10 @@ function initialize(definition) {
   byId('load-example').addEventListener('click', () => byId('reset').click());
   byId('loading').hidden = true;
   byId('experiment').hidden = false;
+  if(discipline==='control'){
+    const query=new URLSearchParams(location.search);
+    for(const[key,field]of Object.entries(inputs)){const raw=query.get(key),value=Number(raw);if(raw!==null&&raw.trim()&&Number.isFinite(value)&&value>=field.min&&value<=field.max)form.elements.namedItem(key).value=String(value);}
+  }
   analyze();
 }
 

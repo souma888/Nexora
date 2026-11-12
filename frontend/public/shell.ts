@@ -22,10 +22,12 @@ export function setActiveDiscipline(discipline: string) {
     if (link.dataset.discipline === discipline) {
       link.setAttribute('aria-current', 'location');
       const list = link.closest<HTMLElement>('.discipline-links');
-      if (list && matchMedia('(max-width: 740px)').matches) {
-        const top = link.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop;
-        if (top < list.scrollTop || top + link.offsetHeight > list.scrollTop + list.clientHeight) {
-          list.scrollTop = Math.max(0, top - list.clientHeight / 2 + link.offsetHeight / 2);
+      if (list) {
+        const scrollHost = matchMedia('(max-width: 740px)').matches ? list : link.closest<HTMLElement>('.discipline-nav');
+        if (!scrollHost) continue;
+        const top = link.getBoundingClientRect().top - scrollHost.getBoundingClientRect().top + scrollHost.scrollTop;
+        if (top < scrollHost.scrollTop || top + link.offsetHeight > scrollHost.scrollTop + scrollHost.clientHeight) {
+          scrollHost.scrollTop = Math.max(0, top - scrollHost.clientHeight / 2 + link.offsetHeight / 2);
         }
       }
     }

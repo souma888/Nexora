@@ -102,7 +102,7 @@ export function setupWorkbench<Result>({
       const min = Number(input.min), max = Number(input.max);
       input.value = logScale(input)
         ? String(Math.min(max, Math.max(min, Number((min * (max / min) ** (slider.valueAsNumber / 300)).toPrecision(5)))))
-        : slider.value;
+        : input.step === 'any' ? String(Number((min+(max-min)*slider.valueAsNumber/300).toPrecision(12))) : slider.value;
       input.dispatchEvent(new Event('input', { bubbles: true }));
     });
   }
@@ -110,10 +110,11 @@ export function setupWorkbench<Result>({
     for (const [input, slider] of sliders) {
       const min = Number(input.min), max = Number(input.max);
       const log = logScale(input);
-      slider.min = log ? '0' : input.min;
-      slider.max = log ? '300' : input.max;
-      slider.step = log ? '1' : input.step === 'any' ? String((max - min) / 300) : input.step;
-      slider.value = log ? String(Math.round(300 * Math.log(Math.max(min, Number(input.value)) / min) / Math.log(max / min))) : input.value;
+      const normalized = log || input.step === 'any';
+      slider.min = normalized ? '0' : input.min;
+      slider.max = normalized ? '300' : input.max;
+      slider.step = normalized ? '1' : input.step;
+      slider.value = log ? String(Math.round(300 * Math.log(Math.max(min, Number(input.value)) / min) / Math.log(max / min))) : normalized ? String(Math.round(300*(Number(input.value)-min)/(max-min))) : input.value;
       const unit = input.nextElementSibling?.textContent?.trim();
       slider.setAttribute('aria-valuetext', `${input.value || 'Unset'}${unit ? ` ${unit}` : ''}`);
     }
