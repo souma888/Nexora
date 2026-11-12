@@ -9,7 +9,7 @@ const format=value=>value===null?'—':value!==0&&(Math.abs(value)<0.001||Math.a
 const noOverflow=async page=>expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width);
 
 for(const[id,{definition:d}]of Object.entries(models))test(`expansion: ${id} is discoverable, interactive and agrees with its API`,async({page})=>{
-  const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(`/#${d.discipline}`);
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(`/#${d.discipline}`,{waitUntil:'domcontentloaded'});
   await expect(page.locator('#catalog-status')).toHaveText('6 experiments available');
   await page.locator(`.sim-link[href="/simulation.html?lab=${id}"]`).click();
   await expect(page.locator('#status')).toHaveText('Live results');await expect(page.getByRole('heading',{level:1})).toContainText(d.title);
@@ -31,20 +31,20 @@ for(const[id,{definition:d}]of Object.entries(models))test(`expansion: ${id} is 
 
 test('expansion presets, invalid physical domains, singular metrics and recovery are clear',async({page})=>{
   for(const[id,preset,warning]of [['amradio','Overmodulated envelope','Overmodulated'],['buckconverter','Discontinuous-conduction warning','continuous-conduction'],['batterydischarge','View past cutoff','empty SOC'],['weibull','Initial hazard singularity','unbounded']]){
-    await page.goto(`/simulation.html?lab=${id}`);await page.getByLabel('Experiment preset').selectOption(preset);await expect(page.locator('#model-warnings')).toContainText(warning);
+    await page.goto(`/simulation.html?lab=${id}`,{waitUntil:'domcontentloaded'});await page.getByLabel('Experiment preset').selectOption(preset);await expect(page.locator('#model-warnings')).toContainText(warning);
     if(id==='weibull')await expect(page.locator('#metric-hazard')).toHaveText('—');
     await page.getByRole('button',{name:'Reset',exact:true}).click();await expect(page.locator('#model-warnings')).toBeHidden();
   }
-  await page.goto('/simulation.html?lab=mm1queue');await page.getByLabel('Mean arrival rate λ',{exact:true}).fill('6');await expect(page.locator('#status')).toHaveAttribute('data-error','true');
+  await page.goto('/simulation.html?lab=mm1queue',{waitUntil:'domcontentloaded'});await page.getByLabel('Mean arrival rate λ',{exact:true}).fill('6');await expect(page.locator('#status')).toHaveAttribute('data-error','true');
   await page.getByRole('button',{name:'Reset',exact:true}).click();await expect(page.locator('#status')).toHaveText('Live results');
-  await page.goto('/simulation.html?lab=criticalpath');await page.getByLabel('Task durations A, B, C, D, E, F',{exact:true}).fill('1,2,3');await expect(page.locator('#status')).toContainText('exactly six');
+  await page.goto('/simulation.html?lab=criticalpath',{waitUntil:'domcontentloaded'});await page.getByLabel('Task durations A, B, C, D, E, F',{exact:true}).fill('1,2,3');await expect(page.locator('#status')).toContainText('exactly six');
   await page.getByLabel('Experiment preset').selectOption('Two critical branches');await expect(page.locator('#metric-critical')).toHaveText('6');await noOverflow(page);
 });
 
 test('new diagrams remain readable in dark and light themes',async({page},testInfo)=>{
   await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});
   for(const id of ['qpsk','solarpv','buckconverter','isentropicflow','consecutive','criticalpath']){
-    await page.goto(`/simulation.html?lab=${id}`);await expect(page.locator('#status')).toHaveText('Live results');await page.evaluate(()=>document.fonts.ready);
+    await page.goto(`/simulation.html?lab=${id}`,{waitUntil:'domcontentloaded'});await expect(page.locator('#status')).toHaveText('Live results');await page.evaluate(()=>document.fonts.ready);
     await page.locator('#model-visual').screenshot({path:testInfo.outputPath(`${id}-dark.png`)});await noOverflow(page);
   }
   await page.getByRole('button',{name:'Switch to light theme'}).click();await page.locator('#model-visual').screenshot({path:testInfo.outputPath('project-light.png')});await noOverflow(page);
