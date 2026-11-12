@@ -24,6 +24,7 @@ export function validate(definition, input) {
     let valid = true, field = rule.field;
     if (rule.type === 'less') valid = values[rule.left] < values[rule.right];
     if (rule.type === 'same-length') valid = values[rule.left].split(',').length === values[rule.right].split(',').length;
+    if (rule.type === 'list-length') valid = values[rule.field].split(',').length === rule.count;
     if (rule.type === 'counter-range') valid = values.initial < 2 ** values.bits;
     if (rule.type === 'fits-width') { const limit=2**values[rule.width],invalid=rule.fields.find(key=>rule.signed?values[key]<-limit/2||values[key]>=limit/2:values[key]<0||values[key]>=limit);valid=invalid===undefined;field=invalid??field; }
     if (rule.type === 'crc-position') valid=values.error<=values.message.split(',').length+values.generator.length-1;

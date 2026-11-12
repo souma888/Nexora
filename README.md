@@ -4,13 +4,13 @@
 
 Nexora is an open-source, browser-based engineering laboratory where students, educators, and engineers explore engineering principles through visual simulations, parameter-driven experiments, plots, and transparent calculations.
 
-> **Status:** 129 labs are available across 12 sections. The latest additions are 10 Data Structures & Algorithms labs and 10 Computer Engineering labs, with step-by-step algorithm traces, arithmetic registers, error-control codes, scheduling, paging, and branch prediction.
+> **Status:** 159 labs are available across 17 sections. The latest release adds 30 simulations in Communications & RF, Power & Energy, Aerospace & Flight, Chemical & Process Engineering, and Industrial & Reliability Engineering, with live previews, probe-linked diagrams, worked examples and independent reference checks.
 
 ## Vision
 
 Bring multiple engineering disciplines into one cohesive platform: explore a model, modify inputs, observe outputs, compare experiments, and understand the governing equations.
 
-## Planned disciplines
+## Disciplines and scope
 
 | Discipline | Example simulation modules |
 | --- | --- |
@@ -26,8 +26,13 @@ Bring multiple engineering disciplines into one cohesive platform: explore a mod
 | Robotics & Mechatronics | Two-link forward/inverse kinematics, four-bar linkage, differential drive, holonomic trajectory tracking |
 | Computational Engineering | Bisection/Newton roots, Euler/RK4 integration, interpolation, seeded Monte Carlo, mesh convergence |
 | Materials Science | Bilinear plasticity, Basquin fatigue, Kelvin–Voigt creep/recovery, thermal expansion/restraint, composite stiffness bounds |
+| Communications & RF | AM, FM, BPSK, Gray QPSK, free-space link budget, Shannon capacity |
+| Power & Energy | Solar PV maximum power, wind/Betz limit, battery discharge, buck/boost converters, balanced three-phase power |
+| Aerospace & Flight | Ballistics, drag polar, banked turns, rocket equation, standard atmosphere, isentropic flow |
+| Chemical & Process Engineering | CSTR/PFR conversion, Arrhenius kinetics, consecutive reactions, mixing tank, Langmuir adsorption, osmosis |
+| Industrial & Reliability Engineering | M/M/1 queues, EOQ, critical path, Weibull survival, series/parallel reliability, X-bar control chart |
 
-Modules will be introduced incrementally; this table is a proposed scope, not a commitment to deliver everything in v1.
+The catalog contains working labs in every section. Some broader examples above remain future scope; the release guides list exactly what is available.
 
 ## Intended experience
 
@@ -63,6 +68,7 @@ These are design choices to evaluate, not installed dependencies.
 - [Feature specification](docs/FEATURES.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Engineering validation](docs/VALIDATION.md)
+- [30 labs in five additional engineering sections](docs/ENGINEERING_EXPANSION.md)
 - [30 additional Data Structures & Algorithms labs](docs/DSA_LABS.md)
 - [20 more DSA and Computer Engineering labs](docs/COMPUTING_LABS.md)
 - [New engineering sections and reference cases](docs/ENGINEERING_SECTIONS.md)

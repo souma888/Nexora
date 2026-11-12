@@ -5,4 +5,6 @@ export const disciplines = {
   algorithms: 'Data Structures & Algorithms', thermofluids: 'Thermofluids',
   digital: 'Digital Logic & Computer Engineering', robotics: 'Robotics & Mechatronics',
   computational: 'Computational Engineering', materials: 'Materials Science',
+  communications: 'Communications & RF', energy: 'Power & Energy', aerospace: 'Aerospace & Flight',
+  chemical: 'Chemical & Process Engineering', industrial: 'Industrial & Reliability Engineering',
 };
