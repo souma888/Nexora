@@ -190,9 +190,9 @@ function initialize(definition) {
   byId('load-example').addEventListener('click', () => byId('reset').click());
   byId('loading').hidden = true;
   byId('experiment').hidden = false;
-  if(discipline==='control'){
+  {
     const query=new URLSearchParams(location.search);
-    for(const[key,field]of Object.entries(inputs)){const raw=query.get(key),value=Number(raw);if(raw!==null&&raw.trim()&&Number.isFinite(value)&&value>=field.min&&value<=field.max)form.elements.namedItem(key).value=String(value);}
+    for(const[key,field]of Object.entries(inputs)){const raw=query.get(key),value=Number(raw);if(raw===null)continue;if(field.type==='enum'&&field.options.includes(raw))form.elements.namedItem(key).value=raw;else if(field.type!=='enum'&&field.type!=='integer-list'&&raw.trim()&&Number.isFinite(value)&&value>=field.min&&value<=field.max&&(!field.integer||Number.isInteger(value)))form.elements.namedItem(key).value=String(value);}
   }
   analyze();
 }

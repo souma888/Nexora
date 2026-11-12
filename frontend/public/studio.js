@@ -1,6 +1,9 @@
 import { controlModels } from '../../backend/control-experiments.js';
 import { robotHero, subjectArt } from './studio-art.js';
-export function initStudio() {
+import { disciplineHero } from './studio-art.js';
+import { studioSections, sectionLabel } from './studio-sections.js';
+import { createSectionPreview } from './section-preview.js';
+export function initStudio(labs) {
   const section=document.createElement('section');section.id='studio';section.setAttribute('aria-label','Featured engineering experiments');
   document.querySelector('.catalog-intro').before(section);
   section.innerHTML=`<header class="studio-hero"><div class="studio-copy"><p class="studio-eyebrow">NEXORA / THE EXPERIMENT STUDIO</p><h1>Ideas into<br>experiments<span>.</span></h1><p class="studio-description">Understand it by changing it. Explore real engineering models, tune a system, and follow the mathematics behind every result.</p><a class="studio-primary" href="#catalog-filters">Explore the experiments <span aria-hidden="true">↗</span></a><div class="studio-facts"><span><strong>129</strong> experiments</span><span><strong>12</strong> disciplines</span><span>Open source. Always curious.</span></div></div><div class="studio-artwork">${robotHero}</div></header>
@@ -9,6 +12,8 @@ export function initStudio() {
   <div class="studio-paths"><a href="/#civil">${subjectArt('beam')}<span>01 / STRUCTURES</span><strong>Find the load path.</strong><small>Explore structural mechanics ↗</small></a><a href="/simulation.html?lab=pid">${subjectArt('feedback')}<span>02 / FEEDBACK</span><strong>Tune the behavior.</strong><small>Tune a controller ↗</small></a><a href="/algorithms.html?lab=quick">${subjectArt('bars')}<span>03 / COMPUTATION</span><strong>See the next step.</strong><small>Trace an algorithm ↗</small></a></div>`;
   section.querySelectorAll('output').forEach(output=>{const value=document.createElement('span');value.id=output.id;value.className='console-value';value.textContent=output.textContent;value.setAttribute('aria-hidden','true');output.replaceWith(value);});
   const homePaths=section.querySelector('.studio-paths').innerHTML;
+  const controlPreview=section.querySelector('.studio-feature');
+  const sectionPreview=createSectionPreview();controlPreview.after(sectionPreview.host);
   const damping=section.querySelector('#featured-damping'),frequency=section.querySelector('#featured-frequency');
   damping.setAttribute('aria-label','Damping ratio');frequency.setAttribute('aria-label','Natural frequency in radians per second');
   function update(){
@@ -26,12 +31,23 @@ export function initStudio() {
   }
   damping.addEventListener('input',update);frequency.addEventListener('input',update);section.querySelector('#featured-reset').addEventListener('click',()=>{damping.value='0.3';frequency.value='2';update();});update();
   return group=>{
-    const show=!group||group==='control';section.hidden=!show;document.querySelector('.catalog-intro').hidden=show;
+    const config=studioSections[group],show=true;section.hidden=!show;document.querySelector('.catalog-intro').hidden=show;
     document.body.dataset.catalogView=group==='control'?'control':!group?'studio':'discipline';
     const control=group==='control';section.querySelector('h1').innerHTML=control?'Find your<br>system’s rhythm<span>.</span>':'Ideas into<br>experiments<span>.</span>';
     section.querySelector('.studio-eyebrow').textContent=control?'NEXORA / CONTROL SYSTEMS':'NEXORA / THE EXPERIMENT STUDIO';
     section.querySelector('.studio-description').textContent=control?'From a first response to a finely tuned loop. Explore feedback, stability, and the systems that turn a command into motion.':'Understand it by changing it. Explore real engineering models, tune a system, and follow the mathematics behind every result.';
     section.querySelector('.studio-paths').innerHTML=control?`<a href="/simulation.html?lab=pid">${subjectArt('feedback')}<span>01 / CONTROLLER DESIGN</span><strong>Balance P, I and D.</strong><small>Tune a controller ↗</small></a><a href="/simulation.html?lab=motor">${subjectArt('motor')}<span>02 / REAL SYSTEMS</span><strong>Put feedback in motion.</strong><small>Drive a motor ↗</small></a><a href="/simulation.html?lab=bode">${subjectArt('poles')}<span>03 / FREQUENCY DOMAIN</span><strong>Look beyond time.</strong><small>Read the frequency response ↗</small></a>`:section.querySelector('.studio-paths').innerHTML;
     if(!control)section.querySelector('.studio-paths').innerHTML=homePaths;
+    controlPreview.hidden=Boolean(config);sectionPreview.show(group,config);
+    section.querySelector('.studio-artwork').innerHTML=config?disciplineHero(config.art,sectionLabel(group)):robotHero;
+    if(config){
+      section.querySelector('h1').innerHTML=config.title+'<span>.</span>';
+      section.querySelector('.studio-eyebrow').textContent=`NEXORA / ${sectionLabel(group).toUpperCase()}`;
+      section.querySelector('.studio-description').textContent=config.description;
+      const paths=config.paths.map(href=>labs.find(lab=>lab.href===href)).filter(Boolean);
+      section.querySelector('.studio-paths').replaceChildren(...paths.map((lab,i)=>{const a=document.createElement('a');a.href=lab.href;a.innerHTML=subjectArt(config.art);const number=document.createElement('span');number.textContent=`0${i+1} / EXPLORE`;const title=document.createElement('strong');title.textContent=lab.title;const action=document.createElement('small');action.textContent='Enter the workbench ↗';a.append(number,title,action);return a;}));
+    }
+    const count=labs.filter(lab=>!group||lab.groups.includes(group)).length;
+    section.querySelector('.studio-facts').innerHTML=`<span><strong>${count}</strong> experiments</span><span><strong>${group?1:12}</strong> ${group?'discipline':'disciplines'}</span><span>Open source. Always curious.</span>`;
   };
 }

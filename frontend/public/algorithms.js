@@ -1,4 +1,4 @@
-import { algorithms, runAlgorithm } from '../../backend/algorithms.js';
+import { algorithms, runAlgorithm, validateAlgorithm } from '../../backend/algorithms.js';
 import { coordinates, workedExamples } from '../../backend/algorithm-definitions.js';
 import { renderAdditional } from './algorithm-views.js';
 
@@ -175,6 +175,8 @@ function initialize() {
     visualWidth = entry.contentRect.width;
     if (definition.kind === 'dp' && trace) requestAnimationFrame(render);
   }).observe($('visual'));
+  const sharedValues=new URLSearchParams(location.search).get('values');
+  if(sharedValues!==null&&fields.values){try{validateAlgorithm(id,{...definition.defaults,values:sharedValues});fields.values.value=sharedValues;}catch{/* Ignore invalid shared input and retain the worked default. */}}
   $('loading').hidden = true; $('algorithm-lab').hidden = false; regenerate();
 }
 if (definition) initialize(); else $('loading').textContent = 'Choose an algorithm from the experiment catalog.';

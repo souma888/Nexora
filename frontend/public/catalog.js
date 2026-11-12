@@ -86,7 +86,7 @@ function thumbnail({ drawing, graphic, step, href, groups }) {
     ${drawing}</svg>`;
 }
 
-const showStudio=initStudio();
+const showStudio=initStudio(labs);
 const catalogHeading=document.createElement('div');catalogHeading.className='studio-catalog-title';catalogHeading.innerHTML='<h2>Experiment catalog</h2><p>Choose a model. Ask a question.</p>';form.before(catalogHeading);
 const cards = labs.map(lab => {
   const card = document.createElement('a');
