@@ -67,6 +67,7 @@ These are design choices to evaluate, not installed dependencies.
 - [20 more DSA and Computer Engineering labs](docs/COMPUTING_LABS.md)
 - [New engineering sections and reference cases](docs/ENGINEERING_SECTIONS.md)
 - [Development setup](docs/DEVELOPMENT.md)
+- [Homepage and Control Systems design preview / revert instructions](docs/CONTROL_STUDIO_PREVIEW.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 

@@ -3,6 +3,8 @@ import { solveBeam } from '../../backend/beam.js';
 import { setActiveDiscipline } from './shell.ts';
 import { algorithms } from '../../backend/algorithm-definitions.js';
 import { disciplines } from '../../backend/disciplines.js';
+import { initStudio } from './studio.js';
+import { subjectArt, controlArt } from './studio-art.js';
 
 const form = document.getElementById('catalog-filters');
 const search = document.getElementById('lab-search');
@@ -60,7 +62,10 @@ const labs = [
   })),
 ];
 
-function thumbnail({ drawing, graphic, step }) {
+function thumbnail({ drawing, graphic, step, href, groups }) {
+  const id=new URL(href,location.origin).searchParams.get('lab');
+  const kind=groups.includes('control')?controlArt(id):groups.includes('robotics')?'robot':groups.includes('electrical')||groups.includes('electronics')?'circuit':groups.includes('thermofluids')||groups.includes('materials')?'thermal':groups.includes('civil')?'beam':null;
+  if(kind)return subjectArt(kind).replace('class="subject-art"','class="thumb subject-art"');
   if (!drawing) {
     const xMin = Math.min(...graphic.map(p => p.x)), xMax = Math.max(...graphic.map(p => p.x));
     const ys = graphic.flatMap(point => [point.y, point.reference].filter(Number.isFinite));
@@ -81,6 +86,8 @@ function thumbnail({ drawing, graphic, step }) {
     ${drawing}</svg>`;
 }
 
+const showStudio=initStudio();
+const catalogHeading=document.createElement('div');catalogHeading.className='studio-catalog-title';catalogHeading.innerHTML='<h2>Experiment catalog</h2><p>Choose a model. Ask a question.</p>';form.before(catalogHeading);
 const cards = labs.map(lab => {
   const card = document.createElement('a');
   card.className = 'sim-link';
@@ -97,6 +104,8 @@ const cards = labs.map(lab => {
 
 function filter() {
   setActiveDiscipline(discipline.value);
+  showStudio(discipline.value);
+  document.getElementById('studio').hidden ||= Boolean(search.value.trim());
   const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
   let count = 0;
   for (const { card, groups, terms } of cards) {
