@@ -18,6 +18,11 @@ export function subjectArt(kind) {
     lattice: '<path d="m93 22 55-16 57 17-3 42-52 12-57-16Zm0 0 57 23 55-22m-55 22v32m-57-16 55-23 54 27M148 6v32"/>'+[[93,22],[148,6],[205,23],[202,65],[150,77],[93,61],[150,45]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="var(--plot-bg)" class="art-result"/>`).join(''),
     network: '<path d="m50 42 70-25 62 28 65-29m-197 26 70 26 62-23 65 23m-127-51v51m62-23v25"/>'+[[50,42],[120,17],[120,68],[182,45],[247,16],[247,68]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="10" fill="var(--plot-bg)" class="${i===3?'art-load':'art-result'}"/>`).join(''),
     numerical: '<path d="M40 8v61h225M55 55Q110-18 165 42T255 26"/><path d="m57 55 42-29 44-3 43 24 42-3 26-18" class="art-result"/>'+[[57,55],[99,26],[143,23],[186,47],[228,44],[254,26]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3" class="art-load"/>`).join(''),
+    radio: '<path d="M150 25v50m-25 0h50m-45-50 20 25 20-25M114 18q-25 20 0 40m72-40q25 20 0 40M95 8q-40 30 0 60m110-60q40 30 0 60"/><circle cx="150" cy="22" r="5" class="art-load"/>',
+    power: '<path d="M88 20h42l-8 42H80Zm42 0h42l-8 42h-42Zm42 0h42l-8 42h-42ZM87 40h123M145 62v12m-25 0h50"/><path d="M53 13v15m-12-7h24m-21-10 18 20m-18 0 18-20" class="art-load"/>',
+    flight: '<path d="m40 54 90-16 21-30 12 2-10 25 80 7 29-19 11 3-16 29-85 5-35 13-10-2 19-18-84 7Z"/><path d="M30 73Q120-30 240 15" stroke-dasharray="4 5" class="art-result"/>',
+    process: '<path d="M90 15h120v53H90ZM150 4v44m-25 0 25-13 25 13M45 30h45m120 25h45m-7-5 7 5-7 5M45 20v10m60 38v8m90-8v8"/><path d="M95 55q20-7 40 0t40 0t30 0" class="art-result"/>',
+    operations: '<rect x="25" y="27" width="60" height="30" rx="5"/><rect x="120" y="8" width="60" height="30" rx="5"/><rect x="120" y="52" width="60" height="25" rx="5"/><rect x="215" y="27" width="60" height="30" rx="5"/><path d="m85 42 35-19m-35 19 35 22m60-41 35 19m-35 22 35-22" class="art-result"/>',
   };
   return `<svg viewBox="0 0 300 82" aria-hidden="true" class="subject-art"><g ${line}>${drawings[kind]??drawings.feedback}</g></svg>`;
 }
@@ -29,6 +34,7 @@ export function controlArt(id) {
   if(id==='poles')return 'poles';
   return ({motor:'motor',cruise:'motor',tank:'tank',thermal:'thermal',pendulum:'pendulum',bode:'poles',lead:'poles',lag:'poles',locus:'poles',nyquist:'poles',digital:'feedback',windup:'feedback',pid:'feedback',firstorder:'feedback',secondorder:'feedback'})[id];
 }
+export const expansionArt={amradio:'wave',fmradio:'wave',bpsk:'wave',qpsk:'network',radiolink:'radio',shannon:'radio',solarpv:'power',windpower:'power',batterydischarge:'power',buckconverter:'circuit',boostconverter:'circuit',threephase:'wave',ballistic:'flight',dragpolar:'flight',bankturn:'flight',rocketequation:'flight',atmosphere:'flight',isentropicflow:'flow',reactorconversion:'process',arrhenius:'thermal',consecutive:'process',mixingtank:'tank',langmuir:'lattice',osmosis:'flow',mm1queue:'operations',eoq:'operations',criticalpath:'network',weibull:'numerical',systemreliability:'chip',controlchart:'numerical'};
 export const robotHero = `<svg viewBox="0 0 520 400" role="img" aria-label="Articulated engineering robot with crimson joints" class="studio-robot">
   <defs><linearGradient id="metal" x2=".9" y2="1"><stop stop-color="#c8d1d0"/><stop offset=".38" stop-color="#6b7979"/><stop offset=".6" stop-color="#d4d9d5"/><stop offset="1" stop-color="#334143"/></linearGradient><linearGradient id="base-metal"><stop stop-color="#283336"/><stop offset=".45" stop-color="#8c9997"/><stop offset="1" stop-color="#182327"/></linearGradient><radialGradient id="floor"><stop stop-color="#416050" stop-opacity=".45"/><stop offset="1" stop-color="#10201a" stop-opacity="0"/></radialGradient></defs>
   <ellipse cx="275" cy="348" rx="235" ry="45" fill="url(#floor)"/><g stroke="#8b9c97" stroke-width=".7" fill="none" opacity=".2"><path d="M20 349h480M55 320h410M100 295h320m-160-20v110m-40-105-80 95m160-95 80 95"/></g>

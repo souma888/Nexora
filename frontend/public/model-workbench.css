@@ -2,6 +2,7 @@
 .model-visual svg { display: block; width: 100%; min-height: 150px; max-height: 310px; }
 .model-visual svg text { fill: var(--text); font-size: 14px; paint-order: stroke; stroke: var(--plot-bg); stroke-width: 1px; }
 .model-visual .wide-model { min-width: 520px; max-height: none; }
+.model-visual:has(.project-model) { max-height: none; }
 .model-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 13px; border-bottom: 1px solid var(--border); }
 .model-actions .quiet { min-height: 38px; }
 .model-actions .field-hint { margin: 0; }

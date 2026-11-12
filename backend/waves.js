@@ -8,6 +8,11 @@ import { roboticModels } from './robotics.js';
 import { computationalModels } from './computational.js';
 import { materialScienceModels } from './material-science.js';
 import { computerModels } from './computer-engineering.js';
+import { communicationModels } from './communications.js';
+import { energyModels } from './power-energy.js';
+import { aerospaceModels } from './aerospace.js';
+import { chemicalModels } from './chemical-process.js';
+import { industrialModels } from './industrial.js';
 
 export const models = {
   divider: experiment('divider', {
@@ -165,4 +170,9 @@ export const models = {
   ...computationalModels,
   ...materialScienceModels,
   ...computerModels,
+  ...communicationModels,
+  ...energyModels,
+  ...aerospaceModels,
+  ...chemicalModels,
+  ...industrialModels,
 };

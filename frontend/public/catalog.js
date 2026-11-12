@@ -4,7 +4,7 @@ import { setActiveDiscipline } from './shell.ts';
 import { algorithms } from '../../backend/algorithm-definitions.js';
 import { disciplines } from '../../backend/disciplines.js';
 import { initStudio } from './studio.js';
-import { subjectArt, controlArt } from './studio-art.js';
+import { subjectArt, controlArt, expansionArt } from './studio-art.js';
 
 const form = document.getElementById('catalog-filters');
 const search = document.getElementById('lab-search');
@@ -64,6 +64,7 @@ const labs = [
 
 function thumbnail({ drawing, graphic, step, href, groups }) {
   const id=new URL(href,location.origin).searchParams.get('lab');
+  if(expansionArt[id])return subjectArt(expansionArt[id]).replace('class="subject-art"','class="thumb subject-art"');
   const kind=groups.includes('control')?controlArt(id):groups.includes('robotics')?'robot':groups.includes('electrical')||groups.includes('electronics')?'circuit':groups.includes('thermofluids')||groups.includes('materials')?'thermal':groups.includes('civil')?'beam':null;
   if(kind)return subjectArt(kind).replace('class="subject-art"','class="thumb subject-art"');
   if (!drawing) {

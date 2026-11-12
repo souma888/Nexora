@@ -4,7 +4,7 @@ The visual direction introduced by commit `93210aa` now covers every discipline 
 
 ## Catalog studios
 
-All twelve discipline views have an editorial introduction, a subject illustration, three featured links, and the existing searchable catalog. The original homepage and Control Systems analyzer are retained. Other live features use the existing solver for a representative experiment:
+All seventeen discipline views have an editorial introduction, a subject illustration, three featured links, and the existing searchable catalog. The original homepage and Control Systems analyzer are retained. Other live features use the existing solver for a representative experiment:
 
 | Discipline | Live feature |
 | --- | --- |
@@ -20,6 +20,11 @@ All twelve discipline views have an editorial introduction, a subject illustrati
 | Computational Engineering | Euler and Runge–Kutta integration |
 | Materials Science | Elastic–plastic stress–strain |
 | Data Structures & Algorithms | Step-by-step Quick Sort |
+| Communications & RF | AM envelope and overmodulation |
+| Power & Energy | Buck converter duty and ripple |
+| Aerospace & Flight | Ballistic launch trajectory |
+| Chemical & Process Engineering | CSTR/PFR conversion |
+| Industrial & Reliability Engineering | Weibull survival |
 
 Previews have keyboard-operable controls and reset. Their physical values or selected sorting input carry into the full workbench through validated URL parameters. Invalid shared parameters retain the original defaults. The full teaching content and reference cases remain in each lab; catalog illustrations identify subjects and do not claim to be additional physical calculations.
 

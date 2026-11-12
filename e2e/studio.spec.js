@@ -17,7 +17,7 @@ test('Control Systems has its own studio, meaningful previews, and catalog navig
   await page.getByRole('button',{name:'Reset preview'}).click();await expect(page.locator('#damping-value')).toHaveText('0.30');
   await page.getByRole('searchbox').fill('motor');await expect(page.locator('#studio')).toBeHidden();await expect(page.locator('#catalog-status')).toHaveText('1 experiment available');
   await page.getByRole('button',{name:'Clear filters'}).click();await expect(page.locator('#studio')).toBeVisible();await expect(page.getByRole('heading',{level:1})).toContainText('Ideas into');
-  await expect(page.getByRole('navigation',{name:'Engineering disciplines'}).locator('.nav-icon')).toHaveCount(13);await noOverflow(page);
+  await expect(page.getByRole('navigation',{name:'Engineering disciplines'}).locator('.nav-icon')).toHaveCount(18);await noOverflow(page);
 });
 test('studio desktop/mobile themes and control instrument view stay readable',async({page},testInfo)=>{
   await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});
