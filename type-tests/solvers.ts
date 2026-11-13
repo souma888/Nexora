@@ -16,3 +16,8 @@ lab(
   // @ts-expect-error Summary values must be numeric or null, never strings.
   ({ x }) => ({ summary: { value: String(x) } }),
 );
+
+import { solveBeam } from '../backend/beam.js';
+const beam = { case: 'point' as const, span: 6, load: 24, modulus: 200, inertia: 8000 };
+// @ts-expect-error Dedicated beam inputs also reject textual numbers.
+solveBeam({ ...beam, span: '6' });

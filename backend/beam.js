@@ -28,6 +28,7 @@ export const definition = {
   },
 };
 
+/** @param {{case:'point'|'uniform'|'cantilever',span:number,load:number,modulus:number,inertia:number}} input */
 export function solveBeam(input) {
   const { case: model, span: L, load, modulus, inertia } = input;
   const EI = modulus * 1e9 * inertia * 1e-8;

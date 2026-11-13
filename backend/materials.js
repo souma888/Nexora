@@ -13,6 +13,7 @@ export const models = {
       },
       outputs: { summary: { stress: 'MPa', strain: '1', displacement: 'mm' }, series: {} },
     },
+    /** @param {{force:number,length:number,area:number,modulus:number}} input */
     solve({ force, length, area, modulus }) {
       const stress = ((force || 0) * 1000) / area; // N/mm² = MPa
       const strain = stress / (modulus * 1000);
@@ -39,6 +40,7 @@ export const models = {
         series: {},
       },
     },
+    /** @param {{sigmaX:number,sigmaY:number,tauXY:number}} input */
     solve({ sigmaX, sigmaY, tauXY }) {
       const center = (sigmaX + sigmaY) / 2;
       const halfDifference = (sigmaX - sigmaY) / 2;
