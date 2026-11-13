@@ -49,7 +49,7 @@ The frontend is **vanilla JavaScript and TypeScript, built with Vite**, with nat
 
 `backend/catalog.js` derives routes and metadata from the executable model and algorithm registries. Discipline labels, grouping and icons come from `backend/disciplines.js`; catalog documentation is generated from the same source. Five endpoints expose catalog discovery and the beam, material, numerical-model, and algorithm families. The latest 30 models are available through `/api/waves`; endpoints are dispatchers, not one endpoint per lab.
 
-TypeScript checks all backend JavaScript and API modules through `checkJs`, with generic JSDoc model-input/result contracts and compile-time negative fixtures. New numerical, units, run-record and workbench TypeScript modules use strict checking. Legacy JavaScript helper parameters are not yet universally strict: this is broader static coverage, not a claim that the entire repository is fully typed. See [architecture and type-check scope](docs/ARCHITECTURE.md).
+TypeScript checks all backend JavaScript and API modules through `checkJs`, with generic JSDoc model-input/result contracts and compile-time negative fixtures. The numerical engine uses strict JSDoc checking; units, run-record and workbench TypeScript modules also use strict checking. Legacy JavaScript helper parameters are not yet universally strict: this is broader static coverage, not a claim that the entire repository is fully typed. See [architecture and type-check scope](docs/ARCHITECTURE.md).
 
 ## Depth and limits
 

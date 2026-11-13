@@ -1,6 +1,6 @@
 import { content } from './content/circuit-builder.js';
 import { lab, textInput, table } from './lab-kit.js';
-import { solveLinear } from './linear.ts';
+import { solveLinear } from './linear.js';
 
 /** @typedef {{kind:'R'|'V'|'I',name:string,a:number,b:number,value:number}} Component */
 /** @param {string} source @returns {Component[]} */

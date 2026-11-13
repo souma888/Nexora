@@ -8,7 +8,8 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "allowJs": true
   },
-  "include": ["frontend/public/*.ts", "backend/**/*.ts"]
+  "include": ["frontend/public/*.ts", "backend/**/*.ts", "backend/linear.js"]
 }
