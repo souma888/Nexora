@@ -247,6 +247,7 @@ export function setupWorkbench<Result extends Report>({
   }
   function edited() {
     clearTimeout(timer);
+    tools.invalidate();
     timer = setTimeout(analyze, 80);
   }
   function reset() {

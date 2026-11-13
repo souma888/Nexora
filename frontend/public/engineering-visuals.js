@@ -22,16 +22,32 @@ export function engineeringVisual(v, data, index, { text, path, box, arrow }) {
     box(x, y, w, h, color) + text(x + w / 2, y + h / 2 + 5, label, color);
   if (v.kind === 'circuit-network') {
     const positions = new Map(
-      v.nodes.map((node, i) => [node, [70 + (i % 3) * 185, 65 + Math.floor(i / 3) * 80]]),
+      v.nodes.map((node, i) => {
+        const angle = Math.PI / 2 + (2 * Math.PI * i) / v.nodes.length;
+        return [node, [260 + 105 * Math.cos(angle), 140 + 95 * Math.sin(angle)]];
+      }),
     );
-    height = Math.max(280, Math.ceil(v.nodes.length / 3) * 80 + 80);
+    height = 300;
+    const groups = new Map();
+    for (const c of v.branches) {
+      const key = [c.a, c.b].sort((a, b) => a - b).join('-');
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(c);
+    }
     drawing = v.branches
-      .map((c, i) => {
+      .map((c) => {
         const [x, y] = positions.get(c.a),
-          [a, b] = positions.get(c.b);
+          [a, b] = positions.get(c.b),
+          group = groups.get([c.a, c.b].sort((a, b) => a - b).join('-'));
+        const offset = (group.indexOf(c) - (group.length - 1) / 2) * 45 * (c.a < c.b ? 1 : -1),
+          length = Math.hypot(a - x, b - y),
+          nx = -(b - y) / length,
+          ny = (a - x) / length;
+        const cx = (x + a) / 2 + nx * offset,
+          cy = (y + b) / 2 + ny * offset;
         return (
-          path(`M${x} ${y}L${a} ${b}`, muted) +
-          text((x + a) / 2, (y + b) / 2 - 8 + (i % 2) * 20, c.name, green)
+          path(`M${x} ${y}Q${cx} ${cy} ${a} ${b}`, muted) +
+          text((x + a) / 4 + cx / 2 + nx * 10, (y + b) / 4 + cy / 2 + ny * 10, c.name, green)
         );
       })
       .join('');
@@ -39,11 +55,15 @@ export function engineeringVisual(v, data, index, { text, path, box, arrow }) {
       .map((node) => {
         const [x, y] = positions.get(node);
         return (
-          circle(x, y, 18, node === 0 ? amber : green) + text(x, y + 5, node === 0 ? 'GND' : node)
+          circle(x, y, 18, node === point.x ? amber : green) +
+          text(x, y + 5, node === 0 ? 'GND' : node)
         );
       })
       .join('');
-    drawing += caption('Connectivity sketch · branch directions and values in table', height - 20);
+    drawing += caption(
+      `Probe node ${point.x} · ${point.y.toFixed(4)} V · branch directions and values in table`,
+      280,
+    );
   } else if (v.kind === 'modulator') {
     drawing =
       node(35, 80, 100, 65, 'Message') +

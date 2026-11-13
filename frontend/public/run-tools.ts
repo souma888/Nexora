@@ -111,7 +111,9 @@ export function installRunTools(config: {
     comparison,
   );
   host.append(body);
-  config.form.closest('.workbench')?.before(host);
+  const workspace =
+    config.form.closest('#algorithm-lab, #experiment') ?? config.form.closest('.workbench');
+  workspace?.before(host);
   let current: { input: Input; data: Report } | null = null;
   const note = (value: string) => {
     status.textContent = value;

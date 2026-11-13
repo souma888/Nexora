@@ -22,6 +22,9 @@
   min-width: 520px;
   max-height: none;
 }
+.model-visual .network-model {
+  max-height: 320px;
+}
 .model-visual:has(.project-model) {
   max-height: none;
 }

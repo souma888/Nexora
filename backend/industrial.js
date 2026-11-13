@@ -221,7 +221,7 @@ export const industrialModels = {
       topic: 'Project scheduling',
       version: '1.1',
       inputs: {
-        durations: list('Task durations A, B, C, D, E, F', '3,2,4,5,2,3', 1, 30, 12),
+        durations: list('Task durations (A–L, 2–12 tasks)', '3,2,4,5,2,3', 1, 30, 12),
         dependencies: textInput('Task dependencies (A>C; B>C, or none)', defaultDependencies, 500),
       },
       validateValues({ durations, dependencies }) {
