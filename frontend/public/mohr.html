@@ -1,62 +1,180 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0f1013">
-  <title>Mohr’s Circle · Nexora Engineering Lab</title>
-  <link rel="icon" href="/mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css">
-  <script type="module" src="/shell.ts"></script>
-  <script type="module" src="/materials.js"></script>
-</head>
-<body class="lab-page" data-model="mohr" data-discipline="mechanical">
-  <!-- site-header -->
-  <main class="standalone" id="main" tabindex="-1">
-    <header class="intro"><div>
-      <p class="breadcrumb mono"><a href="/">CATALOG</a> <span>/</span> <a href="/#mechanical">MECHANICAL</a> <span>/</span> LAB 03</p>
-      <h1>Mohr’s Circle<span>.</span></h1>
-      <p class="intro-copy">Rotate a plane stress element and trace its normal and shear stresses on the circle.</p>
-    </div></header>
-    <div class="workbench">
-      <section class="panel setup" aria-labelledby="setup-title">
-        <div class="panel-head"><div class="heading"><span class="index">01</span><h2 id="setup-title">Stress state</h2></div><button class="quiet" id="reset" type="button">Reset</button></div>
-        <form id="material-form">
-          <div class="field-grid material-fields">
-            <div><label for="sigmaX">Normal stress <i>σx</i></label><div class="field"><input id="sigmaX" name="sigmaX" type="number" min="-5000" max="5000" step="any" value="80" required><span>MPa</span></div></div>
-            <div><label for="sigmaY">Normal stress <i>σy</i></label><div class="field"><input id="sigmaY" name="sigmaY" type="number" min="-5000" max="5000" step="any" value="20" required><span>MPa</span></div></div>
-            <div><label for="tauXY">Shear stress <i>τxy</i></label><div class="field"><input id="tauXY" name="tauXY" type="number" min="-5000" max="5000" step="any" value="40" required><span>MPa</span></div></div>
-          </div>
-          <p class="prediction"><strong>Predict first.</strong> If you reverse the sign of the shear stress, what happens to the principal stresses and their orientation?</p>
-          <p id="status" role="status">Preparing the default example…</p>
-        </form>
-        <div class="angle-control">
-          <label for="angle">Rotate element <output id="angle-value" for="angle">0°</output></label>
-          <input id="angle" type="range" min="-90" max="90" step="any" value="0" disabled>
-          <button class="quiet" id="principal-angle" type="button" disabled>Show principal orientation</button>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f1013" />
+    <title>Mohr’s Circle · Nexora Engineering Lab</title>
+    <link rel="icon" href="/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/shell.ts"></script>
+    <script type="module" src="/materials.js"></script>
+  </head>
+  <body class="lab-page" data-model="mohr" data-discipline="mechanical">
+    <!-- site-header -->
+    <main class="standalone" id="main" tabindex="-1">
+      <header class="intro">
+        <div>
+          <p class="breadcrumb mono">
+            <a href="/">CATALOG</a> <span>/</span> <a href="/#mechanical">MECHANICAL</a>
+            <span>/</span> LAB 03
+          </p>
+          <h1>Mohr’s Circle<span>.</span></h1>
+          <p class="intro-copy">
+            Rotate a plane stress element and trace its normal and shear stresses on the circle.
+          </p>
         </div>
+      </header>
+      <div class="workbench">
+        <section class="panel setup" aria-labelledby="setup-title">
+          <div class="panel-head">
+            <div class="heading">
+              <span class="index">01</span>
+              <h2 id="setup-title">Stress state</h2>
+            </div>
+            <button class="quiet" id="reset" type="button">Reset</button>
+          </div>
+          <form id="material-form">
+            <div class="field-grid material-fields">
+              <div>
+                <label for="sigmaX">Normal stress <i>σx</i></label>
+                <div class="field">
+                  <input
+                    id="sigmaX"
+                    name="sigmaX"
+                    type="number"
+                    min="-5000"
+                    max="5000"
+                    step="any"
+                    value="80"
+                    required
+                  /><span>MPa</span>
+                </div>
+              </div>
+              <div>
+                <label for="sigmaY">Normal stress <i>σy</i></label>
+                <div class="field">
+                  <input
+                    id="sigmaY"
+                    name="sigmaY"
+                    type="number"
+                    min="-5000"
+                    max="5000"
+                    step="any"
+                    value="20"
+                    required
+                  /><span>MPa</span>
+                </div>
+              </div>
+              <div>
+                <label for="tauXY">Shear stress <i>τxy</i></label>
+                <div class="field">
+                  <input
+                    id="tauXY"
+                    name="tauXY"
+                    type="number"
+                    min="-5000"
+                    max="5000"
+                    step="any"
+                    value="40"
+                    required
+                  /><span>MPa</span>
+                </div>
+              </div>
+            </div>
+            <p class="prediction">
+              <strong>Predict first.</strong> If you reverse the sign of the shear stress, what
+              happens to the principal stresses and their orientation?
+            </p>
+            <p id="status" role="status">Preparing the default example…</p>
+          </form>
+          <div class="angle-control">
+            <label for="angle"
+              >Rotate element <output id="angle-value" for="angle">0°</output></label
+            >
+            <input id="angle" type="range" min="-90" max="90" step="any" value="0" disabled />
+            <button class="quiet" id="principal-angle" type="button" disabled>
+              Show principal orientation
+            </button>
+          </div>
+        </section>
+        <section class="panel schematic" aria-labelledby="diagram-title">
+          <div class="panel-head">
+            <div class="heading">
+              <span class="index">02</span>
+              <h2 id="diagram-title">Element &amp; circle</h2>
+            </div>
+            <span class="panel-meta mono">PLANE STRESS</span>
+          </div>
+          <div class="drawing">
+            <svg
+              id="material-diagram"
+              viewBox="0 0 560 260"
+              role="img"
+              aria-label="Mohr’s circle and stress element"
+            ></svg>
+          </div>
+          <div class="legend mono">
+            <span><i class="red"></i> Rotated x′ face</span
+            ><span><i class="green"></i> Stress circle</span><span id="rotated-stress"></span>
+          </div>
+        </section>
+      </div>
+      <section class="results" aria-labelledby="results-title">
+        <div class="section-head heading">
+          <span class="index">03</span>
+          <h2 id="results-title">Principal values</h2>
+        </div>
+        <dl class="metrics">
+          <div>
+            <dt>Major principal stress</dt>
+            <dd id="principalMax">—</dd>
+          </div>
+          <div>
+            <dt>Minor principal stress</dt>
+            <dd id="principalMin">—</dd>
+          </div>
+          <div>
+            <dt>Max. in-plane shear</dt>
+            <dd id="radius">—</dd>
+          </div>
+          <div>
+            <dt>Principal angles</dt>
+            <dd id="principalAngle">—</dd>
+            <small id="other-angle"></small>
+          </div>
+        </dl>
       </section>
-      <section class="panel schematic" aria-labelledby="diagram-title">
-        <div class="panel-head"><div class="heading"><span class="index">02</span><h2 id="diagram-title">Element &amp; circle</h2></div><span class="panel-meta mono">PLANE STRESS</span></div>
-        <div class="drawing"><svg id="material-diagram" viewBox="0 0 560 260" role="img" aria-label="Mohr’s circle and stress element"></svg></div>
-        <div class="legend mono"><span><i class="red"></i> Rotated x′ face</span><span><i class="green"></i> Stress circle</span><span id="rotated-stress"></span></div>
-      </section>
-    </div>
-    <section class="results" aria-labelledby="results-title">
-      <div class="section-head heading"><span class="index">03</span><h2 id="results-title">Principal values</h2></div>
-      <dl class="metrics">
-        <div><dt>Major principal stress</dt><dd id="principalMax">—</dd></div>
-        <div><dt>Minor principal stress</dt><dd id="principalMin">—</dd></div>
-        <div><dt>Max. in-plane shear</dt><dd id="radius">—</dd></div>
-        <div><dt>Principal angles</dt><dd id="principalAngle">—</dd><small id="other-angle"></small></div>
-      </dl>
-    </section>
-    <details class="panel notes">
-      <summary><span>Worked example &amp; sign conventions</span><span class="disclosure" aria-hidden="true"></span></summary>
-      <div><p>For σx = 80 MPa, σy = 20 MPa and τxy = 40 MPa, the center is 50 MPa and the radius is √(30² + 40²) = 50 MPa. The principal stresses are 100 MPa and 0 MPa. The major principal angle is about 26.565° counterclockwise from x.</p><p>Normal stress is positive in tension. Positive τxy acts in +y on the +x face. The circle plots positive shear upward, so rotating the element counterclockwise moves its x′ face point clockwise by twice the angle. Maximum shear here is in-plane.</p></div>
-      <div><p>Use C = (σx + σy)/2 and D = (σx − σy)/2. Then R = √(D² + τxy²), σ₁,₂ = C ± R, and θ₁ = atan2(τxy, D)/2. Reversing shear preserves R and reflects the principal orientation.</p><p>The model assumes plane stress at a point. Out-of-plane stresses and three-dimensional maximum shear are outside this lab’s scope.</p><button class="quiet" id="load-example" type="button">Run worked example</button></div>
-    </details>
-  </main>
-  <!-- site-layout-end -->
-</body>
+      <details class="panel notes">
+        <summary>
+          <span>Worked example &amp; sign conventions</span
+          ><span class="disclosure" aria-hidden="true"></span>
+        </summary>
+        <div>
+          <p>
+            For σx = 80 MPa, σy = 20 MPa and τxy = 40 MPa, the center is 50 MPa and the radius is
+            √(30² + 40²) = 50 MPa. The principal stresses are 100 MPa and 0 MPa. The major principal
+            angle is about 26.565° counterclockwise from x.
+          </p>
+          <p>
+            Normal stress is positive in tension. Positive τxy acts in +y on the +x face. The circle
+            plots positive shear upward, so rotating the element counterclockwise moves its x′ face
+            point clockwise by twice the angle. Maximum shear here is in-plane.
+          </p>
+        </div>
+        <div>
+          <p>
+            Use C = (σx + σy)/2 and D = (σx − σy)/2. Then R = √(D² + τxy²), σ₁,₂ = C ± R, and θ₁ =
+            atan2(τxy, D)/2. Reversing shear preserves R and reflects the principal orientation.
+          </p>
+          <p>
+            The model assumes plane stress at a point. Out-of-plane stresses and three-dimensional
+            maximum shear are outside this lab’s scope.
+          </p>
+          <button class="quiet" id="load-example" type="button">Run worked example</button>
+        </div>
+      </details>
+    </main>
+    <!-- site-layout-end -->
+  </body>
 </html>

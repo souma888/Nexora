@@ -1,12 +1,15 @@
 # Nexora — Project Context
 
 ## Problem
+
 Engineering learners often move between textbooks, isolated calculators, desktop simulation tools, and disconnected online demos. Nexora aims to combine visual intuition, governing mathematics, and repeatable experiments in one browser experience.
 
 ## Mission
+
 Build an extensible multidisciplinary virtual engineering lab for students, instructors, and curious engineers.
 
 ## Core product pillars
+
 1. **Interactive:** modify inputs and observe how a physical system changes.
 2. **Explainable:** expose equations, assumptions, units, and intermediate quantities.
 3. **Visual:** diagrams, animated motion, graphs, and optional 3D models.
@@ -15,14 +18,17 @@ Build an extensible multidisciplinary virtual engineering lab for students, inst
 6. **Accessible:** responsive UI, keyboard controls, and clear error messages.
 
 ## Target users
+
 - Undergraduate engineering students practicing concepts and tutorials.
 - Educators demonstrating engineering relationships.
 - Makers and engineers exploring simplified models, without certification claims.
 
 ## Initial focus
+
 Solid mechanics / strength of materials. A narrow, well-tested MVP is preferable to dozens of unverified simulations.
 
 ## Potential product capabilities
+
 - Subject browser and searchable experiment catalog.
 - Simulation pages with controls, diagrams, plots, equations, and explanations.
 - Parameter presets and guided examples.
@@ -32,12 +38,14 @@ Solid mechanics / strength of materials. A narrow, well-tested MVP is preferable
 - 2D/3D interactive geometry and animation where pedagogically valuable.
 
 ## Scope boundaries
+
 - Not a replacement for ANSYS, Abaqus, MATLAB, or professional FEA software.
 - Do not claim arbitrary geometry or high-fidelity multiphysics in the MVP.
 - No AI-generated engineering answers without independent numerical verification.
 - No safety-critical design approval.
 
 ## Success measures
+
 - Benchmark numerical agreement within documented tolerances.
 - A new student can complete a guided experiment without external instructions.
 - Inputs are validated and all output values include units.
@@ -45,6 +53,7 @@ Solid mechanics / strength of materials. A narrow, well-tested MVP is preferable
 - Fast feedback for simple analytical models.
 
 ## Decisions pending
+
 - Final visual design system and branding.
 - Exact MVP simulation set and release date.
 - Plotting and geometry libraries after prototyping.
@@ -53,4 +62,5 @@ Solid mechanics / strength of materials. A narrow, well-tested MVP is preferable
 - Licensing and contribution policy.
 
 ## Project status
+
 This document describes **planned** functionality as of 2026-11-06. Implementation and validation have not yet begun.

@@ -1,9 +1,9 @@
 ---
 name: Feature request
 about: Propose a module or product improvement
-title: "[Feature] "
+title: '[Feature] '
 labels: enhancement
-assignees: ""
+assignees: ''
 ---
 
 ## Problem to solve

@@ -7,7 +7,8 @@ const cases = {
 };
 
 export const definition = {
-  id: 'beam', version: '1.1',
+  id: 'beam',
+  version: '1.1',
   inputs: {
     case: { label: 'Load case', type: 'enum', options: Object.keys(cases) },
     span: number('Span', 'm', 0.25, 30),
@@ -16,7 +17,13 @@ export const definition = {
     inertia: number('Second moment of area', 'cm⁴', 1, 1000000),
   },
   outputs: {
-    summary: { reactionA: 'kN', reactionB: 'kN', moment: 'kN·m', deflection: 'mm', deflectionAt: 'm' },
+    summary: {
+      reactionA: 'kN',
+      reactionB: 'kN',
+      moment: 'kN·m',
+      deflection: 'mm',
+      deflectionAt: 'm',
+    },
     series: { x: 'm', shear: 'kN', moment: 'kN·m', deflection: 'mm', slope: 'mrad' },
   },
 };
@@ -27,7 +34,7 @@ export function solveBeam(input) {
   const P = load * 1000;
   const uniform = model === 'uniform';
   const fixed = model === 'cantilever';
-  const reactionA = fixed ? P : uniform ? P * L / 2 : P / 2;
+  const reactionA = fixed ? P : uniform ? (P * L) / 2 : P / 2;
   const reactionB = fixed ? null : reactionA;
   const positions = Array.from({ length: 81 }, (_, index) => L * (index / 80));
   // Include both limits at the point-load discontinuity.
@@ -39,23 +46,29 @@ export function solveBeam(input) {
     if (fixed) {
       shear = P;
       moment = -P * (L - x);
-      deflection = -P * x ** 2 * (3 * L - x) / (6 * EI);
-      slope = -P * x * (2 * L - x) / (2 * EI);
+      deflection = (-P * x ** 2 * (3 * L - x)) / (6 * EI);
+      slope = (-P * x * (2 * L - x)) / (2 * EI);
     } else if (uniform) {
       shear = reactionA - P * x;
-      moment = P * x * (L - x) / 2;
-      deflection = -P * x * (L - x) * (L ** 2 + L * x - x ** 2) / (24 * EI);
-      slope = -P * (L ** 3 - 6 * L * x ** 2 + 4 * x ** 3) / (24 * EI);
+      moment = (P * x * (L - x)) / 2;
+      deflection = (-P * x * (L - x) * (L ** 2 + L * x - x ** 2)) / (24 * EI);
+      slope = (-P * (L ** 3 - 6 * L * x ** 2 + 4 * x ** 3)) / (24 * EI);
     } else {
       shear = index <= 40 ? reactionA : -reactionA;
-      moment = P * z / 2;
-      deflection = -P * z * (3 * L ** 2 - 4 * z ** 2) / (48 * EI);
-      slope = Math.sign(x - L / 2) * P * (3 * L ** 2 - 12 * z ** 2) / (48 * EI);
+      moment = (P * z) / 2;
+      deflection = (-P * z * (3 * L ** 2 - 4 * z ** 2)) / (48 * EI);
+      slope = (Math.sign(x - L / 2) * P * (3 * L ** 2 - 12 * z ** 2)) / (48 * EI);
     }
-    return { x, shear: shear / 1000, moment: moment / 1000, deflection: deflection * 1000, slope: slope * 1000 };
+    return {
+      x,
+      shear: shear / 1000,
+      moment: moment / 1000,
+      deflection: deflection * 1000,
+      slope: slope * 1000,
+    };
   });
 
-  const peak = key => series.reduce((a, b) => Math.abs(a[key]) >= Math.abs(b[key]) ? a : b);
+  const peak = (key) => series.reduce((a, b) => (Math.abs(a[key]) >= Math.abs(b[key]) ? a : b));
   const displacement = peak('deflection');
   return {
     series,

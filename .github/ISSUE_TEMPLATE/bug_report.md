@@ -1,14 +1,15 @@
 ---
 name: Bug report
 about: Report a defect in an implemented feature
-title: "[Bug] "
+title: '[Bug] '
 labels: bug
-assignees: ""
+assignees: ''
 ---
 
 ## Summary
 
 ## Steps to reproduce
+
 1.
 2.
 

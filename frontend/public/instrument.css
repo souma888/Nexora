@@ -1,54 +1,230 @@
 /* One instrument language for mechanics, circuits, digital systems and algorithms. */
-.lab-page .intro { padding-bottom: 18px; border-bottom: 1px solid var(--border); }
-.lab-page .intro h1 { font-size: clamp(28px,3vw,38px); }
-.lab-page .intro h1 span { color: var(--brand); }
-.lab-page .workbench { grid-template-columns: minmax(270px,330px) minmax(0,1fr); }
-.lab-page .schematic, .lab-page .algorithm-stage { border-top: 2px solid var(--brand); }
-.lab-page .panel-head { background: linear-gradient(110deg, var(--surface-2), transparent); }
-.lab-page .panel-head .index { color: var(--result); border: 1px solid var(--border); background: var(--plot-bg); }
-.lab-page .metrics > div { box-shadow: inset 0 1px 0 var(--surface-edge); background: linear-gradient(130deg,var(--surface-2),var(--surface-1)); padding: 14px; }
-.lab-page input[type="range"] { accent-color: var(--brand); }
-.lab-page .plot-readout { color: var(--result); border: 1px solid var(--border); background: var(--plot-bg); }
-.lab-page .lab-nav a[aria-current] { color: var(--text-accent); border-color: var(--brand); }
-.lab-page .algorithm-code { background: var(--plot-bg); }
-.lab-page .algorithm-code li[aria-current] { border-left: 2px solid var(--brand); color: var(--text); background: color-mix(in srgb,var(--brand) 12%,var(--surface-1)); }
-.lab-page .playback { background: var(--surface-1); }
-.lab-page #algorithm-lab { display: grid; grid-template-columns: minmax(270px,330px) minmax(0,1fr); gap: 16px; align-items: start; }
-.lab-page #algorithm-lab > .workbench { display: contents; }
-.lab-page #algorithm-lab .setup { grid-column: 1; grid-row: 1 / span 2; }
-.lab-page #algorithm-lab .algorithm-stage { grid-column: 2; grid-row: 1; }
-.lab-page #algorithm-lab .results { grid-column: 2; grid-row: 2; margin: 0; min-width: 0; }
-.lab-page #algorithm-lab .notes { grid-column: 1 / -1; margin: 0; }
-body[data-workbench] #wave-plot polyline[stroke="var(--result)"], body[data-workbench] #wave-plot > path[stroke="var(--result)"] { stroke: var(--load); }
-body[data-workbench] #wave-plot > path[stroke="var(--curve)"] { stroke: var(--result); }
-body[data-workbench] .legend .other-trace { background: var(--load); }
-.discipline-illustration { min-height: 330px; display: flex; flex-direction: column; justify-content: center; padding: 30px 22px; background: linear-gradient(var(--canvas-line) 1px,transparent 1px),linear-gradient(90deg,var(--canvas-line) 1px,transparent 1px); background-size: 44px 44px; }
-.illustration-heading,.illustration-scale { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; color: var(--muted); font: 12px var(--mono); letter-spacing: .04em; }
-.illustration-heading { padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-.illustration-object { padding: 40px 0 28px; filter: drop-shadow(0 12px 14px #0005); }
-.illustration-object .subject-art { color: var(--text); }
-.illustration-scale { color: var(--text-accent); }
-.discipline-illustration > p { margin: 18px 0 0; color: var(--muted); font-size: 12px; }
-.preview-model { overflow: auto; max-height: 240px; border-bottom: 1px solid var(--grid); }
-.preview-model svg { display: block; width: 100%; max-height: 230px; }
-.preview-model svg text { font-size: 14px; }
-.preview-trace { fill: none; stroke-width: 2.4; stroke-linejoin: round; }
-.preview-trace.trace-0 { stroke: var(--result); animation: instrument-in 220ms ease-out; }
-.preview-trace.trace-1 { stroke: var(--muted); stroke-dasharray: 4 5; }
-.preview-trace.trace-2 { stroke: var(--load); }
-.section-preview .console-controls select { min-width: 0; width: 100%; min-height: 38px; padding: 6px; border: 1px solid var(--border); border-radius: 5px; color: var(--text); background: var(--surface-2); }
-.section-preview .console-controls label { margin-bottom: 5px; }
-.section-preview .console-metrics dd { font-size: clamp(15px,1.7vw,20px); overflow-wrap: anywhere; }
-.preview-notice { margin: 0; padding: 8px 14px; color: var(--load); font-size: 12px; }
-.preview-notice:empty { display: none; }
-.studio-robot text { font-size: 11px; }
-@media (max-width:740px) {
-  .lab-page .workbench { grid-template-columns: minmax(0,1fr); }
-  .lab-page #algorithm-lab { display: block; }
-  .lab-page #algorithm-lab > .workbench { display: grid; }
-  .lab-page #algorithm-lab .setup, .lab-page #algorithm-lab .algorithm-stage { grid-column: auto; grid-row: auto; }
-  .lab-page #algorithm-lab .results, .lab-page #algorithm-lab .notes { margin-top: 16px; }
-  .discipline-illustration { min-height: 250px; }
+.lab-page .intro {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
 }
-@media (prefers-reduced-motion:reduce) { .preview-trace.trace-0 { animation: none; } }
-@media print { .lab-page #algorithm-lab, .lab-page #algorithm-lab > .workbench { display: block; } .lab-page .metrics > div { background: white; box-shadow: none; } .lab-page .panel-head { background: white; } }
+.lab-page .intro h1 {
+  font-size: clamp(28px, 3vw, 38px);
+}
+.lab-page .intro h1 span {
+  color: var(--brand);
+}
+.lab-page .workbench {
+  grid-template-columns: minmax(270px, 330px) minmax(0, 1fr);
+}
+.lab-page .schematic,
+.lab-page .algorithm-stage {
+  border-top: 2px solid var(--brand);
+}
+.lab-page .panel-head {
+  background: linear-gradient(110deg, var(--surface-2), transparent);
+}
+.lab-page .panel-head .index {
+  color: var(--result);
+  border: 1px solid var(--border);
+  background: var(--plot-bg);
+}
+.lab-page .metrics > div {
+  box-shadow: inset 0 1px 0 var(--surface-edge);
+  background: linear-gradient(130deg, var(--surface-2), var(--surface-1));
+  padding: 14px;
+}
+.lab-page input[type='range'] {
+  accent-color: var(--brand);
+}
+.lab-page .plot-readout {
+  color: var(--result);
+  border: 1px solid var(--border);
+  background: var(--plot-bg);
+}
+.lab-page .lab-nav a[aria-current] {
+  color: var(--text-accent);
+  border-color: var(--brand);
+}
+.lab-page .algorithm-code {
+  background: var(--plot-bg);
+}
+.lab-page .algorithm-code li[aria-current] {
+  border-left: 2px solid var(--brand);
+  color: var(--text);
+  background: color-mix(in srgb, var(--brand) 12%, var(--surface-1));
+}
+.lab-page .playback {
+  background: var(--surface-1);
+}
+.lab-page #algorithm-lab {
+  display: grid;
+  grid-template-columns: minmax(270px, 330px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.lab-page #algorithm-lab > .workbench {
+  display: contents;
+}
+.lab-page #algorithm-lab .setup {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+.lab-page #algorithm-lab .algorithm-stage {
+  grid-column: 2;
+  grid-row: 1;
+}
+.lab-page #algorithm-lab .results {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  min-width: 0;
+}
+.lab-page #algorithm-lab .notes {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+body[data-workbench] #wave-plot polyline[stroke='var(--result)'],
+body[data-workbench] #wave-plot > path[stroke='var(--result)'] {
+  stroke: var(--load);
+}
+body[data-workbench] #wave-plot > path[stroke='var(--curve)'] {
+  stroke: var(--result);
+}
+body[data-workbench] .legend .other-trace {
+  background: var(--load);
+}
+.discipline-illustration {
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 30px 22px;
+  background:
+    linear-gradient(var(--canvas-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--canvas-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.illustration-heading,
+.illustration-scale {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
+  font: 12px var(--mono);
+  letter-spacing: 0.04em;
+}
+.illustration-heading {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.illustration-object {
+  padding: 40px 0 28px;
+  filter: drop-shadow(0 12px 14px #0005);
+}
+.illustration-object .subject-art {
+  color: var(--text);
+}
+.illustration-scale {
+  color: var(--text-accent);
+}
+.discipline-illustration > p {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.preview-model {
+  overflow: auto;
+  max-height: 240px;
+  border-bottom: 1px solid var(--grid);
+}
+.preview-model svg {
+  display: block;
+  width: 100%;
+  max-height: 230px;
+}
+.preview-model svg text {
+  font-size: 14px;
+}
+.preview-trace {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+}
+.preview-trace.trace-0 {
+  stroke: var(--result);
+  animation: instrument-in 220ms ease-out;
+}
+.preview-trace.trace-1 {
+  stroke: var(--muted);
+  stroke-dasharray: 4 5;
+}
+.preview-trace.trace-2 {
+  stroke: var(--load);
+}
+.section-preview .console-controls select {
+  min-width: 0;
+  width: 100%;
+  min-height: 38px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  background: var(--surface-2);
+}
+.section-preview .console-controls label {
+  margin-bottom: 5px;
+}
+.section-preview .console-metrics dd {
+  font-size: clamp(15px, 1.7vw, 20px);
+  overflow-wrap: anywhere;
+}
+.preview-notice {
+  margin: 0;
+  padding: 8px 14px;
+  color: var(--load);
+  font-size: 12px;
+}
+.preview-notice:empty {
+  display: none;
+}
+.studio-robot text {
+  font-size: 11px;
+}
+@media (max-width: 740px) {
+  .lab-page .workbench {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lab-page #algorithm-lab {
+    display: block;
+  }
+  .lab-page #algorithm-lab > .workbench {
+    display: grid;
+  }
+  .lab-page #algorithm-lab .setup,
+  .lab-page #algorithm-lab .algorithm-stage {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .lab-page #algorithm-lab .results,
+  .lab-page #algorithm-lab .notes {
+    margin-top: 16px;
+  }
+  .discipline-illustration {
+    min-height: 250px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .preview-trace.trace-0 {
+    animation: none;
+  }
+}
+@media print {
+  .lab-page #algorithm-lab,
+  .lab-page #algorithm-lab > .workbench {
+    display: block;
+  }
+  .lab-page .metrics > div {
+    background: white;
+    box-shadow: none;
+  }
+  .lab-page .panel-head {
+    background: white;
+  }
+}

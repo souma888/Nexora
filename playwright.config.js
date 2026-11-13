@@ -9,9 +9,13 @@ export default defineConfig({
   snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}{ext}',
   workers: 1,
   use: { baseURL, channel },
-  webServer: deployed ? undefined : {
-    command: 'node backend/dev-server.js', env: { PORT: '3099' }, url: baseURL,
-  },
+  webServer: deployed
+    ? undefined
+    : {
+        command: 'node backend/dev-server.js',
+        env: { PORT: '3099' },
+        url: baseURL,
+      },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
     { name: 'mobile', use: { ...devices['Pixel 7'] } },

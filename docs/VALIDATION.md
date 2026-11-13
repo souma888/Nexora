@@ -1,9 +1,11 @@
 # Engineering Validation Policy
 
 ## Why validation matters
+
 A beautiful plot is not evidence of a correct engineering solution. Every simulation must be tested against a known analytical solution or trustworthy reference.
 
 ## Required per-module documentation
+
 1. Governing equations and derivation/reference.
 2. Model assumptions (e.g., small deflection, linear elasticity).
 3. Geometry, coordinate system and sign conventions.
@@ -13,6 +15,7 @@ A beautiful plot is not evidence of a correct engineering solution. Every simula
 7. Numerical stability, edge cases and known limitations.
 
 ## Automated reference cases
+
 - Simply supported beam with central point load: reactions, peak moment, peak deflection.
 - Simply supported beam under uniform distributed load.
 - Cantilever beam with end point load: free-end slope and deflection.
@@ -34,6 +37,7 @@ A beautiful plot is not evidence of a correct engineering solution. Every simula
 The lab badge refers to these analytical checks. The browser and the API use the same solvers. Run `npm test` to reproduce the reference cases.
 
 ## Testing layers
+
 - **Unit:** pure solver functions, units, input validation.
 - **Reference:** independent hand calculations and textbook results.
 - **Property:** equilibrium, symmetry, limiting behavior, dimensional consistency.
@@ -42,27 +46,28 @@ The lab badge refers to these analytical checks. The browser and the API use the
 - **Regression:** snapshot numeric benchmarks with explicitly justified tolerances.
 
 ## Tolerance guidance
+
 Set absolute/relative tolerances based on the solver and problem scale; do not apply one arbitrary tolerance to all modules. Record precision and sample resolution.
 
 ## Control-system reference cases
 
 `tests/control.test.js` checks all 15 new definitions, their input boundaries, API responses, and these independent analytical values:
 
-| Model | Reference / tolerance |
-| --- | --- |
-| First order | Unit-gain output at τ is 1 − e⁻¹; absolute tolerance 1e−7 |
-| Second order | Undamped 1−cos(2t), critical 1−(1+2t)e⁻²ᵗ, overdamped value 0.36963997772 at 1 s; sampled ζ=0.3 peak within 0.0003 of the analytic maximum |
-| PID | Kp=3, Ki=0, Kd=3: y=0.75[1−(1+2t)e⁻²ᵗ]; RK4 value at 1 s within 1e−10 |
-| Motor | Equilibrium Kmotor Kp/(Rb + Kmotor² + Kmotor Kp); final speed within 1e−7 |
-| Cruise / tank | Independent steady balances multiplied by 1−e⁻⁶ at six time constants; mass/area affect time scale |
-| Thermal | Proportional-only y=0.8(1−e⁻²⋅⁵ᵗ), at 1 s within 1e−10 |
-| Pendulum | Kp=9.81, Kd=0 cancels gravity exactly; stable default decays below 0.01° |
-| Windup | Saturated output at 4 s equals 1−e⁻⁴ within 1e−8; conditional integration reduces recovery error at 8 s |
-| Bode | Corner −3.01029995664 dB within 1e−10; corner frequency 1/τ |
-| Lead / lag | Ratio 5 gives ±41.8103148958°, within 1e−9; peak frequency is the geometric mean |
-| Pole locus | a=2, K=4 yields −1±j√3; K=0 includes the origin |
-| Nyquist | Every point satisfies (Re−K/2)²+Im²=(K/2)² within 1e−7 |
-| Digital | a=K=0.8 gives y[1]=0.8 and zero transient pole; unstable pole −3 alternates and grows |
+| Model         | Reference / tolerance                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| First order   | Unit-gain output at τ is 1 − e⁻¹; absolute tolerance 1e−7                                                                                  |
+| Second order  | Undamped 1−cos(2t), critical 1−(1+2t)e⁻²ᵗ, overdamped value 0.36963997772 at 1 s; sampled ζ=0.3 peak within 0.0003 of the analytic maximum |
+| PID           | Kp=3, Ki=0, Kd=3: y=0.75[1−(1+2t)e⁻²ᵗ]; RK4 value at 1 s within 1e−10                                                                      |
+| Motor         | Equilibrium Kmotor Kp/(Rb + Kmotor² + Kmotor Kp); final speed within 1e−7                                                                  |
+| Cruise / tank | Independent steady balances multiplied by 1−e⁻⁶ at six time constants; mass/area affect time scale                                         |
+| Thermal       | Proportional-only y=0.8(1−e⁻²⋅⁵ᵗ), at 1 s within 1e−10                                                                                     |
+| Pendulum      | Kp=9.81, Kd=0 cancels gravity exactly; stable default decays below 0.01°                                                                   |
+| Windup        | Saturated output at 4 s equals 1−e⁻⁴ within 1e−8; conditional integration reduces recovery error at 8 s                                    |
+| Bode          | Corner −3.01029995664 dB within 1e−10; corner frequency 1/τ                                                                                |
+| Lead / lag    | Ratio 5 gives ±41.8103148958°, within 1e−9; peak frequency is the geometric mean                                                           |
+| Pole locus    | a=2, K=4 yields −1±j√3; K=0 includes the origin                                                                                            |
+| Nyquist       | Every point satisfies (Re−K/2)²+Im²=(K/2)² within 1e−7                                                                                     |
+| Digital       | a=K=0.8 gives y[1]=0.8 and zero transient pole; unstable pole −3 alternates and grows                                                      |
 
 The “peak in view” is the maximum sampled signed output, not an absolute envelope or an analytical extremum. Tests cover finite outputs at each individual input bound; they do not certify every possible combination for design use.
 
@@ -73,6 +78,7 @@ The “peak in view” is the maximum sampled signed output, not an absolute env
 Browser tests open all 30 new labs through their catalog section on desktop and mobile, compare rendered results with actual API calls, scrub traces, exercise playback/predictions/presets/reset/validation, inspect plots with the keyboard, assert active sidebar navigation, detect JavaScript errors, and check page overflow. See [the release inventory](NEW_LABS.md) for the implementation assumptions and reference links.
 
 ## Responsible use
+
 Display a clear educational-use disclaimer. Do not imply that simplified models satisfy engineering codes or professional safety requirements.
 
 ## Additional Data Structures & Algorithms release

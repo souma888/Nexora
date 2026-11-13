@@ -1,12 +1,13 @@
 import { number } from './contract.js';
 
 export const parameter = (label, unit, min, max, initial) => ({
-  ...number(label, unit, min, max), initial,
+  ...number(label, unit, min, max),
+  initial,
 });
 
 export const samples = (start, end, evaluate, count = 240) =>
   Array.from({ length: count + 1 }, (_, i) => {
-    const x = start + (end - start) * i / count;
+    const x = start + ((end - start) * i) / count;
     return { x, ...evaluate(x) };
   });
 

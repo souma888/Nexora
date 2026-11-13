@@ -2,9 +2,13 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { POST } from '../api/beam.js';
 
-const run = body => POST(new Request('http://localhost/api/beam', {
-  method: 'POST', body: JSON.stringify(body),
-}));
+const run = (body) =>
+  POST(
+    new Request('http://localhost/api/beam', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  );
 const inputs = { span: 6, load: 24, modulus: 200, inertia: 8000 };
 const references = [
   { model: 'point', reactions: [12, 12], moment: 36, deflection: -6.75, at: 3, slope: 3.375 },
@@ -24,8 +28,11 @@ for (const { model, reactions, moment, deflection, at, slope } of references) {
     assert.equal(series[0].deflection, 0);
     assert.ok(Math.abs(series.at(-1).slope - slope) < 1e-9);
     if (model === 'point') {
-      const limits = series.filter(point => point.x === 3);
-      assert.deepEqual(limits.map(point => point.shear), [12, -12]);
+      const limits = series.filter((point) => point.x === 3);
+      assert.deepEqual(
+        limits.map((point) => point.shear),
+        [12, -12],
+      );
     }
   });
 }
@@ -38,7 +45,13 @@ test('rejects out-of-domain inputs and unsupported cases', async () => {
 
 test('asymmetric cantilever tip slope and deflection scale with span', async () => {
   // 10 kN over 2 m at EI = 2 MN·m².
-  const response = await run({ case: 'cantilever', span: 2, load: 10, modulus: 200, inertia: 1000 });
+  const response = await run({
+    case: 'cantilever',
+    span: 2,
+    load: 10,
+    modulus: 200,
+    inertia: 1000,
+  });
   const data = await response.json();
   assert.equal(data.series.at(-1).slope, -10);
   assert.ok(Math.abs(data.summary.deflection + 40 / 3) < 1e-9);

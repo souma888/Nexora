@@ -1,21 +1,44 @@
 import { expect, test } from '@playwright/test';
 import { runAlgorithm, algorithms } from '../backend/algorithms.js';
 
-const end = async page => { await page.locator('#timeline').focus(); await page.keyboard.press('End'); };
-const noOverflow = async page => expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width);
+const end = async (page) => {
+  await page.locator('#timeline').focus();
+  await page.keyboard.press('End');
+};
+const noOverflow = async (page) =>
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+    page.viewportSize().width,
+  );
 
-test('Data Structures & Algorithms uses consistent capitalization in navigation and filters', async ({ page }) => {
+test('Data Structures & Algorithms uses consistent capitalization in navigation and filters', async ({
+  page,
+}) => {
   await page.goto('/#algorithms');
-  await expect(page.getByRole('navigation', { name: 'Engineering disciplines' }).getByRole('link', { name: 'Data Structures & Algorithms', exact: true })).toHaveAttribute('aria-current', 'location');
-  await expect(page.locator('#discipline-filter option:checked')).toHaveText('Data Structures & Algorithms');
+  await expect(
+    page
+      .getByRole('navigation', { name: 'Engineering disciplines' })
+      .getByRole('link', { name: 'Data Structures & Algorithms', exact: true }),
+  ).toHaveAttribute('aria-current', 'location');
+  await expect(page.locator('#discipline-filter option:checked')).toHaveText(
+    'Data Structures & Algorithms',
+  );
   await expect(page.locator('#catalog-status')).toHaveText('55 experiments available');
   await page.getByRole('searchbox').fill('AVL');
   await expect(page.locator('#catalog-status')).toHaveText('1 experiment available');
-  await page.locator('#catalog-grid').getByRole('link', { name: /AVL Tree Rotations/ }).click();
-  await expect(page.getByRole('navigation', { name: 'Engineering disciplines' }).getByRole('link', { name: 'Data Structures & Algorithms', exact: true })).toBeVisible();
+  await page
+    .locator('#catalog-grid')
+    .getByRole('link', { name: /AVL Tree Rotations/ })
+    .click();
+  await expect(
+    page
+      .getByRole('navigation', { name: 'Engineering disciplines' })
+      .getByRole('link', { name: 'Data Structures & Algorithms', exact: true }),
+  ).toBeVisible();
 });
 
-test('structure operation editing validates, preserves overflow events, and resets playback', async ({ page }) => {
+test('structure operation editing validates, preserves overflow events, and resets playback', async ({
+  page,
+}) => {
   await page.goto('/algorithms.html?lab=circularqueue');
   await page.getByLabel('Input preset').selectOption('Overflow');
   await end(page);
@@ -33,13 +56,19 @@ test('structure operation editing validates, preserves overflow events, and rese
   await noOverflow(page);
 });
 
-test('AVL playback exposes both halves of a double rotation and supports stepping backward', async ({ page }) => {
+test('AVL playback exposes both halves of a double rotation and supports stepping backward', async ({
+  page,
+}) => {
   await page.goto('/algorithms.html?lab=avl');
   await page.getByLabel('Input preset').selectOption('Left-right rotation');
-  const trace = runAlgorithm('avl', { ...algorithms.avl.defaults, ...algorithms.avl.presets['Left-right rotation'] });
-  const index = trace.frames.findIndex(f => /After rotation: subtree root is 20/.test(f.message));
+  const trace = runAlgorithm('avl', {
+    ...algorithms.avl.defaults,
+    ...algorithms.avl.presets['Left-right rotation'],
+  });
+  const index = trace.frames.findIndex((f) => /After rotation: subtree root is 20/.test(f.message));
   expect(index).toBeGreaterThan(0);
-  await page.locator('#timeline').focus(); await page.keyboard.press('Home');
+  await page.locator('#timeline').focus();
+  await page.keyboard.press('Home');
   for (let i = 0; i < index; i++) await page.keyboard.press('ArrowRight');
   await expect(page.locator('#step-message')).toHaveText(trace.frames[index].message);
   await page.getByRole('button', { name: 'Previous step' }).click();
@@ -49,7 +78,9 @@ test('AVL playback exposes both halves of a double rotation and supports steppin
   await noOverflow(page);
 });
 
-test('range-query controls reject indexes outside the edited array and recompute correctly', async ({ page }) => {
+test('range-query controls reject indexes outside the edited array and recompute correctly', async ({
+  page,
+}) => {
   await page.goto('/algorithms.html?lab=fenwick');
   await page.getByLabel('Array values', { exact: true }).fill('1');
   await expect(page.locator('#status')).toHaveAttribute('data-error', 'true');
@@ -63,7 +94,9 @@ test('range-query controls reject indexes outside the edited array and recompute
   await expect(page.locator('#result-text')).toContainText('Prefix sum through index 4 = 18');
 });
 
-test('string and matrix labs update from editable inputs and expose readable state', async ({ page }) => {
+test('string and matrix labs update from editable inputs and expose readable state', async ({
+  page,
+}) => {
   await page.goto('/algorithms.html?lab=kmp');
   await page.getByLabel('Text', { exact: true }).fill('AAAAA');
   await page.getByLabel('Pattern', { exact: true }).fill('AAA');
@@ -82,8 +115,14 @@ test('string and matrix labs update from editable inputs and expose readable sta
 
 test('trees, hash chains and prefix tables retain readable diagrams', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
-  for (const [id, image] of [['avl', 'avl-tree.png'], ['hashchain', 'collision-chains.png'], ['lcs', 'prefix-table.png']]) {
-    await page.goto(`/algorithms.html?lab=${id}`); await end(page); await page.locator('#timeline').blur();
+  for (const [id, image] of [
+    ['avl', 'avl-tree.png'],
+    ['hashchain', 'collision-chains.png'],
+    ['lcs', 'prefix-table.png'],
+  ]) {
+    await page.goto(`/algorithms.html?lab=${id}`);
+    await end(page);
+    await page.locator('#timeline').blur();
     await expect(page.locator('#visual')).toHaveScreenshot(image, { maxDiffPixelRatio: 0.035 });
   }
 });

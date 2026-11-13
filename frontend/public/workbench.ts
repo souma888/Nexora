@@ -3,8 +3,10 @@ type Model<Result> = {
   definition: { id: string; version: string; outputs: unknown; prediction?: Prediction };
   solve: (input: Inputs) => Result;
 };
-type Check = (definition: Model<unknown>['definition'], input: Inputs) =>
-  { values?: Inputs; message?: string };
+type Check = (
+  definition: Model<unknown>['definition'],
+  input: Inputs,
+) => { values?: Inputs; message?: string };
 
 export function setMetric(id: string, value: string, unit = '') {
   const cell = document.getElementById(id);
@@ -18,20 +20,65 @@ export function setMetric(id: string, value: string, unit = '') {
 }
 
 export const readFields = (form: HTMLFormElement): Inputs =>
-  Object.fromEntries([...new FormData(form)].filter(([key]) => key !== 'prediction-choice')
-    .map(([key, value]) => [key, key === 'case' || (form.elements.namedItem(key) as HTMLElement | null)?.dataset.valueType === 'string' ? String(value) : Number(value)]));
+  Object.fromEntries(
+    [...new FormData(form)]
+      .filter(([key]) => key !== 'prediction-choice')
+      .map(([key, value]) => [
+        key,
+        key === 'case' ||
+        (form.elements.namedItem(key) as HTMLElement | null)?.dataset.valueType === 'string'
+          ? String(value)
+          : Number(value),
+      ]),
+  );
 
 type Prediction = [choices: string[], correct: number, explanation: string];
 const predictions: Record<string, Prediction> = {
-  beam: [['2×', '4×', '8×'], 2, 'For a center point load, peak deflection scales with the cube of span. A uniform load per metre instead gives a fourth-power relationship.'],
-  axial: [['Only stress', 'Strain and length change', 'All three outputs'], 1, 'Stress is force divided by area. A lower modulus increases strain and length change at the same stress.'],
-  mohr: [['Magnitudes change', 'Angle reverses, stresses stay fixed', 'Both stay fixed'], 1, 'Shear enters the radius squared, so its sign affects orientation while the principal stresses stay the same.'],
-  divider: [['Falls', 'Rises', 'Stays fixed'], 0, 'A smaller load resistance reduces the equivalent resistance of the lower leg and pulls the output voltage down.'],
-  rc: [['Final voltage only', 'Charging time only', 'Both'], 1, 'Capacitance changes the time constant RC. The final capacitor voltage still equals the step voltage.'],
-  rectifier: [['A smaller sine wave', 'The positive half-cycle', 'Zero output'], 2, 'When the input never reaches the forward drop, the model diode never conducts.'],
-  opamp: [['Yes, always', 'Only before clipping', 'Never'], 1, 'Feedback sets the linear gain. The output stops increasing once it reaches a voltage limit.'],
-  sampling: [['It appears as 4 Hz', 'It remains 8 Hz', 'It appears as 12 Hz'], 0, 'An 8 Hz cosine and a 4 Hz cosine have the same sample values at 12 samples per second.'],
-  average: [['Fewer samples', 'More samples', 'The same number'], 1, 'A wider window keeps older zero-valued samples in the average longer, so the output takes longer to settle.'],
+  beam: [
+    ['2×', '4×', '8×'],
+    2,
+    'For a center point load, peak deflection scales with the cube of span. A uniform load per metre instead gives a fourth-power relationship.',
+  ],
+  axial: [
+    ['Only stress', 'Strain and length change', 'All three outputs'],
+    1,
+    'Stress is force divided by area. A lower modulus increases strain and length change at the same stress.',
+  ],
+  mohr: [
+    ['Magnitudes change', 'Angle reverses, stresses stay fixed', 'Both stay fixed'],
+    1,
+    'Shear enters the radius squared, so its sign affects orientation while the principal stresses stay the same.',
+  ],
+  divider: [
+    ['Falls', 'Rises', 'Stays fixed'],
+    0,
+    'A smaller load resistance reduces the equivalent resistance of the lower leg and pulls the output voltage down.',
+  ],
+  rc: [
+    ['Final voltage only', 'Charging time only', 'Both'],
+    1,
+    'Capacitance changes the time constant RC. The final capacitor voltage still equals the step voltage.',
+  ],
+  rectifier: [
+    ['A smaller sine wave', 'The positive half-cycle', 'Zero output'],
+    2,
+    'When the input never reaches the forward drop, the model diode never conducts.',
+  ],
+  opamp: [
+    ['Yes, always', 'Only before clipping', 'Never'],
+    1,
+    'Feedback sets the linear gain. The output stops increasing once it reaches a voltage limit.',
+  ],
+  sampling: [
+    ['It appears as 4 Hz', 'It remains 8 Hz', 'It appears as 12 Hz'],
+    0,
+    'An 8 Hz cosine and a 4 Hz cosine have the same sample values at 12 samples per second.',
+  ],
+  average: [
+    ['Fewer samples', 'More samples', 'The same number'],
+    1,
+    'A wider window keeps older zero-valued samples in the average longer, so the output takes longer to settle.',
+  ],
 };
 
 function predictionControl(form: HTMLFormElement, model: Model<unknown>['definition']) {
@@ -72,7 +119,13 @@ function predictionControl(form: HTMLFormElement, model: Model<unknown>['definit
 }
 
 export function setupWorkbench<Result>({
-  form, model, validate, payload, render, onReset, onInvalid,
+  form,
+  model,
+  validate,
+  payload,
+  render,
+  onReset,
+  onInvalid,
 }: {
   form: HTMLFormElement;
   model: Model<Result>;
@@ -99,22 +152,42 @@ export function setupWorkbench<Result>({
     input.closest('.field')?.after(slider);
     sliders.set(input, slider);
     slider.addEventListener('input', () => {
-      const min = Number(input.min), max = Number(input.max);
+      const min = Number(input.min),
+        max = Number(input.max);
       input.value = logScale(input)
-        ? String(Math.min(max, Math.max(min, Number((min * (max / min) ** (slider.valueAsNumber / 300)).toPrecision(5)))))
-        : input.step === 'any' ? String(Number((min+(max-min)*slider.valueAsNumber/300).toPrecision(12))) : slider.value;
+        ? String(
+            Math.min(
+              max,
+              Math.max(
+                min,
+                Number((min * (max / min) ** (slider.valueAsNumber / 300)).toPrecision(5)),
+              ),
+            ),
+          )
+        : input.step === 'any'
+          ? String(Number((min + ((max - min) * slider.valueAsNumber) / 300).toPrecision(12)))
+          : slider.value;
       input.dispatchEvent(new Event('input', { bubbles: true }));
     });
   }
   function syncSliders() {
     for (const [input, slider] of sliders) {
-      const min = Number(input.min), max = Number(input.max);
+      const min = Number(input.min),
+        max = Number(input.max);
       const log = logScale(input);
       const normalized = log || input.step === 'any';
       slider.min = normalized ? '0' : input.min;
       slider.max = normalized ? '300' : input.max;
       slider.step = normalized ? '1' : input.step;
-      slider.value = log ? String(Math.round(300 * Math.log(Math.max(min, Number(input.value)) / min) / Math.log(max / min))) : normalized ? String(Math.round(300*(Number(input.value)-min)/(max-min))) : input.value;
+      slider.value = log
+        ? String(
+            Math.round(
+              (300 * Math.log(Math.max(min, Number(input.value)) / min)) / Math.log(max / min),
+            ),
+          )
+        : normalized
+          ? String(Math.round((300 * (Number(input.value) - min)) / (max - min)))
+          : input.value;
       const unit = input.nextElementSibling?.textContent?.trim();
       slider.setAttribute('aria-valuetext', `${input.value || 'Unset'}${unit ? ` ${unit}` : ''}`);
     }
@@ -123,7 +196,7 @@ export function setupWorkbench<Result>({
     clearTimeout(timer);
     syncSliders();
     const { values, message } = validate(model.definition, payload());
-    if (!values || [...sliders.keys()].some(input => !input.validity.valid)) {
+    if (!values || [...sliders.keys()].some((input) => !input.validity.valid)) {
       status.dataset.error = 'true';
       status.textContent = `${message ?? 'Enter values within the allowed ranges.'} The last valid result is still shown.`;
       onInvalid?.();
@@ -146,11 +219,11 @@ export function setupWorkbench<Result>({
     onReset?.();
     analyze();
   }
-  form.addEventListener('input', event => {
+  form.addEventListener('input', (event) => {
     const target = event.target as HTMLInputElement;
     if (target.name !== 'prediction-choice' && target.type !== 'range') edited();
   });
-  form.addEventListener('submit', event => event.preventDefault());
+  form.addEventListener('submit', (event) => event.preventDefault());
   document.getElementById('reset')?.addEventListener('click', reset);
   return { analyze, edited, syncSliders, reset };
 }

@@ -6,7 +6,12 @@ import * as materials from '../api/materials.js';
 import * as waves from '../api/waves.js';
 import * as algorithms from '../api/algorithms.js';
 
-const routes = { '/api/beam': beam, '/api/materials': materials, '/api/waves': waves, '/api/algorithms': algorithms };
+const routes = {
+  '/api/beam': beam,
+  '/api/materials': materials,
+  '/api/waves': waves,
+  '/api/algorithms': algorithms,
+};
 
 const port = Number(process.env.PORT || 3000);
 const server = createServer(async (req, res) => {

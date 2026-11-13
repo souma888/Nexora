@@ -1,59 +1,127 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0f1013">
-  <title>Simulation · Nexora Engineering Lab</title>
-  <link rel="icon" href="/mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="/model-workbench.css">
-  <script type="module" src="/shell.ts"></script>
-  <script type="module" src="/simulation.js"></script>
-</head>
-<body class="lab-page">
-  <!-- site-header -->
-  <main class="standalone" id="main" tabindex="-1">
-    <header class="intro"><div>
-      <p class="breadcrumb mono"><a href="/">CATALOG</a> <span>/</span> <a id="discipline" href="/">LAB</a> <span id="lab-number"></span></p>
-      <h1 id="title">Simulation</h1>
-      <p class="intro-copy" id="description"></p>
-    </div></header>
-    <p id="loading" role="status">Loading experiment…</p>
-    <div id="experiment" hidden>
-      <div class="workbench">
-        <section class="panel setup" aria-labelledby="setup-title">
-          <div class="panel-head"><div class="heading"><span class="index">01</span><h2 id="setup-title">Experiment setup</h2></div><button class="quiet" id="reset" type="button">Reset</button></div>
-          <form id="simulation-form">
-            <div id="preset-row" hidden><label for="lab-preset">Experiment preset</label><select id="lab-preset" class="material-select"></select></div>
-            <div class="field-grid material-fields" id="parameters"></div>
-            <p class="prediction"><strong>Predict first.</strong> <span id="prediction"></span></p>
-            <p id="status" role="status"></p>
-          </form>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f1013" />
+    <title>Simulation · Nexora Engineering Lab</title>
+    <link rel="icon" href="/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/model-workbench.css" />
+    <script type="module" src="/shell.ts"></script>
+    <script type="module" src="/simulation.js"></script>
+  </head>
+  <body class="lab-page">
+    <!-- site-header -->
+    <main class="standalone" id="main" tabindex="-1">
+      <header class="intro">
+        <div>
+          <p class="breadcrumb mono">
+            <a href="/">CATALOG</a> <span>/</span> <a id="discipline" href="/">LAB</a>
+            <span id="lab-number"></span>
+          </p>
+          <h1 id="title">Simulation</h1>
+          <p class="intro-copy" id="description"></p>
+        </div>
+      </header>
+      <p id="loading" role="status">Loading experiment…</p>
+      <div id="experiment" hidden>
+        <div class="workbench">
+          <section class="panel setup" aria-labelledby="setup-title">
+            <div class="panel-head">
+              <div class="heading">
+                <span class="index">01</span>
+                <h2 id="setup-title">Experiment setup</h2>
+              </div>
+              <button class="quiet" id="reset" type="button">Reset</button>
+            </div>
+            <form id="simulation-form">
+              <div id="preset-row" hidden>
+                <label for="lab-preset">Experiment preset</label
+                ><select id="lab-preset" class="material-select"></select>
+              </div>
+              <div class="field-grid material-fields" id="parameters"></div>
+              <p class="prediction">
+                <strong>Predict first.</strong> <span id="prediction"></span>
+              </p>
+              <p id="status" role="status"></p>
+            </form>
+          </section>
+          <section class="panel schematic" aria-labelledby="plot-title">
+            <div class="panel-head">
+              <div class="heading">
+                <span class="index">02</span>
+                <h2 id="plot-title">Response plot</h2>
+              </div>
+            </div>
+            <div
+              id="model-visual"
+              class="model-visual"
+              role="region"
+              aria-label="Interactive model schematic"
+              tabindex="0"
+              hidden
+            ></div>
+            <div id="model-actions" class="model-actions" hidden>
+              <button class="quiet" id="preview-toggle" type="button">Play preview</button
+              ><button class="quiet" id="preview-step" type="button">Next frame</button
+              ><span class="field-hint">Preview and plot inspector share the same position.</span>
+            </div>
+            <div class="drawing">
+              <svg
+                id="wave-plot"
+                viewBox="0 0 480 265"
+                role="img"
+                aria-labelledby="plot-title axis-labels"
+              ></svg>
+            </div>
+            <div class="legend mono" id="traces"></div>
+            <p class="wave-axes mono" id="axis-labels"></p>
+            <div class="angle-control">
+              <label for="wave-probe">Inspect a plot sample</label
+              ><input type="range" id="wave-probe" min="0" max="240" value="0" step="1" /><output
+                class="plot-readout"
+                id="wave-readout"
+                for="wave-probe"
+              ></output>
+            </div>
+          </section>
+        </div>
+        <section class="results" aria-labelledby="results-title">
+          <div class="section-head heading">
+            <span class="index">03</span>
+            <h2 id="results-title">Analysis results</h2>
+          </div>
+          <dl class="metrics material-metrics" id="metrics"></dl>
         </section>
-        <section class="panel schematic" aria-labelledby="plot-title">
-          <div class="panel-head"><div class="heading"><span class="index">02</span><h2 id="plot-title">Response plot</h2></div></div>
-          <div id="model-visual" class="model-visual" role="region" aria-label="Interactive model schematic" tabindex="0" hidden></div>
-          <div id="model-actions" class="model-actions" hidden><button class="quiet" id="preview-toggle" type="button">Play preview</button><button class="quiet" id="preview-step" type="button">Next frame</button><span class="field-hint">Preview and plot inspector share the same position.</span></div>
-          <div class="drawing"><svg id="wave-plot" viewBox="0 0 480 265" role="img" aria-labelledby="plot-title axis-labels"></svg></div>
-          <div class="legend mono" id="traces"></div>
-          <p class="wave-axes mono" id="axis-labels"></p>
-          <div class="angle-control"><label for="wave-probe">Inspect a plot sample</label><input type="range" id="wave-probe" min="0" max="240" value="0" step="1"><output class="plot-readout" id="wave-readout" for="wave-probe"></output></div>
+        <p id="model-warnings" class="model-warnings" role="status" hidden></p>
+        <section
+          id="model-table"
+          class="panel model-table"
+          role="region"
+          aria-label="Detailed experiment data"
+          tabindex="0"
+          hidden
+        >
+          <table></table>
         </section>
+        <details class="panel notes">
+          <summary>
+            <span>Worked example &amp; model notes</span
+            ><span class="disclosure" aria-hidden="true"></span>
+          </summary>
+          <div>
+            <p id="example"></p>
+            <p id="equation"></p>
+            <p id="limits"></p>
+            <button class="quiet" id="load-example" type="button">Run worked example</button>
+          </div>
+        </details>
       </div>
-      <section class="results" aria-labelledby="results-title">
-        <div class="section-head heading"><span class="index">03</span><h2 id="results-title">Analysis results</h2></div>
-        <dl class="metrics material-metrics" id="metrics"></dl>
-      </section>
-      <p id="model-warnings" class="model-warnings" role="status" hidden></p>
-      <section id="model-table" class="panel model-table" role="region" aria-label="Detailed experiment data" tabindex="0" hidden><table></table></section>
-      <details class="panel notes">
-        <summary><span>Worked example &amp; model notes</span><span class="disclosure" aria-hidden="true"></span></summary>
-        <div><p id="example"></p><p id="equation"></p><p id="limits"></p><button class="quiet" id="load-example" type="button">Run worked example</button></div>
-      </details>
-    </div>
-    <footer><span class="mono">NEXORA / ENGINEERING LAB</span><span>For education and exploration</span></footer>
-  </main>
-  <!-- site-layout-end -->
-</body>
+      <footer>
+        <span class="mono">NEXORA / ENGINEERING LAB</span><span>For education and exploration</span>
+      </footer>
+    </main>
+    <!-- site-layout-end -->
+  </body>
 </html>

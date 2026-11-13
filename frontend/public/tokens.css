@@ -6,7 +6,8 @@
 }
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
+  src: url('@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2')
+    format('woff2');
   font-weight: 100 800;
   font-display: swap;
 }
@@ -39,24 +40,57 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
     color-scheme: light;
-    --bg: #edf1f6; --surface-1: #fff; --surface-2: #f4f7fb; --border: #cbd3df;
-    --text: #192230; --muted: #4b586c; --brand: #b41a3c; --load: #925600; --result: #08744c;
-    --curve: #175eb8; --hogging: #6543a9; --danger: #b3233f; --plot-bg: #f8fafd; --grid: #dce3ed;
+    --bg: #edf1f6;
+    --surface-1: #fff;
+    --surface-2: #f4f7fb;
+    --border: #cbd3df;
+    --text: #192230;
+    --muted: #4b586c;
+    --brand: #b41a3c;
+    --load: #925600;
+    --result: #08744c;
+    --curve: #175eb8;
+    --hogging: #6543a9;
+    --danger: #b3233f;
+    --plot-bg: #f8fafd;
+    --grid: #dce3ed;
     --shadow: 0 10px 24px #27385613;
   }
 }
-:root[data-theme="light"] {
+:root[data-theme='light'] {
   color-scheme: light;
-  --bg: #edf1f6; --surface-1: #fff; --surface-2: #f4f7fb; --border: #cbd3df;
-  --text: #192230; --muted: #4b586c; --brand: #b41a3c; --load: #925600; --result: #08744c;
-  --curve: #175eb8; --hogging: #6543a9; --danger: #b3233f; --plot-bg: #f8fafd; --grid: #dce3ed;
+  --bg: #edf1f6;
+  --surface-1: #fff;
+  --surface-2: #f4f7fb;
+  --border: #cbd3df;
+  --text: #192230;
+  --muted: #4b586c;
+  --brand: #b41a3c;
+  --load: #925600;
+  --result: #08744c;
+  --curve: #175eb8;
+  --hogging: #6543a9;
+  --danger: #b3233f;
+  --plot-bg: #f8fafd;
+  --grid: #dce3ed;
   --shadow: 0 10px 24px #27385613;
 }
 @media print {
-  :root[data-theme], :root:not([data-theme]) {
+  :root[data-theme],
+  :root:not([data-theme]) {
     color-scheme: light;
-    --bg: white; --surface-1: white; --surface-2: white; --border: #bbb; --plot-bg: white;
-    --grid: #ddd; --text: #111; --muted: #444; --result: #175b40; --curve: #135b9b; --load: #865000;
-    --hogging: #6440a1; --shadow: none;
+    --bg: white;
+    --surface-1: white;
+    --surface-2: white;
+    --border: #bbb;
+    --plot-bg: white;
+    --grid: #ddd;
+    --text: #111;
+    --muted: #444;
+    --result: #175b40;
+    --curve: #135b9b;
+    --load: #865000;
+    --hogging: #6440a1;
+    --shadow: none;
   }
 }
