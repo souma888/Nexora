@@ -415,14 +415,14 @@ for (const [id, { definition: d }] of Object.entries(expansionModels))
           assert.ok(v === null || Number.isFinite(v), `${id} contains a nonfinite plot coordinate`);
     }
     assert.ok(d.example && d.equation && d.limits && d.prediction);
-    assert.equal(d.version, '1.0');
+    assert.equal(d.version, id === 'criticalpath' ? '1.1' : '1.0');
   });
 test('discovery includes all 30 new models and API rejects cross-field and fixed-list invalid inputs', async () => {
   const { models } = await GET().json();
   for (const id of Object.keys(expansionModels)) assert.ok(models.some((d) => d.id === id));
   for (const [id, input, key] of [
     ['mm1queue', { arrival: 6, service: 6 }, 'arrival'],
-    ['criticalpath', { durations: '1,2,3' }, 'durations'],
+    ['criticalpath', { durations: '1,2,3' }, 'dependencies'],
     ['rocketequation', { initial: 500, final: 500 }, 'final'],
     ['amradio', { carrier: 5, message: 5 }, 'message'],
   ]) {
@@ -445,7 +445,7 @@ test('discovery includes all 30 new models and API rejects cross-field and fixed
     assert.equal(response.status, 200);
     const r = await response.json();
     assert.equal(r.model, id);
-    assert.equal(r.version, '1.0');
+    assert.equal(r.version, expansionModels[id].definition.version);
     assert.deepEqual(r.units, expansionModels[id].definition.outputs);
   }
 });

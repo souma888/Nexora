@@ -794,3 +794,109 @@ svg .reaction-label {
     box-shadow: none;
   }
 }
+
+.run-tools {
+  margin: 0 0 16px;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  border-radius: 10px;
+}
+.run-tools summary {
+  padding: 12px 16px;
+  cursor: pointer;
+  color: var(--text-accent);
+  font-weight: 650;
+}
+.run-tools > div {
+  padding: 4px 16px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: end;
+}
+.run-tools label {
+  display: grid;
+  gap: 4px;
+  max-width: 100%;
+  color: var(--muted);
+}
+.run-tools input,
+.run-tools select {
+  max-width: 100%;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+.run-tools input[type='file'] {
+  width: 230px;
+}
+.run-tools p,
+.run-comparison {
+  flex-basis: 100%;
+  margin: 0;
+}
+.run-comparison {
+  overflow: auto;
+  max-width: 100%;
+}
+.run-comparison table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.run-comparison th,
+.run-comparison td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.unit-select {
+  max-width: 85px;
+  min-width: 50px;
+  border: 0;
+  background: var(--surface-2);
+  color: var(--result);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.field input:has(+ .unit-select) {
+  width: calc(100% - 85px);
+}
+#parameters textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text);
+  font-family: var(--mono);
+  line-height: 1.6;
+}
+.saved-library {
+  margin-block: 24px;
+  padding: 22px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  scroll-margin-top: 16px;
+}
+.saved-library a {
+  color: var(--result);
+  text-decoration: underline;
+}
+.saved-library li {
+  padding-block: 6px;
+}
+@media print {
+  .run-tools,
+  .unit-select {
+    display: none;
+  }
+  .saved-library {
+    display: none;
+  }
+}

@@ -169,6 +169,21 @@ function initialize(definition) {
       byId('parameters').append(row);
       continue;
     }
+    if (field.type === 'text') {
+      const input = element('textarea');
+      Object.assign(input, {
+        id: key,
+        name: key,
+        defaultValue: field.initial,
+        maxLength: field.maxLength,
+        rows: 5,
+        required: true,
+      });
+      input.dataset.valueType = 'string';
+      row.append(label, input);
+      byId('parameters').append(row);
+      continue;
+    }
     if (field.type === 'integer-list') {
       row.className = 'sequence-field';
       const input = element('input');
@@ -281,7 +296,7 @@ function initialize(definition) {
       button.setAttribute('aria-pressed', String(value === '1'));
     }
   };
-  const { analyze } = setupWorkbench({
+  const { applyInputs, analyze } = setupWorkbench({
     form,
     model: models[id],
     validate,
@@ -376,11 +391,15 @@ function initialize(definition) {
     byId('preset-row').hidden = false;
     select.addEventListener('change', () => {
       pause();
-      const values = definition.presets[select.value] ?? {};
-      for (const [key, field] of Object.entries(inputs))
-        form.elements.namedItem(key).value = values[key] ?? field.initial;
+      const chosen = select.value;
+      const values = definition.presets[chosen] ?? {};
       resetProbe = true;
-      analyze();
+      applyInputs(
+        Object.fromEntries(
+          Object.entries(inputs).map(([key, field]) => [key, values[key] ?? field.initial]),
+        ),
+      );
+      select.value = chosen;
     });
   }
   if (definition.interaction === 'arm-target') {

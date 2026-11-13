@@ -37,7 +37,7 @@ test('discipline navigation remains available inside every lab template', async 
     .click();
   await expect(page).toHaveURL(/\/#electrical$/);
   await expect(page.getByLabel('Discipline', { exact: true })).toHaveValue('electrical');
-  await expect(page.getByRole('status')).toHaveText('4 experiments available');
+  await expect(page.getByRole('status')).toHaveText('5 experiments available');
 });
 
 test('catalog places the brand in the corner and links to About', async ({ page }) => {
@@ -46,7 +46,7 @@ test('catalog places the brand in the corner and links to About', async ({ page 
   await page.goto('/#electronics');
   const brand = await page.getByRole('link', { name: 'Nexora catalog' }).boundingBox();
   expect(brand.x).toBe(16);
-  await expect(page.locator('#total-labs')).toHaveText('159');
+  await expect(page.locator('#total-labs')).toHaveText('160');
   await expect(page.locator('#total-disciplines')).toHaveText('17');
   await page.getByRole('link', { name: 'About', exact: true }).click();
   await expect(page).toHaveURL(/#about$/);
@@ -81,7 +81,7 @@ test('discipline sidebar follows direct links, filters, and browser history', as
   await page.goBack();
   await expect(electronics).toHaveAttribute('aria-current', 'location');
   await sidebar.getByRole('link', { name: 'All disciplines' }).click();
-  await expect(page.getByRole('status')).toHaveText('159 experiments available');
+  await expect(page.getByRole('status')).toHaveText('160 experiments available');
   const bounds = await sidebar.boundingBox();
   expect(bounds.x).toBe(0);
   if (page.viewportSize().width > 740) {
@@ -186,7 +186,7 @@ test('electrical, electronics, and signals labs open from the catalog and run', 
   for (const [discipline, name, metric, expected] of labs) {
     await page.goto('/');
     await page.getByLabel('Discipline', { exact: true }).selectOption(discipline);
-    await expect(page.getByRole('status')).toHaveText('4 experiments available');
+    await expect(page.getByRole('status')).toHaveText('5 experiments available');
     await page
       .locator('#catalog-grid')
       .getByRole('link', { name: new RegExp(name) })
@@ -207,7 +207,7 @@ test('electrical, electronics, and signals labs open from the catalog and run', 
 test('catalog thumbnail, persistent theme, and print layout', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
   await page.goto('/');
-  await expect(page.getByRole('status')).toHaveText('159 experiments available');
+  await expect(page.getByRole('status')).toHaveText('160 experiments available');
   await expect(
     page.locator('#catalog-grid').getByRole('link', { name: /Axial Stress/ }),
   ).toHaveCount(1);

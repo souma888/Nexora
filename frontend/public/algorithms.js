@@ -1,3 +1,4 @@
+import { installRunTools } from './run-tools.ts';
 import { algorithms, runAlgorithm, validateAlgorithm } from '../../backend/algorithms.js';
 import { coordinates, workedExamples } from '../../backend/algorithm-definitions.js';
 import { renderAdditional } from './algorithm-views.js';
@@ -11,6 +12,7 @@ let trace,
   debounce;
 const definition = Object.hasOwn(algorithms, id) ? algorithms[id] : null;
 const fields = {};
+let runTools;
 const node = (tag, text) => {
   const element = document.createElement(tag);
   if (text !== undefined) element.textContent = text;
@@ -245,8 +247,13 @@ function regenerate(overrides) {
     $('play').disabled = false;
     $('timeline').disabled = false;
     render();
+    runTools?.setCurrent(
+      Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, field.value])),
+      trace,
+    );
     if (overrides) $('feedback').textContent = '';
   } catch (error) {
+    runTools?.invalidate();
     trace = null;
     $('status').textContent = error.message;
     $('status').dataset.error = 'true';
@@ -381,6 +388,7 @@ function initialize() {
     field.addEventListener('input', () => {
       pause();
       clearTimeout(debounce);
+      runTools?.invalidate();
       $('status').textContent = 'Updating trace…';
       $('status').removeAttribute('data-error');
       $('result-text').textContent = 'Updating trace for the new input…';
@@ -456,6 +464,21 @@ function initialize() {
       /* Ignore invalid shared input and retain the worked default. */
     }
   }
+  runTools = installRunTools({
+    form: $('algorithm-form'),
+    model: id,
+    version: definition.version,
+    units: {},
+    validate: (input) => {
+      validateAlgorithm(id, input);
+      return input;
+    },
+    solve: (input) => runAlgorithm(id, input),
+    load: (input) => {
+      clearTimeout(debounce);
+      load(input);
+    },
+  });
   $('loading').hidden = true;
   $('algorithm-lab').hidden = false;
   regenerate();

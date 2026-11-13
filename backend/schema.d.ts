@@ -94,6 +94,7 @@ export interface LabConfig<F extends Fields> extends Omit<
   Definition<F>,
   'version' | 'outputs' | 'metrics' | 'prediction'
 > {
+  version?: string;
   metrics: Record<string, string[]>;
   text: [string, string, string[], string, string, string, string];
 }

@@ -1,18 +1,56 @@
-import { lab, p, integer, list, parseList, choice, samples, table } from './lab-kit.js';
-export function criticalSchedule(durations) {
-  const predecessors = [[], [], [0], [0, 1], [2, 3], [3]],
-    successors = Array.from({ length: 6 }, () => []),
-    early = Array(6).fill(0),
-    finish = Array(6).fill(0),
-    late = Array(6),
-    last = Array(6);
-  predecessors.forEach((parents, i) => {
-    parents.forEach((p) => successors[p].push(i));
-    early[i] = Math.max(0, ...parents.map((p) => finish[p]));
+import { lab, p, integer, list, parseList, choice, samples, table, textInput } from './lab-kit.js';
+export const defaultDependencies = 'A>C; A>D; B>D; C>E; D>E; D>F';
+export function projectEdges(source, count) {
+  const seen = new Set(),
+    edges = [];
+  if (!source.trim() || source.trim() === 'none') return edges;
+  for (const part of source.split(';')) {
+    const match = part.trim().match(/^([A-L])\s*>\s*([A-L])$/);
+    if (!match) throw new Error('Use dependencies like A>C; B>C, or none.');
+    const a = match[1].charCodeAt(0) - 65,
+      b = match[2].charCodeAt(0) - 65,
+      key = `${a}>${b}`;
+    if (a >= count || b >= count)
+      throw new Error('A dependency refers to a task outside the duration list.');
+    if (a === b || seen.has(key))
+      throw new Error('Dependencies cannot repeat or connect a task to itself.');
+    seen.add(key);
+    edges.push([a, b]);
+  }
+  if (edges.length > 40) throw new Error('Use at most 40 dependencies.');
+  return edges;
+}
+export function criticalSchedule(
+  durations,
+  edges = projectEdges(defaultDependencies, durations.length),
+) {
+  const n = durations.length,
+    predecessors = Array.from({ length: n }, () => []),
+    successors = Array.from({ length: n }, () => []);
+  for (const [a, b] of edges) {
+    predecessors[b].push(a);
+    successors[a].push(b);
+  }
+  const degree = predecessors.map((p) => p.length),
+    ready = degree.flatMap((value, i) => (value === 0 ? [i] : [])),
+    order = [];
+  while (ready.length) {
+    const i = ready.shift();
+    order.push(i);
+    for (const j of successors[i]) if (--degree[j] === 0) ready.push(j);
+  }
+  if (order.length !== n)
+    throw new Error('Dependencies must form a directed acyclic graph; remove the cycle.');
+  const early = Array(n).fill(0),
+    finish = Array(n).fill(0),
+    late = Array(n).fill(0),
+    last = Array(n).fill(0);
+  for (const i of order) {
+    early[i] = Math.max(0, ...predecessors[i].map((p) => finish[p]));
     finish[i] = early[i] + durations[i];
-  });
+  }
   const duration = Math.max(...finish);
-  for (let i = 5; i >= 0; i--) {
+  for (const i of [...order].reverse()) {
     last[i] = successors[i].length ? Math.min(...successors[i].map((s) => late[s])) : duration;
     late[i] = last[i] - durations[i];
   }
@@ -196,15 +234,21 @@ export const industrialModels = {
       discipline: 'industrial',
       lab: 'IE03',
       topic: 'Project scheduling',
-      inputs: { durations: list('Task durations A, B, C, D, E, F', '3,2,4,5,2,3', 1, 30, 6) },
-      rules: [
-        {
-          type: 'list-length',
-          field: 'durations',
-          count: 6,
-          message: 'Provide exactly six task durations for A through F.',
-        },
-      ],
+      version: '1.1',
+      inputs: {
+        durations: list('Task durations A, B, C, D, E, F', '3,2,4,5,2,3', 1, 30, 12),
+        dependencies: textInput('Task dependencies (A>C; B>C, or none)', defaultDependencies, 500),
+      },
+      validateValues({ durations, dependencies }) {
+        const d = parseList(durations);
+        if (d.length < 2)
+          return { key: 'durations', message: 'Enter 2–12 task durations, labelled A through L.' };
+        try {
+          criticalSchedule(d, projectEdges(dependencies, d.length));
+        } catch (error) {
+          return { key: 'dependencies', message: error.message };
+        }
+      },
       metrics: {
         duration: ['Earliest project completion', 'days'],
         critical: ['Zero-slack tasks', ''],
@@ -225,12 +269,12 @@ export const industrialModels = {
         'A noncritical task can use its slack without changing the project’s completion time.',
         'With durations [3,2,4,5,2,3], the project finishes in 11 days. A→D→F is critical; B, C and E each have one day of slack.',
         'ES=max predecessor EF, EF=ES+d. In the backward pass LF=min successor LS, LS=LF−d. Total slack=LS−ES. All terminal tasks must finish by the project deadline.',
-        'Fixed finish-to-start DAG: A/B start; C follows A; D follows A and B; E follows C and D; F follows D. Unlimited resources, deterministic whole-day durations, no calendars or resource leveling. Active intervals are [ES,EF). Multiple critical branches are supported.',
+        'Editable finish-to-start DAG with 2–12 tasks labelled A through L and up to 40 dependencies. Enter A>C to make C depend on A, or none for independent tasks. Cycles, unknown tasks, duplicates and self-edges are rejected. Unlimited resources, deterministic whole-day durations, no calendars or resource leveling. Active intervals are [ES,EF). Multiple critical branches are supported.',
       ],
     },
-    ({ durations }) => {
+    ({ durations, dependencies }) => {
       const d = parseList(durations),
-        s = criticalSchedule(d),
+        s = criticalSchedule(d, projectEdges(dependencies, d.length)),
         series = Array.from({ length: s.duration + 1 }, (_, t) => ({
           x: t,
           y: d.filter((_, i) => s.early[i] <= t && t < s.finish[i]).length,

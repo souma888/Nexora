@@ -1,3 +1,3 @@
-# Reference tests
+# Reference and contract checks
 
-Run `npm test` from the repository root. The beam tests exercise the API handler against closed-form values for the three supported load cases and verify that the API rejects unsupported or out-of-range inputs.
+`npm test` runs independent solver references, conservation/edge cases, parsers, API discovery/validation and portable run/CSV/unit checks. `npm run typecheck` includes backend/API JavaScript, strict TypeScript modules and negative compile fixtures. `npm run test:e2e` exercises browser behavior on desktop/mobile and compares client results with the API. See [VALIDATION.md](../docs/VALIDATION.md); these checks do not certify safety-critical engineering accuracy.

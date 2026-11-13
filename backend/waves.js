@@ -1,3 +1,4 @@
+import { circuitModels } from './circuit-builder.js';
 import { cosine, experiment, parameter, samples } from './experiment.js';
 import { mechanicalModels } from './mechanical-experiments.js';
 import { systemModels } from './system-experiments.js';
@@ -15,6 +16,7 @@ import { chemicalModels } from './chemical-process.js';
 import { industrialModels } from './industrial.js';
 
 export const models = {
+  ...circuitModels,
   divider: experiment(
     'divider',
     {
