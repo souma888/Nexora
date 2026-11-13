@@ -14,18 +14,29 @@
     "test:e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "eslint . --max-warnings=0"
+    "lint": "eslint . --max-warnings=0",
+    "docs:generate": "node scripts/catalog-docs.mjs",
+    "docs:check": "node scripts/catalog-docs.mjs --check",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run docs:check && npm test && npm run build"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@fontsource-variable/inter": "5.3.0",
     "@fontsource-variable/jetbrains-mono": "5.3.0",
     "@playwright/test": "1.65.0",
-    "@types/node": "^26.6.6",
+    "@types/node": "^24.19.2",
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
     "prettier": "^3.10.1",
     "typescript": "7.0.2",
     "vite": "8.3.6"
+  },
+  "overrides": {
+    "eslint": {
+      "minimatch": "^11.0.1"
+    },
+    "@eslint/config-array": {
+      "minimatch": "^11.0.1"
+    }
   }
 }

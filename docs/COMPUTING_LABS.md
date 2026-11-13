@@ -1,6 +1,6 @@
 # Twenty more DSA and Computer Engineering labs
 
-These additions are available through the persistent discipline sidebar and searchable catalog. DSA has 55 labs; Digital Logic & Computer Engineering has 16. Nexora now has 159 labs across 17 sections; see [the engineering expansion](ENGINEERING_EXPANSION.md).
+These additions are available through the persistent discipline sidebar and searchable catalog. DSA has 55 labs; Digital Logic & Computer Engineering has 16. At this release, Nexora reached 159 labs across 17 sections; see [the engineering expansion](ENGINEERING_EXPANSION.md).
 
 Every lab includes editable inputs, a prediction question, a worked example, governing rules, explicit limits, and a reproducible browser/API solver. DSA labs support play/pause, keyboard scrubbing, pseudocode highlights, immutable state snapshots and operation counters. Computer Engineering labs expose bit words or state diagrams, probe-linked tables, plots, metrics, and microstep playback where state evolves. The workbench preserves the existing theme and responsive layout; dense bit words and tables scroll inside their panels.
 

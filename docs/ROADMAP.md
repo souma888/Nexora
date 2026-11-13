@@ -1,51 +1,33 @@
 # Roadmap
 
-No dates are committed. Milestones are outcome-based.
+No dates are promised. Completed items describe running code, not a proposed framework migration.
 
-## Phase 0 — Foundation (current)
+## Delivered foundation
 
-- [x] Establish product vision and documentation.
-- [x] Define preliminary architecture and module priorities.
-- [ ] Choose license and branding conventions.
-- [ ] Scaffold React/TypeScript frontend and FastAPI backend.
-- [ ] Add formatting, linting, type checks and test runners.
+- [x] MIT license and charcoal/crimson/forest design system.
+- [x] Vite multi-page JavaScript/TypeScript UI and Node/Vercel API.
+- [x] Shared field/error contracts, pure solvers and independent benchmark tests.
+- [x] Formatting, ESLint, solver/API `checkJs`, strict TypeScript core modules, browser tests and GitHub Actions workflow.
+- [x] Catalog/sidebar/studio previews across the registered disciplines.
+- [x] Beam, axial stress, Mohr, circuits, control, algorithm traces and multidisciplinary labs; see [the generated inventory](CATALOG.md).
+- [x] Worked examples, model limits, warnings, keyboard inspection, responsive themes and printing.
+- [x] Local saved runs, recalculated restore/comparison, portable JSON and CSV exports.
+- [x] Shared supported-unit conversion with scale and affine temperature offsets.
+- [x] Editable DC circuit networks with assembled numerical solve and residual/power checks.
+- [x] Editable project DAGs with topological scheduling, cycle detection and slack.
+- [x] One derived catalog, generated documentation, and rendering/input audit.
 
-## Phase 1 — Verified solver core
+## Next improvements
 
-- [ ] Define simulation schema, units and error contract.
-- [ ] Implement beam shear/bending for selected load cases.
-- [ ] Implement beam deflection for supported cases.
-- [ ] Add axial stress/strain and plane-stress transformation.
-- [ ] Verify against documented textbook/reference cases.
-
-## Phase 2 — First complete lab experience
-
-- [ ] Create responsive navigation and subject catalog.
-- [ ] Implement reusable parameter panel and visualization shell.
-- [ ] Connect frontend to solver API.
-- [ ] Add worked examples, assumptions, plot exports and error states.
-- [ ] Test accessibility and mobile layouts.
-
-## Phase 3 — Product depth
-
-- [ ] Add presets, experiment comparison and saved sessions.
-- [ ] Introduce PostgreSQL and authentication if needed.
-- [ ] Add truss, mechanism, and vibration modules.
-- [ ] Instrument performance and reliability.
-
-## Phase 4 — Multidisciplinary expansion
-
-- [ ] Electrical circuits and transient analysis.
-- [ ] Electronics characteristic curves and filter responses.
-- [ ] Signals and systems interactive lab.
-- [ ] Shared experiment versioning and learning content.
-
-## Phase 5 — Advanced exploration
-
-- [ ] 3D visualizations where useful.
-- [ ] Guided assignments, classroom workflows, collaboration.
-- [ ] More advanced numerical simulation and benchmark suites.
+- [ ] Gradually eliminate implicit legacy helper parameters and enable the remaining strict JavaScript flags, beyond the checked model boundaries.
+- [x] Separate teaching prose for the 71 lab-kit models from their numerical implementations; metadata is unchanged.
+- [ ] Additional numerical convergence/stiffness studies and independent benchmark datasets.
+- [ ] More physical/composite unit dimensions and optional output display-unit conversion.
+- [ ] User-defined trusses, nonlinear/transient circuit elements, and larger graph editing with performance budgets.
+- [ ] Optional cloud synchronization/authentication if a real account-based workflow is introduced.
+- [ ] Classroom assignments and collaboration with an ownership/privacy design.
+- [ ] An independent accessibility audit and assisted-technology testing beyond the automated keyboard/mobile checks.
 
 ## Release gates
 
-A phase is complete only when implemented features have tests, documented limitations, and a working user-facing flow.
+A feature is complete only with running UI behavior, domain validation, appropriate independent tests, honest documentation, and no regression in the shared workbenches. Keep mechanical changes and functional changes in separate, explained commits. Retain AI-assistance disclosure and existing history; do not manufacture an authorship narrative.

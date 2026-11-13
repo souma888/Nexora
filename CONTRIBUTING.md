@@ -1,6 +1,6 @@
 # Contributing to Nexora
 
-Nexora is in its initial planning stage. Before submitting major code, open an issue to discuss the proposed simulation, physical assumptions, and expected user experience.
+Nexora is a working educational laboratory. Before submitting major code, open an issue to discuss the proposed simulation, physical assumptions, and expected user experience.
 
 ## Contribution expectations
 
@@ -11,13 +11,17 @@ Nexora is in its initial planning stage. Before submitting major code, open an i
 - Keep UI accessible and responsive.
 - Avoid committing secrets, generated datasets, or large binaries.
 
+## Required checks
+
+Run `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run docs:check`, `npm test`, `npm run build`, and `npm run test:e2e`. Run `npm run docs:generate` after registry changes. Keep formatting-only and behavioral changes in separate commits.
+
 ## Pull requests
 
 Describe the problem, approach, test evidence, screenshots for UI changes, and any limitations. Small, focused changes are easier to review.
 
 ## Licensing
 
-A project license has not been chosen. Please discuss contributions with the maintainer before submitting substantial code so licensing expectations can be clarified.
+Nexora uses the [MIT License](LICENSE). Contributions are submitted under the same license. Disclose material AI assistance in the PR and be prepared to explain the equations, assumptions and tests.
 
 ## Code of conduct
 

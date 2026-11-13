@@ -1,38 +1,25 @@
-# Feature Catalog and Prioritization
+# Current features and scope
 
-Legend: **MVP** = first release target; **Next** = post-MVP; **Explore** = longer-term possibility. Nothing listed is implemented yet.
+This describes shipped functionality. The complete executable inventory is [generated from the registry](CATALOG.md).
 
-| Area                | Module / feature                                        | Priority |
-| ------------------- | ------------------------------------------------------- | -------- |
-| Core                | Experiment catalog, search, responsive layout           | MVP      |
-| Core                | Validated parameter controls, units, reset and presets  | MVP      |
-| Core                | 2D diagrams, interactive charts, equations and warnings | MVP      |
-| Mechanics of solids | Beam shear force and bending moment diagrams            | MVP      |
-| Mechanics of solids | Beam slope and deflection for supported cases           | MVP      |
-| Mechanics of solids | Axial loading and stress/strain                         | MVP      |
-| Mechanics of solids | Plane stress and Mohr's circle                          | MVP      |
-| Platform            | Save, compare, and export experiment results            | Next     |
-| Civil / structures  | Trusses and structural load paths                       | Next     |
-| Mechanical          | Rigid-body kinematics and mechanisms                    | Next     |
-| Mechanical          | Vibrations, springs, dampers and gears                  | Next     |
-| Electrical          | DC/AC circuits and RLC transients                       | Next     |
-| Electronics         | Diodes, BJT/MOSFET simplified models, filters           | Next     |
-| Signals             | Convolution, Fourier series/transforms, sampling        | Next     |
-| Platform            | Accounts, dashboard and personal workspaces             | Next     |
-| Visualization       | 3D interactive assemblies and animations                | Explore  |
-| Education           | Guided labs, quizzes, classroom sharing                 | Explore  |
-| Advanced            | Control systems, fluids, heat transfer, robotics        | Explore  |
-| Advanced            | General finite-element workflows                        | Explore  |
+| Area               | Shipped                                                                                                            | Limit                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| Catalog            | Search, discipline filters, persistent sidebar, subject previews                                                   | Bounded registered labs                                        |
+| Workbench          | Parameter controls, presets/reset, plot inspection, diagrams, tables, worked examples, predictions and model notes | Not an arbitrary multiphysics editor                           |
+| Circuit builder    | User-defined resistors and independent DC V/I sources, modified nodal assembly and pivoted linear solve            | 20 ideal components, nodes 0–8, ground required                |
+| Project scheduling | Editable durations/dependencies, DAG cycle detection, earliest/latest times, slack, Gantt                          | 2–12 tasks; no resource leveling/calendars                     |
+| Numerical methods  | Roots, Euler/RK4, finite-difference convergence, seeded sampling and assembled circuit solve                       | Each method’s model assumptions remain explicit                |
+| Algorithms         | Editable bounded inputs, pseudocode, playback, intermediate state, operation counts                                | Older graph algorithms use six nodes                           |
+| Units              | Dimension-checked scale/offset conversion for registered physical units, contextual mechanics converters           | Unsupported/composite units remain in declared model units     |
+| Saved runs         | Browser library, restore/recalculate, same-model/version comparisons                                               | Local browser only; 40 runs; no cloud sync                     |
+| Export/import      | Portable versioned JSON, numerical summaries and CSV plot/trace data, recalculated imports                         | Same-model/current-version imports; 200 kB file limit          |
+| Access and themes  | Keyboard controls, responsive layouts, dark/light, print styles, reduced motion                                    | Tests do not constitute a complete accessibility certification |
+| Quality            | Formatting, lint, backend/API JS checking, strict TS modules, independent references, browser-to-API checks, CI    | Legacy helper typing remains incremental                       |
 
-## Shared experiment UX
+## Not shipped
 
-Each module should present: **problem statement → model/diagram → inputs → run/update → plots/outputs → assumptions → worked explanation → validation/reference**.
+Accounts, collaborative classrooms, cloud-synced workspaces, arbitrary truss/FEA models, 3D geometry authoring, nonlinear circuit devices, transient arbitrary networks, and professional design certification. These are future scope, not installed dependencies or hidden features.
 
-## Definition of done for a module
+## Definition of done
 
-- Documented equations, assumptions, sign convention and units.
-- Domain-checked inputs and informative error states.
-- Analytical reference tests and edge-case coverage.
-- Clear graph labels and accessible controls.
-- Reproducible example configuration.
-- No unqualified claims of professional-grade accuracy.
+A model needs equations, units/signs, assumptions, ordinary/edge/invalid reference cases, a usable browser flow and explicit domain errors. Exact analytical models are described as analytical; numerical methods expose their method and limits. New registrations must regenerate the catalog and pass every CI quality gate.
