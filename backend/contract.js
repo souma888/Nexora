@@ -1,3 +1,4 @@
+/** @returns {import("./schema.js").NumberField} */
 export const number = (label, unit, min, max) => ({ label, type: 'number', unit, min, max });
 
 export function validate(definition, input) {
@@ -11,6 +12,9 @@ export function validate(definition, input) {
     if (field.type === 'enum') {
       if (!field.options.includes(value))
         return { key, message: `Choose a supported ${field.label.toLowerCase()}.` };
+    } else if (field.type === 'text') {
+      if (typeof value !== 'string' || !value.trim() || value.length > field.maxLength)
+        return { key, message: `${field.label}: enter up to ${field.maxLength} characters.` };
     } else if (field.type === 'integer-list') {
       const parts =
         typeof value === 'string' && value.length <= 300
@@ -43,27 +47,12 @@ export function validate(definition, input) {
     if (rule.type === 'same-length')
       valid = values[rule.left].split(',').length === values[rule.right].split(',').length;
     if (rule.type === 'list-length') valid = values[rule.field].split(',').length === rule.count;
-    if (rule.type === 'counter-range') valid = values.initial < 2 ** values.bits;
-    if (rule.type === 'fits-width') {
-      const limit = 2 ** values[rule.width],
-        invalid = rule.fields.find((key) =>
-          rule.signed
-            ? values[key] < -limit / 2 || values[key] >= limit / 2
-            : values[key] < 0 || values[key] >= limit,
-        );
-      valid = invalid === undefined;
-      field = invalid ?? field;
-    }
-    if (rule.type === 'crc-position')
-      valid = values.error <= values.message.split(',').length + values.generator.length - 1;
-    if (rule.type === 'one-bit-state') valid = values.predictor !== 'one' || values.initial <= 1;
-    if (rule.type === 'root-bracket') {
-      const fn = (x) => (values.function === 'cubic' ? x ** 3 - x - 2 : Math.cos(x) - x);
-      valid = fn(values.lower) * fn(values.upper) <= 0;
-    }
+    if (!['less', 'same-length', 'list-length'].includes(rule.type))
+      throw new Error(`Unsupported validation rule: ${rule.type}`);
     if (!valid) return { key: field, message: rule.message };
   }
-  return { values };
+  const error = definition.validateValues?.(values);
+  return error ?? { values };
 }
 
 export function simulationHandler(select) {

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.solvers.json",
     "dev": "node backend/dev-server.js",
     "test": "node --test",
     "test:e2e": "playwright test",

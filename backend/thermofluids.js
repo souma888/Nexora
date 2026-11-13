@@ -6,6 +6,7 @@ const temperatures = {
   hot: p('Hot-side temperature', '°C', 20, 300, 100),
   cold: p('Cold-side temperature', '°C', -10, 100, 20),
 };
+/** @type {import("./schema.js").Rule} */
 const hotRule = {
   type: 'less',
   left: 'cold',

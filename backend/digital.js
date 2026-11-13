@@ -224,13 +224,13 @@ export const digitalModels = {
         initial: integer('Initial count', 0, 255, 0),
         steps: integer('Clock edges', 1, 32, 20),
       },
-      rules: [
-        {
-          type: 'counter-range',
-          field: 'initial',
-          message: 'Initial count must fit in the selected number of bits.',
-        },
-      ],
+      validateValues({ initial, bits }) {
+        if (initial >= 2 ** bits)
+          return {
+            key: 'initial',
+            message: 'Initial count must fit in the selected number of bits.',
+          };
+      },
       metrics: {
         final: ['Final count', ''],
         wraps: ['Wrap events', ''],

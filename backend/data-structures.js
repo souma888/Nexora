@@ -700,14 +700,12 @@ export function runDataStructure(id, input, { show, stats }) {
         {
           type: 'tree',
           roots: tree.flatMap((_, i) => (i && i + (i & -i) >= tree.length ? [i] : [])),
-          nodes: tree
-            .slice(1)
-            .map((label, j) => ({
-              id: j + 1,
-              label,
-              detail: `i${j + 1}: ${j + 2 - ((j + 1) & -(j + 1))}…${j + 1}`,
-              active: active.includes(j + 1),
-            })),
+          nodes: tree.slice(1).map((label, j) => ({
+            id: j + 1,
+            label,
+            detail: `i${j + 1}: ${j + 2 - ((j + 1) & -(j + 1))}…${j + 1}`,
+            active: active.includes(j + 1),
+          })),
           edges: tree.flatMap((_, i) =>
             i && i + (i & -i) < tree.length ? [[i + (i & -i), i]] : [],
           ),

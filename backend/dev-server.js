@@ -23,8 +23,19 @@ const server = createServer(async (req, res) => {
         res.writeHead(405, { Allow: 'GET, POST' }).end();
         return;
       }
-      const body = req.method === 'POST' ? { body: Readable.toWeb(req), duplex: 'half' } : {};
-      const request = new Request(url, { method: req.method, headers: req.headers, ...body });
+      const body =
+        req.method === 'POST'
+          ? {
+              body: /** @type {ReadableStream} */ (/** @type {unknown} */ (Readable.toWeb(req))),
+              duplex: 'half',
+            }
+          : {};
+      const headers = new Headers();
+      for (const [name, value] of Object.entries(req.headers)) {
+        if (Array.isArray(value)) value.forEach((item) => headers.append(name, item));
+        else if (value !== undefined) headers.set(name, value);
+      }
+      const request = new Request(url, { method: req.method, headers, ...body });
       const response = await handlers[req.method](request);
       res.writeHead(response.status, Object.fromEntries(response.headers));
       res.end(await response.text());

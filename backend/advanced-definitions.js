@@ -851,7 +851,7 @@ export function validateAdditional(definition, raw) {
   for (const key of ['index', 'query', 'left', 'right'])
     if (key in result && result[key] >= result.values.length)
       invalid(key, `${key} must be smaller than the array length (${result.values.length}).`);
-  if ('left' in result && result.left > result.right)
+  if ('left' in result && 'right' in result && result.left > result.right)
     invalid('right', 'Range end must be at least the start.');
   for (const rule of definition.constraints ?? []) {
     if (rule.type === 'length-bound' && result[rule.key] > result[rule.array].length)

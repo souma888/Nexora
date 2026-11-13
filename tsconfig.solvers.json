@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "strict": false,
+    "types": ["node"]
+  },
+  "include": ["backend/**/*.js", "api/**/*.js", "type-tests/**/*.ts"],
+  "exclude": []
+}

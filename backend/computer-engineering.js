@@ -2,14 +2,21 @@ import { lab, integer, choice, list, parseList, table } from './lab-kit.js';
 const binary = (value, width) =>
   (((value % 2 ** width) + 2 ** width) % 2 ** width).toString(2).padStart(width, '0');
 const signed = (value, width) => (value >= 2 ** (width - 1) ? value - 2 ** width : value);
-const wordRule = (fields, signedValues = false) => ({
-  type: 'fits-width',
-  fields,
-  width: 'width',
-  signed: signedValues,
-  field: fields[0],
-  message: `Operands must fit the selected ${signedValues ? 'signed' : 'unsigned'} word width.`,
-});
+const wordCheck =
+  (fields, signedValues = false) =>
+  (values) => {
+    const limit = 2 ** values.width;
+    const key = fields.find((key) =>
+      signedValues
+        ? values[key] < -limit / 2 || values[key] >= limit / 2
+        : values[key] < 0 || values[key] >= limit,
+    );
+    if (key)
+      return {
+        key,
+        message: `Operands must fit the selected ${signedValues ? 'signed' : 'unsigned'} word width.`,
+      };
+  };
 const wordPlot = {
   x: 'Bit index (LSB is zero)',
   xUnit: '',
@@ -51,7 +58,7 @@ export const computerModels = {
           'ADD',
         ),
       },
-      rules: [wordRule(['a', 'b'])],
+      validateValues: wordCheck(['a', 'b']),
       metrics: {
         result: ['Unsigned result', ''],
         signed: ['Signed interpretation', ''],
@@ -146,7 +153,7 @@ export const computerModels = {
         width: integer('Word width', 4, 8, 8),
         value: integer('Signed input value', -128, 127, -5),
       },
-      rules: [wordRule(['value'], true)],
+      validateValues: wordCheck(['value'], true),
       metrics: {
         encoded: ['Unsigned encoding', ''],
         negated: ['Signed negation after wrap', ''],
@@ -221,7 +228,7 @@ export const computerModels = {
         a: integer('Signed multiplicand M', -128, 127, -3),
         b: integer('Signed multiplier Q', -128, 127, 5),
       },
-      rules: [wordRule(['a', 'b'], true)],
+      validateValues: wordCheck(['a', 'b'], true),
       metrics: {
         product: ['Signed product', ''],
         cycles: ['Booth cycles', ''],
@@ -261,7 +268,7 @@ export const computerModels = {
         dividend: integer('Unsigned dividend', 0, 255, 13),
         divisor: integer('Nonzero unsigned divisor', 1, 255, 3),
       },
-      rules: [wordRule(['dividend', 'divisor'])],
+      validateValues: wordCheck(['dividend', 'divisor']),
       metrics: {
         quotient: ['Quotient', ''],
         remainder: ['Remainder', ''],
@@ -386,13 +393,13 @@ export const computerModels = {
         ),
         error: integer('Flipped transmitted position (0 means none)', 0, 20, 0),
       },
-      rules: [
-        {
-          type: 'crc-position',
-          field: 'error',
-          message: 'The flipped position must fit the message plus CRC word.',
-        },
-      ],
+      validateValues(values) {
+        if (values.error > values.message.split(',').length + values.generator.length - 1)
+          return {
+            key: 'error',
+            message: 'The flipped position must fit the message plus CRC word.',
+          };
+      },
       metrics: {
         remainder: ['Encoder remainder as integer', ''],
         syndrome: ['Receiver remainder as integer', ''],
@@ -436,7 +443,7 @@ export const computerModels = {
           'left',
         ),
       },
-      rules: [wordRule(['initial'])],
+      validateValues: wordCheck(['initial']),
       metrics: {
         final: ['Final unsigned register', ''],
         outgoing: ['Ones shifted out', ''],
@@ -597,13 +604,10 @@ export const computerModels = {
         ),
         initial: integer('Initial predictor state', 0, 3, 1),
       },
-      rules: [
-        {
-          type: 'one-bit-state',
-          field: 'initial',
-          message: 'A one-bit predictor state must be 0 or 1.',
-        },
-      ],
+      validateValues(values) {
+        if (values.predictor === 'one' && values.initial > 1)
+          return { key: 'initial', message: 'A one-bit predictor state must be 0 or 1.' };
+      },
       metrics: {
         accuracy: ['Prediction accuracy', '%'],
         misses: ['Mispredictions', ''],
