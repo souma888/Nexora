@@ -93,7 +93,12 @@ export function solveCircuit(source) {
     return { ...c, drop, current, power: drop * current };
   });
   const residual = Math.max(
-    ...matrix.map((row, i) => Math.abs(row.reduce((s, v, j) => s + v * solution[j], 0) - rhs[i])),
+    ...matrix.map((row, i) => {
+      const computed = row.reduce((sum, v, j) => sum + v * solution[j], 0);
+      const scale =
+        Math.abs(rhs[i]) + row.reduce((sum, v, j) => sum + Math.abs(v * solution[j]), 0);
+      return Math.abs(computed - rhs[i]) / Math.max(scale, 1e-30);
+    }),
   );
   return { nodes, voltage, branches, residual, matrix, rhs, solution };
 }
@@ -109,6 +114,8 @@ export const circuitModels = {
         netlist: textInput(
           'Circuit netlist (Ω, V, A)',
           'V V1 1 0 10; R R1 1 2 1000; R R2 2 0 1000',
+          2000,
+          'Format: R|V|I name nodeA nodeB value. Separate components with semicolons or newlines. Node 0 is ground.',
         ),
       },
       validateValues({ netlist }) {
@@ -122,7 +129,7 @@ export const circuitModels = {
         peak: ['Largest absolute node voltage', 'V'],
         dissipation: ['Resistor dissipation', 'W'],
         balance: ['Signed power-balance residual', 'W'],
-        residual: ['Maximum equation residual', ''],
+        residual: ['Maximum relative equation residual', '1'],
       },
       plot: {
         x: 'Node number',

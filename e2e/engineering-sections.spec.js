@@ -1,3 +1,4 @@
+import { disciplineCounts as counts } from '../backend/catalog.js';
 import { expect, test } from '@playwright/test';
 import { thermofluidModels } from '../backend/thermofluids.js';
 import { digitalModels } from '../backend/digital.js';
@@ -13,7 +14,6 @@ const models = {
   ...computationalModels,
   ...materialScienceModels,
 };
-const counts = { thermofluids: 9, digital: 16, robotics: 5, computational: 5, materials: 5 };
 const format = (value) =>
   value === null
     ? '—'

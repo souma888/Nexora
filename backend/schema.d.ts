@@ -30,6 +30,7 @@ export interface ListField extends BaseField {
   initial: string;
 }
 export interface TextField extends BaseField {
+  hint?: string;
   type: 'text';
   maxLength: number;
   initial: string;

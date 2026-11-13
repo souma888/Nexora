@@ -170,17 +170,25 @@ function initialize(definition) {
       continue;
     }
     if (field.type === 'text') {
+      row.className = 'sequence-field';
       const input = element('textarea');
       Object.assign(input, {
         id: key,
         name: key,
         defaultValue: field.initial,
         maxLength: field.maxLength,
-        rows: 5,
+        rows: field.maxLength <= 500 ? 3 : 5,
         required: true,
       });
       input.dataset.valueType = 'string';
       row.append(label, input);
+      if (field.hint) {
+        const hint = element('p', field.hint);
+        hint.className = 'field-hint';
+        hint.id = `${key}-hint`;
+        input.setAttribute('aria-describedby', hint.id);
+        row.append(hint);
+      }
       byId('parameters').append(row);
       continue;
     }

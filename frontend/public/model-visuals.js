@@ -508,7 +508,7 @@ export function renderModelVisual(host, definition, data, index) {
     'predictor',
     'engineering-extension',
   ].includes(v.type);
-  host.innerHTML = `<svg viewBox="0 0 520 ${height}" class="${wide ? 'wide-model' : ''}${v.kind === 'project' ? ' project-model' : ''}" role="img" aria-label="${escape(definition.title)} interactive schematic">${defs}${drawing}</svg>`;
+  host.innerHTML = `<svg viewBox="0 0 520 ${height}" class="${wide ? 'wide-model' : ''}${v.kind === 'project' ? ' project-model' : ''}${v.kind === 'circuit-network' ? ' network-model' : ''}" role="img" aria-label="${escape(definition.title)} interactive schematic">${defs}${drawing}</svg>`;
 }
 
 export function renderModelTable(host, data) {

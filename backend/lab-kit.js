@@ -74,9 +74,10 @@ export function lab(config, solve) {
   );
 }
 
-/** @param {string} label @param {string} initial @param {number} [maxLength]
+/** @param {string} label @param {string} initial @param {number} [maxLength] @param {string} [hint]
  * @returns {import('./schema.js').TextField} */
-export const textInput = (label, initial, maxLength = 2000) => ({
+export const textInput = (label, initial, maxLength = 2000, hint = '') => ({
+  hint,
   label,
   initial,
   maxLength,

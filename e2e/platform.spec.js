@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { test, expect } from '@playwright/test';
 const ready = async (page, url) => {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
@@ -12,6 +13,16 @@ test('build a circuit, detect a singular network and restore a valid preset', as
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await ready(page, '/simulation.html?lab=circuitbuilder');
+  expect(
+    await page
+      .locator('.run-tools')
+      .evaluate((node) =>
+        Boolean(
+          node.compareDocumentPosition(document.getElementById('experiment')) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+        ),
+      ),
+  ).toBe(true);
   await expect(page.locator('#metric-peak')).toHaveText('10 V');
   await expect(page.locator('#model-table')).toContainText('R1');
   await page
@@ -36,7 +47,7 @@ test('editable project DAG detects cycles and solves dependencies outside declar
 }) => {
   await ready(page, '/simulation.html?lab=criticalpath');
   await page.getByLabel('Task dependencies (A>C; B>C, or none)', { exact: true }).fill('C>A; A>B');
-  await page.getByLabel('Task durations A, B, C, D, E, F', { exact: true }).fill('2,4,3');
+  await page.getByLabel('Task durations (A–L, 2–12 tasks)', { exact: true }).fill('2,4,3');
   await expect(page.locator('#metric-duration')).toHaveText('9 days');
   await page.getByLabel('Task dependencies (A>C; B>C, or none)', { exact: true }).fill('A>B;B>A');
   await expect(page.locator('#status')).toContainText('cycle');
@@ -83,7 +94,15 @@ test('save, compare, restore, portable JSON, CSV and the browser library work en
   ]) {
     const promise = page.waitForEvent('download');
     await page.getByRole('button', { name, exact: true }).click();
-    expect((await promise).suggestedFilename()).toContain(extension);
+    const download = await promise;
+    expect(download.suggestedFilename()).toContain(extension);
+    const contents = await readFile(await download.path(), 'utf8');
+    if (extension === '.json') {
+      const run = JSON.parse(contents);
+      expect(run.model).toBe('divider');
+      expect(run.input.voltage).toBe(12);
+      expect(run.result.summary.loaded).toBe(4);
+    } else expect(contents).toContain('"4","V"');
   }
   await page.getByLabel('Import run JSON', { exact: true }).setInputFiles({
     name: 'run.json',
@@ -157,6 +176,16 @@ test('algorithm URL values are validated and algorithm runs can be saved and res
   await expect(page.getByLabel('Array values', { exact: true })).not.toHaveValue(/img/);
   expect(await page.evaluate(() => window.__executed)).toBe(false);
   await page.getByText('Save, compare & export', { exact: true }).click();
+  expect(
+    await page
+      .locator('.run-tools')
+      .evaluate((node) =>
+        Boolean(
+          node.compareDocumentPosition(document.getElementById('algorithm-lab')) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+        ),
+      ),
+  ).toBe(true);
   await page.getByRole('button', { name: 'Save run', exact: true }).click();
   const before = await page.getByLabel('Array values', { exact: true }).inputValue();
   await page.getByLabel('Array values', { exact: true }).fill('3,2,1');
