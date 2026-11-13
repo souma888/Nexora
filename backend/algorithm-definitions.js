@@ -20,7 +20,7 @@ const define = (
   example,
   predict,
   answer,
-  defaults = array,
+  defaults = /** @type {Record<string,string|number>} */ (array),
 ) => ({
   id,
   title,

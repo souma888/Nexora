@@ -5,6 +5,7 @@ export const integer = (label, min, max, initial) => ({
   integer: true,
 });
 export const bit = (label, initial = 0) => ({ ...integer(label, 0, 1, initial), widget: 'bit' });
+/** @returns {import("./schema.js").EnumField} */
 export const choice = (label, options, initial) => ({
   label,
   type: 'enum',
@@ -13,6 +14,7 @@ export const choice = (label, options, initial) => ({
   initial,
   unit: '',
 });
+/** @returns {import("./schema.js").ListField} */
 export const list = (label, initial, minItem = 0, maxItem = 1, maxItems = 24) => ({
   label,
   type: 'integer-list',
@@ -28,6 +30,11 @@ export const radians = (degrees) => (degrees * Math.PI) / 180;
 export const degrees = (radians) => (radians * 180) / Math.PI;
 export const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
+/** @template {import("./schema.js").Fields} F
+ * @template {import("./schema.js").Result} R
+ * @param {import("./schema.js").LabConfig<F>} config
+ * @param {(input:import("./schema.js").InputValues<F>)=>R} solve
+ */
 export function lab(config, solve) {
   const { id, title, discipline, inputs, metrics, text, plot = {}, rules = [], ...extra } = config;
   return experiment(
@@ -66,3 +73,13 @@ export function lab(config, solve) {
     solve,
   );
 }
+
+/** @param {string} label @param {string} initial @param {number} [maxLength]
+ * @returns {import('./schema.js').TextField} */
+export const textInput = (label, initial, maxLength = 2000) => ({
+  label,
+  initial,
+  maxLength,
+  type: 'text',
+  unit: '',
+});

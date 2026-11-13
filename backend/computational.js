@@ -47,13 +47,17 @@ export const computationalModels = {
           field: 'upper',
           message: 'Upper bound must exceed lower bound.',
         },
-        {
-          type: 'root-bracket',
-          field: 'lower',
-          when: { key: 'method', is: 'bisection' },
-          message: 'Bisection needs opposite signs (or a root) at the two bracket endpoints.',
-        },
       ],
+      validateValues(values) {
+        if (
+          values.method === 'bisection' &&
+          functionAt(values.function, values.lower) * functionAt(values.function, values.upper) > 0
+        )
+          return {
+            key: 'lower',
+            message: 'Bisection needs opposite signs (or a root) at the two bracket endpoints.',
+          };
+      },
       metrics: {
         root: ['Latest root estimate', ''],
         residual: ['Absolute residual', ''],
