@@ -15,6 +15,11 @@ export default [
     ...js.configs.recommended,
     files: ['**/*.js', '**/*.mjs'],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
-    rules: { 'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }] },
+    rules: {
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-script-url': 'error',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
   },
 ];

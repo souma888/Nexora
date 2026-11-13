@@ -1,78 +1,48 @@
-# Proposed Architecture
+# Shipped architecture
 
-> Design proposal; not implemented yet.
-
-## High-level flow
+## Runtime flow
 
 ```text
-Browser (React/TypeScript)
-  ├── Experiment catalog and guided learning UI
-  ├── Input forms + unit conversion + client validation
-  ├── 2D/3D visualization and charts
-  └── API client
-          │ HTTPS / JSON
-          ▼
-FastAPI application
-  ├── Request schemas and physical-domain validation
-  ├── Simulation registry / dispatch
-  ├── Discipline-specific solver modules
-  ├── Result serialization + metadata
-  └── Optional account / experiment services
-          │
-          ├── NumPy / SciPy analytical & numerical routines
-          └── PostgreSQL (later, for persistent user data)
+Vite multi-page browser app (vanilla JS + strict TS workbench modules)
+  ├─ backend/catalog.js → catalog, routes, subject filters
+  ├─ pure model/algorithm engines → immediate local updates
+  ├─ SVG/DOM diagrams, plot inspector, tables, learning notes
+  └─ local run library → validated JSON/CSV, same-model comparison
+
+Node.js 24 / Vercel Functions
+  ├─ GET /api/catalog → shared catalog and discipline counts
+  ├─ GET/POST /api/beam → beam discovery and analysis
+  ├─ GET/POST /api/materials → axial/Mohr models
+  ├─ GET/POST /api/waves → all numerical-model definitions and dispatch
+  └─ GET/POST /api/algorithms → algorithm discovery and traces
 ```
 
-## Suggested boundaries
+`backend/dev-server.js` routes these same handlers and serves Vite locally. Production uses Vercel’s file-based `api/` routes. Adding a model to the numerical registry makes it available through `/api/waves`; it does not require another URL or server route. The browser evaluates the same implementation locally; browser tests separately call the HTTP implementation and compare outputs.
 
-- `frontend/src/features/`: discipline-specific screens and controls.
-- `frontend/src/components/`: shared forms, graphs, units, diagrams.
-- `frontend/src/lib/api/`: typed API client.
-- `backend/app/api/`: versioned HTTP endpoints.
-- `backend/app/schemas/`: typed requests and responses.
-- `backend/app/solvers/`: pure deterministic solvers, grouped by discipline.
-- `backend/app/core/`: units, validation, error types, registry.
-- `backend/tests/`: solver and API tests.
-- `tests/benchmarks/`: published reference problems.
+## Ownership boundaries
 
-## Suggested simulation contract
+- `backend/contract.js`: shared field types, finite numeric bounds, enum/list/text validation, generic relational rules, and the HTTP error envelope.
+- Each definition’s `validateValues` hook: model-specific constraints, such as root brackets, binary word width, CRC positions, circuit singularity, and graph cycles. Hooks execute after field checks in both browser and API. Functions are not serialized into discovery JSON.
+- `backend/experiment.js` / `lab-kit.js` and `schema.d.ts`: generic typed definition, input, result, unit and teaching metadata contracts.
+- `backend/linear.ts`: strict typed, scaled partial-pivot Gaussian elimination. `circuit-builder.js` owns circuit parsing and modified nodal assembly.
+- `backend/units.ts`: dimension-compatible scale/offset conversions. Contracts retain their declared units; the UI changes display units without changing the physical input.
+- `backend/run-record.ts`: bounded, versioned run-file shape and CSV cell protection. Each model still validates imported input values before use.
+- `frontend/public/run-tools.ts`: browser storage, download/import controls, and same-model/version comparison. Stored/exported numerical results are never a trusted solver input.
 
-**Input:** simulation identifier, version, parameters with units, boundary conditions, sampling configuration.
+## Single catalog source
 
-**Output:** numerical summaries, plot series, visualization geometry, unit labels, equations/assumptions, warnings, solver version, validation status.
+`backend/catalog.js` derives the lab list from `waves.js`, `algorithm-definitions.js`, and the three dedicated mechanics entries. The frontend supplies artwork only. `disciplines.js` owns label/group/icon metadata, and navigation derives from it. `scripts/catalog-docs.mjs` generates `docs/CATALOG.md` and the README count; CI rejects stale output. Release guides document historical releases rather than becoming additional runtime registries.
 
-Example conceptual endpoint: `POST /api/v1/simulations/{simulation_id}/run`. This is **not** currently live.
+## Static checking: exact scope
 
-## Engineering rules
+`tsconfig.json` checks the TypeScript UI/core modules in strict mode. `tsconfig.solvers.json` enables `allowJs` and `checkJs` for **all backend JavaScript and API handlers**, including the development server. Generic JSDoc contracts infer numeric versus string inputs for model callbacks and require numerical summaries and plot values. `type-tests/solvers.ts` contains deliberately invalid calls under `@ts-expect-error`; loss of those checks fails the build.
 
-- Use SI units internally; convert only at input/output boundaries.
-- Specify coordinate systems and sign conventions per simulation.
-- Validate dimensions, supported boundaries, and singular cases.
-- Keep numerical solver logic separate from HTTP handlers and UI.
-- Version formulas and API schemas; avoid silently changing results.
-- Include precision, tolerances, and known approximations in metadata.
-- Never silently extrapolate beyond validated operating ranges.
+The legacy JavaScript pass does not enable every strict flag or prohibit every inferred `any` helper parameter. Runtime validators and reference tests remain necessary. Further helper-by-helper strict typing is tracked in the roadmap; excluding all solvers while claiming whole-project safety is no longer the workflow.
 
-## Data model (future)
+## Persistence and interoperability
 
-- User
-- ExperimentDefinition (immutable versioned catalog item)
-- ExperimentRun (input, output summary, solver version, timestamps)
-- SavedPreset (owner, name, parameters)
-- Collection / Classroom (optional)
+A run records format/schema version, lab ID, solver version, canonical input, label and creation time. The local library holds up to 40 runs and reports storage/quota errors. JSON export contains inputs and a computed summary; CSV contains canonical-unit summaries plus plot rows or trace states. Imports are limited to 200 kB, require the current model/version and valid scalar fields, and recalculate outputs. Comparisons only combine the same model/version, with canonical units and numeric deltas. JSON files make runs portable; no login or database is implied.
 
-## Security and operations
+## Deployment
 
-- Validate payloads and enforce resource limits.
-- Never evaluate user-provided Python or arbitrary expressions on the server.
-- Use environment variables for secrets, not committed credentials.
-- Apply auth, ownership checks, rate limiting, and monitoring before public persistence.
-- Treat exports and user-uploaded files as untrusted.
-
-## Delivery strategy
-
-1. Prototype solvers as pure Python functions with reference tests.
-2. Wrap them in versioned FastAPI endpoints.
-3. Build one polished frontend experiment workflow.
-4. Add persistence only when experiment saving is justified.
-5. Expand to additional disciplines through shared contracts.
+Vercel root directory is the repository root; framework preset **Other**; build `npm run build`; output `dist`. `vercel.json` defines these and browser security headers. There are no production secrets or additional services. See DEVELOPMENT.md for local setup and API payloads.

@@ -1,6 +1,6 @@
 # Data Structures & Algorithms: 30 additional labs
 
-This document covers the earlier batch of 30 additions. The section currently contains 55 labs, and Nexora contains 159 experiments in total; see [the next 20 computing labs](COMPUTING_LABS.md) for that release. The sidebar, catalog tags, and discipline selector consistently display **Data Structures & Algorithms**.
+This document covers the earlier batch of 30 additions. The section currently contains 55 labs, and Nexora reached 159 experiments in that release; see [the next 20 computing labs](COMPUTING_LABS.md) for that release. The sidebar, catalog tags, and discipline selector consistently display **Data Structures & Algorithms**.
 
 ## New inventory
 

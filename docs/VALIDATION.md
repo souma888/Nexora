@@ -96,3 +96,9 @@ The next 20 additions bring the catalog to 129 labs, including 55 DSA labs and 1
 ## Communications, energy, flight, process and operations release
 
 The next 30 labs bring the catalog to **159 experiments in 17 sections**. [ENGINEERING_EXPANSION.md](ENGINEERING_EXPANSION.md) records each new model, units, default benchmark, explicit limits and primary teaching references. The dedicated 62 solver/contract checks include conservation laws, numerical integrals, independently enumerated states and paths, analytic limits and boundary validation. Desktop/mobile browser checks cover all 30 live workbenches and the five section previews, including API agreement, keyboard inspection, reset and invalid-domain recovery. No new deployment secrets or services are required.
+
+## Platform hardening and editable-model release
+
+The generated catalog now includes the DC circuit builder; current counts come from [CATALOG.md](CATALOG.md). `tests/platform.test.js` adds independent matrix-pivot references, divider/bridge/non-ground-source equations, KCL and power checks, graph-topology scheduling cases, unit round trips and dimensions, run-file validation and CSV formula handling. The critical-path solver is version 1.1 because editable dependency inputs change its contract. Existing reference cases remain unchanged at the default graph.
+
+`e2e/platform.spec.js` checks the editable builders, invalid-state recovery, supported-unit conversion, saved-run library, same-version comparisons, download/import behavior, forged-summary recalculation and malicious markup/URL inputs on desktop/mobile. [SECURITY_AUDIT.md](SECURITY_AUDIT.md) records the reviewed sinks and trust boundaries. Static regression fixtures must continue to reject invalid solver-input/output types. Passing tests within these bounds does not certify engineering designs.

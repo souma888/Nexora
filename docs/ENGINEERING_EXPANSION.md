@@ -1,6 +1,6 @@
 # 30 labs across five new engineering sections
 
-Nexora now has **159 experiments across 17 disciplines**. This release adds six labs per section. Each section has its own live preview, three featured entry points, distinctive subject artwork, catalog filter, and persistent sidebar link. Each lab includes editable parameters, units, a keyboard-operable plot inspector, a probe-linked schematic, a prediction question, a worked example, equations, assumptions, reset, and presets. Tables accompany models where they explain intermediate calculations.
+This release brought Nexora to **159 experiments across 17 disciplines**. See [the generated inventory](CATALOG.md) for current totals. This release adds six labs per section. Each section has its own live preview, three featured entry points, distinctive subject artwork, catalog filter, and persistent sidebar link. Each lab includes editable parameters, units, a keyboard-operable plot inspector, a probe-linked schematic, a prediction question, a worked example, equations, assumptions, reset, and presets. Tables accompany models where they explain intermediate calculations.
 
 These are bounded teaching models with explicit assumptions, rather than equipment sizing or certification tools. Pure JavaScript solvers run identically in the browser and behind `POST /api/waves`; `GET /api/waves` supplies their versioned input/output definitions. No database, secrets, or new deployment configuration is required.
 
@@ -68,16 +68,16 @@ Kinetics are isothermal and first order; stoichiometric concentration conservati
 
 Open the [section](https://soumadip-nexora.vercel.app/#industrial).
 
-| ID                  | Experiment                                            | Default independent reference                                                                            |
-| ------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `mm1queue`          | Stationary queue distribution and waiting time        | λ=4/h, μ=6/h: utilization 2/3, L=2, W=30 min, Wq=20 min                                                  |
-| `eoq`               | Economic order quantity and inventory cycle           | D=1000/year, S=50/order, H=2/(unit·year): EOQ=223.607; selected Q=200 costs 450/year with a 73-day cycle |
-| `criticalpath`      | Fixed six-task DAG, forward/backward passes and Gantt | Durations [3,2,4,5,2,3]: completion 11 days; A→D→F critical; other tasks have 1 day slack                |
-| `weibull`           | Survival, cumulative failure, hazard regimes          | η=1000 h, β=2, age=1000 h: R=36.787944%, h=.002/h, median=832.555 h                                      |
-| `systemreliability` | Independent series and parallel components            | [90,90,95,80]%: series 61.56%, parallel 99.99%                                                           |
-| `controlchart`      | Seeded Gaussian subgroup means and process shift      | μ=100, σ=2, n=5: control limits 97.316718 and 102.683282; shift applied after subgroup 18                |
+| ID                  | Experiment                                              | Default independent reference                                                                            |
+| ------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `mm1queue`          | Stationary queue distribution and waiting time          | λ=4/h, μ=6/h: utilization 2/3, L=2, W=30 min, Wq=20 min                                                  |
+| `eoq`               | Economic order quantity and inventory cycle             | D=1000/year, S=50/order, H=2/(unit·year): EOQ=223.607; selected Q=200 costs 450/year with a 73-day cycle |
+| `criticalpath`      | Editable project DAG, forward/backward passes and Gantt | Durations [3,2,4,5,2,3]: completion 11 days; A→D→F critical; other tasks have 1 day slack                |
+| `weibull`           | Survival, cumulative failure, hazard regimes            | η=1000 h, β=2, age=1000 h: R=36.787944%, h=.002/h, median=832.555 h                                      |
+| `systemreliability` | Independent series and parallel components              | [90,90,95,80]%: series 61.56%, parallel 99.99%                                                           |
+| `controlchart`      | Seeded Gaussian subgroup means and process shift        | μ=100, σ=2, n=5: control limits 97.316718 and 102.683282; shift applied after subgroup 18                |
 
-M/M/1 rejects λ≥μ and reports the exact probability tail beyond n=50; its inspector chooses a state, not elapsed time. EOQ uses continuous quantities, instantaneous replenishment and generic currency. CPM requires exactly six positive whole-day durations and supports multiple critical branches. Weibull hazard at zero age with β<1 is unbounded: the metric is **—** with a warning. Reliability assumes independent component failures over the same mission interval. The X̄ chart uses known in-control mean and sigma, not fitted limits or product specifications; plots are standardized by σ/√n and the table retains original measurement units. Its LCG/Box–Muller seed reproduces the same observation sample at each reset.
+M/M/1 rejects λ≥μ and reports the exact probability tail beyond n=50; its inspector chooses a state, not elapsed time. EOQ uses continuous quantities, instantaneous replenishment and generic currency. CPM originally used six tasks; version 1.1 now accepts 2–12 positive whole-day durations and editable dependencies, rejects cycles, and supports multiple critical branches. The original six-task reference remains its default. Weibull hazard at zero age with β<1 is unbounded: the metric is **—** with a warning. Reliability assumes independent component failures over the same mission interval. The X̄ chart uses known in-control mean and sigma, not fitted limits or product specifications; plots are standardized by σ/√n and the table retains original measurement units. Its LCG/Box–Muller seed reproduces the same observation sample at each reset.
 
 ## Verification and tolerances
 

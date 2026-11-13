@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Nexora is pre-release and has no supported production version yet.
+Security fixes target the current `main` deployment. Nexora remains an educational application without a certified engineering or long-term-support release. See [the rendering/input audit](docs/SECURITY_AUDIT.md) for current trust boundaries.
 
 ## Reporting
 

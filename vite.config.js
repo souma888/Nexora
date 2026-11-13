@@ -1,3 +1,4 @@
+import { escapeHtml as escape } from './backend/html.js';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { disciplines } from './backend/disciplines.js';
@@ -5,7 +6,6 @@ import { navigationGroups, disciplineIcon } from './backend/discipline-navigatio
 
 const root = resolve('frontend/public');
 const pages = ['index', 'beam', 'axial', 'mohr', 'simulation', 'algorithms'];
-const escape = (label) => label.replaceAll('&', '&amp;');
 const links = navigationGroups
   .map(
     ([name, ids]) =>
