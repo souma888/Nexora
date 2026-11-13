@@ -90,3 +90,7 @@ Every lab exposes **Save, compare & export** above the workbench. Saves stay in 
 The generic numerical workbench offers supported input-unit selectors; values and bounds convert while outputs and saved runs stay in each model’s canonical units. Dedicated beam/material pages retain their load-case-aware converters. Unsupported composite units remain explicit model units.
 
 Quality gates are `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run docs:check`, `npm test`, `npm run build` and `npm run test:e2e`. Regenerate `docs/CATALOG.md` and README counts with `npm run docs:generate` after registration changes. Read ARCHITECTURE.md for exact static-check scope and SECURITY_AUDIT.md for rendering/import boundaries.
+
+## Verify the deployed API bundle
+
+After Vercel reports Ready, run `npm run verify:deployment -- https://soumadip-nexora.vercel.app` and the deployed browser checks. This command compares every registered lab’s default result with the local engine, checks all discovery endpoints, exercises model-owned invalid-input hooks, and verifies production security headers. A successful static build is not sufficient evidence that API dependencies were bundled. Server numerical imports deliberately use plain, strictly checked ESM JavaScript; the browser-only unit/run modules may use TypeScript.

@@ -41,6 +41,8 @@ npx playwright install --with-deps --only-shell chromium
 npm run test:e2e
 ```
 
+After deploying, run `npm run verify:deployment -- https://soumadip-nexora.vercel.app` to check every live API registry and result.
+
 For installed Microsoft Edge on Windows, set `$env:NEXORA_BROWSER_CHANNEL='msedge'` before the browser tests. CI runs the same checks. [Development setup](docs/DEVELOPMENT.md) includes API examples and Vercel settings.
 
 ## Actual architecture
