@@ -1,6 +1,18 @@
+import { attachUnitControls } from './unit-controls.ts';
+import { installRunTools, type Report } from './run-tools.ts';
 type Inputs = Record<string, number | string>;
 type Model<Result> = {
-  definition: { id: string; version: string; outputs: unknown; prediction?: Prediction };
+  definition: {
+    id: string;
+    version: string;
+    outputs: { summary: Record<string, string>; series: Record<string, string> };
+    inputs?: Record<
+      string,
+      { type: string; unit?: string; min?: number; max?: number; integer?: boolean }
+    >;
+    metrics?: Record<string, string>;
+    prediction?: Prediction;
+  };
   solve: (input: Inputs) => Result;
 };
 type Check = (
@@ -118,7 +130,7 @@ function predictionControl(form: HTMLFormElement, model: Model<unknown>['definit
   };
 }
 
-export function setupWorkbench<Result>({
+export function setupWorkbench<Result extends Report>({
   form,
   model,
   validate,
@@ -136,6 +148,26 @@ export function setupWorkbench<Result>({
   onInvalid?: () => void;
 }) {
   const status = document.getElementById('status')!;
+  const unitControls = attachUnitControls(
+    form,
+    form.id === 'simulation-form' ? (model.definition.inputs ?? {}) : {},
+  );
+  const normalize = (input: Inputs) => {
+    const result = validate(model.definition, input);
+    if (!result.values) throw new Error(result.message ?? 'Invalid inputs.');
+    return result.values;
+  };
+  const tools = installRunTools({
+    form,
+    model: model.definition.id,
+    version: model.definition.version,
+    metrics: model.definition.metrics,
+    units: model.definition.outputs.summary,
+    seriesUnits: model.definition.outputs.series,
+    validate: normalize,
+    solve: model.solve,
+    load: applyInputs,
+  });
   const sliders = new Map<HTMLInputElement, HTMLInputElement>();
   const prediction = predictionControl(form, model.definition);
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -188,23 +220,27 @@ export function setupWorkbench<Result>({
         : normalized
           ? String(Math.round((300 * (Number(input.value) - min)) / (max - min)))
           : input.value;
-      const unit = input.nextElementSibling?.textContent?.trim();
+      const suffix = input.nextElementSibling;
+      const unit = suffix instanceof HTMLSelectElement ? suffix.value : suffix?.textContent?.trim();
       slider.setAttribute('aria-valuetext', `${input.value || 'Unset'}${unit ? ` ${unit}` : ''}`);
     }
   }
   function analyze() {
     clearTimeout(timer);
     syncSliders();
-    const { values, message } = validate(model.definition, payload());
+    const { values, message } = validate(model.definition, unitControls.canonical(payload()));
     if (!values || [...sliders.keys()].some((input) => !input.validity.valid)) {
       status.dataset.error = 'true';
       status.textContent = `${message ?? 'Enter values within the allowed ranges.'} The last valid result is still shown.`;
+      tools.invalidate();
       onInvalid?.();
       return;
     }
     status.dataset.error = 'false';
     status.textContent = 'Live results';
-    render({ ...model.solve(values), input: values, units: model.definition.outputs });
+    const data = model.solve(values);
+    render({ ...data, input: values, units: model.definition.outputs });
+    tools.setCurrent(values, data);
     const current = JSON.stringify(values);
     if (lastInput && current !== lastInput) prediction.reveal();
     lastInput = current;
@@ -214,6 +250,7 @@ export function setupWorkbench<Result>({
     timer = setTimeout(analyze, 80);
   }
   function reset() {
+    unitControls.reset();
     form.reset();
     prediction.reset();
     onReset?.();
@@ -225,5 +262,20 @@ export function setupWorkbench<Result>({
   });
   form.addEventListener('submit', (event) => event.preventDefault());
   document.getElementById('reset')?.addEventListener('click', reset);
-  return { analyze, edited, syncSliders, reset };
+  function applyInputs(input: Inputs) {
+    unitControls.reset();
+    form.reset();
+    onReset?.();
+    for (const [key, value] of Object.entries(input)) {
+      const field = form.elements.namedItem(key);
+      if (
+        field instanceof HTMLInputElement ||
+        field instanceof HTMLSelectElement ||
+        field instanceof HTMLTextAreaElement
+      )
+        field.value = String(value);
+    }
+    analyze();
+  }
+  return { analyze, edited, syncSliders, reset, applyInputs };
 }

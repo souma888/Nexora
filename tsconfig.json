@@ -5,7 +5,10 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "include": ["frontend/public/*.ts"]
+  "include": ["frontend/public/*.ts", "backend/**/*.ts"]
 }

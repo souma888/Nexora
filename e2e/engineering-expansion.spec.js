@@ -84,7 +84,7 @@ test('expansion presets, invalid physical domains, singular metrics and recovery
   await expect(page.locator('#status')).toHaveText('Live results');
   await page.goto('/simulation.html?lab=criticalpath', { waitUntil: 'domcontentloaded' });
   await page.getByLabel('Task durations A, B, C, D, E, F', { exact: true }).fill('1,2,3');
-  await expect(page.locator('#status')).toContainText('exactly six');
+  await expect(page.locator('#status')).toContainText('outside the duration list');
   await page.getByLabel('Experiment preset').selectOption('Two critical branches');
   await expect(page.locator('#metric-critical')).toHaveText('6');
   await noOverflow(page);

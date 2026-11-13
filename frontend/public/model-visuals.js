@@ -1,10 +1,6 @@
+import { escapeHtml as escape } from '../../backend/html.js';
 import { computerVisual } from './computer-visuals.js';
 import { engineeringVisual } from './engineering-visuals.js';
-const escape = (value) =>
-  String(value).replace(
-    /[&<>"']/g,
-    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-  );
 const f = (value, digits = 3) =>
   typeof value === 'number'
     ? value !== 0 && (Math.abs(value) < 0.0001 || Math.abs(value) >= 1e6)

@@ -1,8 +1,4 @@
-const escape = (value) =>
-  String(value).replace(
-    /[&<>"']/g,
-    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
-  );
+import { escapeHtml as escape } from '../../backend/html.js';
 const format = (value) =>
   value === Infinity
     ? '∞'

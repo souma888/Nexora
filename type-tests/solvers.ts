@@ -1,14 +1,9 @@
 import { energyModels } from '../backend/power-energy.js';
 import { lab, p } from '../backend/lab-kit.js';
 // These fail the type check if the public solver boundary ever degrades to any.
+const settings = { voltage: 24, duty: 0.5, resistance: 10, inductance: 2, frequency: 20 };
 // @ts-expect-error Duty must be numeric.
-energyModels.buckconverter.solve({
-  voltage: 24,
-  duty: '0.5',
-  resistance: 10,
-  inductance: 2,
-  frequency: 20,
-});
+energyModels.buckconverter.solve({ ...settings, duty: 'bad' });
 // @ts-expect-error Required input voltage is missing.
 energyModels.buckconverter.solve({ duty: 0.5, resistance: 10, inductance: 2, frequency: 20 });
 lab(

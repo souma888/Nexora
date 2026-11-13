@@ -20,7 +20,31 @@ export function engineeringVisual(v, data, index, { text, path, box, arrow }) {
   };
   const node = (x, y, w, h, label, color = green) =>
     box(x, y, w, h, color) + text(x + w / 2, y + h / 2 + 5, label, color);
-  if (v.kind === 'modulator') {
+  if (v.kind === 'circuit-network') {
+    const positions = new Map(
+      v.nodes.map((node, i) => [node, [70 + (i % 3) * 185, 65 + Math.floor(i / 3) * 80]]),
+    );
+    height = Math.max(280, Math.ceil(v.nodes.length / 3) * 80 + 80);
+    drawing = v.branches
+      .map((c, i) => {
+        const [x, y] = positions.get(c.a),
+          [a, b] = positions.get(c.b);
+        return (
+          path(`M${x} ${y}L${a} ${b}`, muted) +
+          text((x + a) / 2, (y + b) / 2 - 8 + (i % 2) * 20, c.name, green)
+        );
+      })
+      .join('');
+    drawing += v.nodes
+      .map((node) => {
+        const [x, y] = positions.get(node);
+        return (
+          circle(x, y, 18, node === 0 ? amber : green) + text(x, y + 5, node === 0 ? 'GND' : node)
+        );
+      })
+      .join('');
+    drawing += caption('Connectivity sketch · branch directions and values in table', height - 20);
+  } else if (v.kind === 'modulator') {
     drawing =
       node(35, 80, 100, 65, 'Message') +
       arrow(135, 112, 195, 112) +
@@ -394,15 +418,16 @@ export function engineeringVisual(v, data, index, { text, path, box, arrow }) {
       text(260, 28, 'Instantaneous replenishment · constant demand') +
       caption(`Probe order Q=${q.toFixed(2)} · annual relevant cost ${point.y.toFixed(2)}`);
   } else if (v.kind === 'project') {
-    height = 425;
-    const positions = [
-      [65, 65],
-      [65, 155],
-      [245, 65],
-      [245, 155],
-      [430, 65],
-      [430, 155],
-    ];
+    const n = v.durations.length,
+      columns = n <= 6 ? 3 : 4,
+      rowCount = Math.ceil(n / columns),
+      graphEnd = 65 + (rowCount - 1) * 90,
+      ganttStart = graphEnd + 80;
+    height = ganttStart + n * 21 + 95;
+    const positions = Array.from({ length: n }, (_, i) => [
+      65 + (i % columns) * (390 / (columns - 1)),
+      65 + Math.floor(i / columns) * 90,
+    ]);
     drawing = v.predecessors
       .flatMap((parents, i) =>
         parents.map((p) => {
@@ -421,26 +446,31 @@ export function engineeringVisual(v, data, index, { text, path, box, arrow }) {
           text(x, y + 18, `${v.durations[i]} d`, muted),
       )
       .join('');
-    drawing += text(260, 215, 'Earliest-start Gantt · crimson means zero slack');
+    drawing += text(260, graphEnd + 55, 'Earliest-start Gantt · crimson means zero slack');
     drawing +=
       v.durations
         .map((duration, i) => {
           const active = point.x >= v.early[i] && point.x < v.finish[i],
             x = 100 + (350 * v.early[i]) / v.duration,
             w = (350 * duration) / v.duration,
-            y = 235 + i * 21;
+            y = ganttStart + i * 21;
           return (
             text(75, y + 13, String.fromCharCode(65 + i), muted) +
             `<rect x="${x}" y="${y}" width="${w}" height="16" rx="3" fill="${v.slack[i] === 0 ? red : green}" opacity="${active ? 1 : 0.4}"/>`
           );
         })
         .join('') +
-      path(`M${100 + (350 * point.x) / v.duration} 230v135`, amber) +
-      path('M100 365H450', muted) +
+      path(`M${100 + (350 * point.x) / v.duration} ${ganttStart - 5}v${n * 21 + 5}`, amber) +
+      path(`M100 ${ganttStart + n * 21 + 5}H450`, muted) +
       [0, 0.5, 1]
-        .map((f) => text(100 + 350 * f, 384, `${(v.duration * f).toFixed(1)} d`, muted))
+        .map((f) =>
+          text(100 + 350 * f, ganttStart + n * 21 + 25, `${(v.duration * f).toFixed(1)} d`, muted),
+        )
         .join('') +
-      caption(`Probe day ${point.x} · ${point.y} tasks active · finish day ${v.duration}`, 410);
+      caption(
+        `Probe day ${point.x} · ${point.y} tasks active · finish day ${v.duration}`,
+        height - 15,
+      );
   } else if (v.kind === 'survival') {
     const r = point.y / 100,
       circumference = 2 * Math.PI * 70;

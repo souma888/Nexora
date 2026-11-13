@@ -1,3 +1,5 @@
+import { mountRunLibrary } from './run-library.ts';
+import { catalog } from '../../backend/catalog.js';
 import { models } from '../../backend/waves.js';
 import { solveBeam } from '../../backend/beam.js';
 import { setActiveDiscipline } from './shell.ts';
@@ -13,118 +15,75 @@ const status = document.getElementById('catalog-status');
 const grid = document.getElementById('catalog-grid');
 const labGroups = disciplines;
 const beam = solveBeam({ case: 'point', span: 6, load: 24, modulus: 200, inertia: 8000 });
-const labs = [
-  {
-    href: '/beam.html',
-    title: 'Beam Analysis',
-    groups: ['civil'],
-    description: 'Explore how a beam carries load, from support reactions to slope and deflection.',
-    graphic: beam.series.map(({ x, deflection }) => ({ x, y: deflection })),
-  },
-  {
-    href: '/axial.html',
-    title: 'Axial Stress & Strain',
-    groups: ['civil', 'mechanical'],
-    description: 'Calculate how a bar elongates in tension or shortens in compression.',
-    drawing:
-      '<rect x="82" y="31" width="136" height="20" rx="3" fill="none" stroke="var(--curve)" stroke-width="2"/><path d="M72 41H38m0 0 9-6m-9 6 9 6m181-6h34m0 0-9-6m9 6-9 6" fill="none" stroke="var(--load)" stroke-width="2"/>',
-  },
-  {
-    href: '/mohr.html',
-    title: 'Mohr’s Circle',
-    groups: ['mechanical'],
-    description:
-      'Rotate a stress element and find its principal stresses and maximum in-plane shear.',
-    drawing:
-      '<circle cx="150" cy="41" r="29" fill="none" stroke="var(--curve)" stroke-width="2"/><path d="M127 59l46-36" stroke="var(--curve)" stroke-dasharray="4 3"/><circle cx="173" cy="23" r="4" fill="var(--load)"/>',
-  },
-  ...Object.values(models).map(({ definition, solve }) => ({
-    href: `/simulation.html?lab=${definition.id}`,
-    title: definition.title,
-    groups: [definition.discipline],
-    description: definition.description,
-    topic:
-      definition.topic ??
-      {
-        buckling: 'Structural stability',
-        hydrostatic: 'Fluid statics',
-        torsion: 'Solid mechanics',
-        oscillator: 'Dynamics',
-      }[definition.id] ??
-      {
-        electrical: 'Circuit analysis',
-        electronics: 'Analog electronics',
-        signals: 'Signal processing',
-        control: 'Feedback & dynamics',
-      }[definition.discipline],
-    graphic: solve(
-      Object.fromEntries(
-        Object.entries(definition.inputs).map(([key, input]) => [key, input.initial]),
-      ),
-    ).series,
-    step: definition.plot.step,
-  })),
-  ...Object.values(algorithms).map((definition) => ({
-    href: `/algorithms.html?lab=${definition.id}`,
-    title: definition.title,
-    groups: ['algorithms'],
-    description: definition.description,
-    topic:
-      definition.topic ??
-      {
-        sort: 'Sorting',
-        search: 'Searching',
-        graph: 'Graphs & paths',
-        dp: 'Dynamic programming',
-        number: 'Number theory',
-      }[definition.kind],
-    level: ['graph', 'dp', 'tree', 'graph-extra', 'dp-extra', 'string'].includes(definition.kind)
-      ? 'Intermediate'
-      : 'Beginner',
-    drawing:
-      definition.kind === 'tree'
-        ? '<path d="M150 18l-60 40m60-40 60 40" fill="none" stroke="var(--curve)" stroke-width="2"/>' +
+const drawings = {
+  axial:
+    '<rect x="82" y="31" width="136" height="20" rx="3" fill="none" stroke="var(--curve)" stroke-width="2"/><path d="M72 41H38m0 0 9-6m-9 6 9 6m181-6h34m0 0-9-6m9 6-9 6" fill="none" stroke="var(--load)" stroke-width="2"/>',
+  mohr: '<circle cx="150" cy="41" r="29" fill="none" stroke="var(--curve)" stroke-width="2"/><path d="M127 59l46-36" stroke="var(--curve)" stroke-dasharray="4 3"/><circle cx="173" cy="23" r="4" fill="var(--load)"/>',
+};
+const algorithmDrawing = (definition) =>
+  definition.kind === 'tree'
+    ? '<path d="M150 18l-60 40m60-40 60 40" fill="none" stroke="var(--curve)" stroke-width="2"/>' +
+      [
+        [150, 18],
+        [90, 58],
+        [210, 58],
+      ]
+        .map(
+          ([x, y]) =>
+            `<circle cx="${x}" cy="${y}" r="9" fill="var(--surface-1)" stroke="var(--result)" stroke-width="2"/>`,
+        )
+        .join('')
+    : definition.kind === 'structure'
+      ? [65, 125, 185]
+          .map(
+            (x, i) =>
+              `<rect x="${x}" y="25" width="42" height="32" rx="4" fill="none" stroke="var(--curve)" stroke-width="2"/>${i < 2 ? `<path d="M${x + 44} 41h14m-4-4 4 4-4 4" fill="none" stroke="var(--result)"/>` : ''}`,
+          )
+          .join('')
+      : ['graph', 'graph-extra'].includes(definition.kind)
+        ? '<path d="M70 41l70-22 65 22-65 22Zm70-22v44m-70-22h135" fill="none" stroke="var(--curve)" stroke-width="2"/>' +
           [
-            [150, 18],
-            [90, 58],
-            [210, 58],
+            [70, 41],
+            [140, 19],
+            [140, 63],
+            [205, 41],
           ]
-            .map(
-              ([x, y]) =>
-                `<circle cx="${x}" cy="${y}" r="9" fill="var(--surface-1)" stroke="var(--result)" stroke-width="2"/>`,
-            )
+            .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="var(--result)"/>`)
             .join('')
-        : definition.kind === 'structure'
-          ? [65, 125, 185]
-              .map(
-                (x, i) =>
-                  `<rect x="${x}" y="25" width="42" height="32" rx="4" fill="none" stroke="var(--curve)" stroke-width="2"/>${i < 2 ? `<path d="M${x + 44} 41h14m-4-4 4 4-4 4" fill="none" stroke="var(--result)"/>` : ''}`,
-              )
-              .join('')
-          : ['graph', 'graph-extra'].includes(definition.kind)
-            ? '<path d="M70 41l70-22 65 22-65 22Zm70-22v44m-70-22h135" fill="none" stroke="var(--curve)" stroke-width="2"/>' +
-              [
-                [70, 41],
-                [140, 19],
-                [140, 63],
-                [205, 41],
-              ]
-                .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="var(--result)"/>`)
-                .join('')
-            : definition.kind === 'string'
-              ? '<text x="150" y="32" text-anchor="middle" style="fill:var(--muted);font-size:17px">A B A B A B C</text><text x="165" y="59" text-anchor="middle" style="fill:var(--result);font-size:17px">A B A B C</text>'
-              : ['dp', 'dp-extra'].includes(definition.kind)
-                ? '<path d="M90 12h120v58H90Zm0 19h120M90 50h120m-90-38v58m30-58v58m30-58v58" fill="none" stroke="var(--curve)" stroke-width="2"/><rect x="151" y="32" width="28" height="17" fill="var(--result)" opacity=".6"/>'
-                : definition.kind === 'number'
-                  ? '<text x="150" y="48" text-anchor="middle" style="fill:var(--result);font-size:22px">48 mod 18 = 12</text>'
-                  : [38, 12, 27, 8, 43, 19, 5, 31]
-                      .map(
-                        (v, i) =>
-                          `<rect x="${45 + i * 27}" y="${68 - v}" width="18" height="${v}" rx="2" fill="${i === 2 ? 'var(--load)' : 'var(--curve)'}"/>`,
-                      )
-                      .join(''),
-  })),
-];
+        : definition.kind === 'string'
+          ? '<text x="150" y="32" text-anchor="middle" style="fill:var(--muted);font-size:17px">A B A B A B C</text><text x="165" y="59" text-anchor="middle" style="fill:var(--result);font-size:17px">A B A B C</text>'
+          : ['dp', 'dp-extra'].includes(definition.kind)
+            ? '<path d="M90 12h120v58H90Zm0 19h120M90 50h120m-90-38v58m30-58v58m30-58v58" fill="none" stroke="var(--curve)" stroke-width="2"/><rect x="151" y="32" width="28" height="17" fill="var(--result)" opacity=".6"/>'
+            : definition.kind === 'number'
+              ? '<text x="150" y="48" text-anchor="middle" style="fill:var(--result);font-size:22px">48 mod 18 = 12</text>'
+              : [38, 12, 27, 8, 43, 19, 5, 31]
+                  .map(
+                    (v, i) =>
+                      `<rect x="${45 + i * 27}" y="${68 - v}" width="18" height="${v}" rx="2" fill="${i === 2 ? 'var(--load)' : 'var(--curve)'}"/>`,
+                  )
+                  .join('');
+const labs = catalog.map((entry) => {
+  if (entry.engine === 'numeric') {
+    const { definition, solve } = models[entry.id];
+    return {
+      ...entry,
+      graphic: solve(
+        Object.fromEntries(Object.entries(definition.inputs).map(([key, f]) => [key, f.initial])),
+      ).series,
+      step: definition.plot.step,
+    };
+  }
+  if (entry.engine === 'algorithm')
+    return { ...entry, drawing: algorithmDrawing(algorithms[entry.id]) };
+  return {
+    ...entry,
+    drawing: drawings[entry.id],
+    graphic:
+      entry.id === 'beam'
+        ? beam.series.map(({ x, deflection }) => ({ x, y: deflection }))
+        : undefined,
+  };
+});
 
 function thumbnail({ drawing, graphic, step, href, groups }) {
   const id = new URL(href, location.origin).searchParams.get('lab');
@@ -176,10 +135,16 @@ function thumbnail({ drawing, graphic, step, href, groups }) {
     ${drawing}</svg>`;
 }
 
+mountRunLibrary(labs);
 const showStudio = initStudio(labs);
 const catalogHeading = document.createElement('div');
 catalogHeading.className = 'studio-catalog-title';
 catalogHeading.innerHTML = '<h2>Experiment catalog</h2><p>Choose a model. Ask a question.</p>';
+const savedLink = document.createElement('a');
+savedLink.href = '#saved-runs';
+savedLink.textContent = 'Saved runs';
+savedLink.className = 'quiet';
+catalogHeading.append(savedLink);
 form.before(catalogHeading);
 const cards = labs.map((lab) => {
   const card = document.createElement('a');
@@ -187,10 +152,23 @@ const cards = labs.map((lab) => {
   card.href = lab.href;
   const group = lab.groups.map((key) => labGroups[key]).join(' + ');
   const topic = lab.topic ?? 'Solid mechanics';
-  card.innerHTML = `${thumbnail(lab)}
-    <div class="card-tags"><span class="discipline-tag">${group}</span><span>${topic}</span><span>${lab.level ?? 'Beginner'}</span></div>
-    <strong>${lab.title}</strong><p>${lab.description}</p>
-    <span class="open-lab">Open lab <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span>`;
+  card.innerHTML = thumbnail(lab); // Trusted source artwork or finite numerical geometry only.
+  const tags = document.createElement('div');
+  tags.className = 'card-tags';
+  for (const [i, value] of [group, topic, lab.level].entries()) {
+    const tag = document.createElement('span');
+    tag.textContent = value;
+    if (i === 0) tag.className = 'discipline-tag';
+    tags.append(tag);
+  }
+  const title = document.createElement('strong');
+  title.textContent = lab.title;
+  const description = document.createElement('p');
+  description.textContent = lab.description;
+  const action = document.createElement('span');
+  action.className = 'open-lab';
+  action.textContent = 'Open lab ↗';
+  card.append(tags, title, description, action);
   grid.append(card);
   return { card, groups: lab.groups, terms: card.textContent.toLowerCase() };
 });
@@ -214,7 +192,7 @@ function filter() {
 
 function hashFilter() {
   const group = location.hash.slice(1);
-  if (group === 'about' || group === 'catalog-filters') return;
+  if (group === 'about' || group === 'catalog-filters' || group === 'saved-runs') return;
   discipline.value = Object.hasOwn(labGroups, group) ? group : '';
   filter();
 }
@@ -241,7 +219,11 @@ form.hidden = false;
 document.getElementById('total-labs').textContent = labs.length;
 document.getElementById('total-disciplines').textContent = Object.keys(labGroups).length;
 const initialAnchor = location.hash.slice(1);
-if (initialAnchor === 'about' || initialAnchor === 'catalog-filters') {
+if (
+  initialAnchor === 'about' ||
+  initialAnchor === 'catalog-filters' ||
+  initialAnchor === 'saved-runs'
+) {
   filter();
   document.getElementById(initialAnchor).scrollIntoView();
 } else {
