@@ -4,18 +4,18 @@ This document covers the earlier batch of 30 additions. The section currently co
 
 ## New inventory
 
-| Subject | New labs |
-| --- | --- |
-| Stacks and queues | Stack Operations, Queue Operations, Double-Ended Queue, Circular Queue Buffer |
-| Linked lists | Singly Linked List, Doubly Linked List |
-| Trees and priorities | Binary Search Tree, AVL Tree Rotations, Min-Heap Priority Queue |
-| Hashing and sets | Hash Table: Chaining, Hash Table: Linear Probing, Disjoint Set Union |
-| Prefix/range structures | Trie Prefix Search, Fenwick Tree Prefix Sums, Segment Tree Range Sums |
-| Sorting | Counting Sort, LSD Radix Sort, Shell Sort |
-| Graph algorithms | Topological Sort: Kahn, Kruskal’s Minimum Spanning Forest, Prim’s Minimum Spanning Forest, Floyd–Warshall All-Pairs Paths |
-| String matching | Knuth–Morris–Pratt Search, Rabin–Karp Rolling Hash |
+| Subject                        | New labs                                                                                                                              |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Stacks and queues              | Stack Operations, Queue Operations, Double-Ended Queue, Circular Queue Buffer                                                         |
+| Linked lists                   | Singly Linked List, Doubly Linked List                                                                                                |
+| Trees and priorities           | Binary Search Tree, AVL Tree Rotations, Min-Heap Priority Queue                                                                       |
+| Hashing and sets               | Hash Table: Chaining, Hash Table: Linear Probing, Disjoint Set Union                                                                  |
+| Prefix/range structures        | Trie Prefix Search, Fenwick Tree Prefix Sums, Segment Tree Range Sums                                                                 |
+| Sorting                        | Counting Sort, LSD Radix Sort, Shell Sort                                                                                             |
+| Graph algorithms               | Topological Sort: Kahn, Kruskal’s Minimum Spanning Forest, Prim’s Minimum Spanning Forest, Floyd–Warshall All-Pairs Paths             |
+| String matching                | Knuth–Morris–Pratt Search, Rabin–Karp Rolling Hash                                                                                    |
 | Dynamic programming and arrays | Longest Common Subsequence, Levenshtein Edit Distance, Minimum Coin Change, Longest Increasing Subsequence, Kadane’s Maximum Subarray |
-| Number theory | Sieve of Eratosthenes |
+| Number theory                  | Sieve of Eratosthenes                                                                                                                 |
 
 Every addition has editable inputs, a prediction question, four-step pseudocode, a worked example, complexity and invariant notes, reversible playback, operation counters, an accessible state table, and a structure-specific SVG. Tall/wide diagrams scroll inside their panel to retain readable text. Empty/full structures, duplicates, unreachable states and algorithm failure conditions are taught explicitly.
 
@@ -23,14 +23,14 @@ Every addition has editable inputs, a prediction question, four-step pseudocode,
 
 Separate operations with semicolons. Commands are case-insensitive, take space-separated integer arguments, and are limited to 24 operations. Values are −99 to 99. State-dependent failures such as removing from an empty structure or deleting an invalid position appear in the trace and preserve the data. Unknown commands or wrong argument counts are validation errors.
 
-| Structure | Commands |
-| --- | --- |
-| Stack | `push value`, `pop`, `peek` |
-| Queue / circular buffer | `enqueue value`, `dequeue`, `front` |
-| Deque | `pushfront value`, `pushback value`, `popfront`, `popback`, `front`, `back` |
-| Singly linked list | `append value`, `prepend value`, `insert index value`, `delete index`, `find value` |
-| Doubly linked list | `append value`, `prepend value`, `delete index`, `reverse`, `find value` |
-| Disjoint set | `union a b`, `find a`, `connected a b` |
+| Structure               | Commands                                                                            |
+| ----------------------- | ----------------------------------------------------------------------------------- |
+| Stack                   | `push value`, `pop`, `peek`                                                         |
+| Queue / circular buffer | `enqueue value`, `dequeue`, `front`                                                 |
+| Deque                   | `pushfront value`, `pushback value`, `popfront`, `popback`, `front`, `back`         |
+| Singly linked list      | `append value`, `prepend value`, `insert index value`, `delete index`, `find value` |
+| Doubly linked list      | `append value`, `prepend value`, `delete index`, `reverse`, `find value`            |
+| Disjoint set            | `union a b`, `find a`, `connected a b`                                              |
 
 Circular capacity is 1–8. Head and rear use modulo capacity; size distinguishes full from empty. Union–find has 2–10 elements, numbered from zero, with union by rank and path compression. Linked-list tables expose stable node identities and actual next/previous links. Structure diagrams and sequence snapshots are visualization machinery; copying/rendering that state is excluded from the model complexity displayed in the lab.
 

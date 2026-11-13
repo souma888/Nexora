@@ -24,6 +24,7 @@ FastAPI application
 ```
 
 ## Suggested boundaries
+
 - `frontend/src/features/`: discipline-specific screens and controls.
 - `frontend/src/components/`: shared forms, graphs, units, diagrams.
 - `frontend/src/lib/api/`: typed API client.
@@ -35,6 +36,7 @@ FastAPI application
 - `tests/benchmarks/`: published reference problems.
 
 ## Suggested simulation contract
+
 **Input:** simulation identifier, version, parameters with units, boundary conditions, sampling configuration.
 
 **Output:** numerical summaries, plot series, visualization geometry, unit labels, equations/assumptions, warnings, solver version, validation status.
@@ -42,6 +44,7 @@ FastAPI application
 Example conceptual endpoint: `POST /api/v1/simulations/{simulation_id}/run`. This is **not** currently live.
 
 ## Engineering rules
+
 - Use SI units internally; convert only at input/output boundaries.
 - Specify coordinate systems and sign conventions per simulation.
 - Validate dimensions, supported boundaries, and singular cases.
@@ -51,6 +54,7 @@ Example conceptual endpoint: `POST /api/v1/simulations/{simulation_id}/run`. Thi
 - Never silently extrapolate beyond validated operating ranges.
 
 ## Data model (future)
+
 - User
 - ExperimentDefinition (immutable versioned catalog item)
 - ExperimentRun (input, output summary, solver version, timestamps)
@@ -58,6 +62,7 @@ Example conceptual endpoint: `POST /api/v1/simulations/{simulation_id}/run`. Thi
 - Collection / Classroom (optional)
 
 ## Security and operations
+
 - Validate payloads and enforce resource limits.
 - Never evaluate user-provided Python or arbitrary expressions on the server.
 - Use environment variables for secrets, not committed credentials.
@@ -65,6 +70,7 @@ Example conceptual endpoint: `POST /api/v1/simulations/{simulation_id}/run`. Thi
 - Treat exports and user-uploaded files as untrusted.
 
 ## Delivery strategy
+
 1. Prototype solvers as pure Python functions with reference tests.
 2. Wrap them in versioned FastAPI endpoints.
 3. Build one polished frontend experiment workflow.

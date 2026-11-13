@@ -19,7 +19,10 @@ test('discipline navigation remains available inside every lab template', async 
     const nav = page.getByRole('navigation', { name: 'Engineering disciplines' });
     await expect(nav).toBeVisible();
     await expect(nav.getByRole('link')).toHaveCount(18);
-    await expect(nav.locator(`[data-discipline="${active}"]`)).toHaveAttribute('aria-current', 'location');
+    await expect(nav.locator(`[data-discipline="${active}"]`)).toHaveAttribute(
+      'aria-current',
+      'location',
+    );
     const bounds = await nav.boundingBox();
     expect(bounds.x).toBe(0);
     if (page.viewportSize().width > 740) {
@@ -28,8 +31,10 @@ test('discipline navigation remains available inside every lab template', async 
     }
     await expectNoHorizontalOverflow(page);
   }
-  await page.getByRole('navigation', { name: 'Engineering disciplines' })
-    .getByRole('link', { name: 'Electrical engineering', exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Engineering disciplines' })
+    .getByRole('link', { name: 'Electrical engineering', exact: true })
+    .click();
   await expect(page).toHaveURL(/\/#electrical$/);
   await expect(page.getByLabel('Discipline', { exact: true })).toHaveValue('electrical');
   await expect(page.getByRole('status')).toHaveText('4 experiments available');
@@ -62,10 +67,17 @@ test('discipline sidebar follows direct links, filters, and browser history', as
   await expect(page).toHaveURL(/#electronics$/);
   await expect(electronics).toHaveAttribute('aria-current', 'location');
   await expect(filter).toHaveValue('electronics');
-  await expect(page.locator('#catalog-grid').getByRole('link', { name: /Half-Wave Rectifier/ })).toBeVisible();
-  await expect(page.locator('#catalog-grid').getByRole('link', { name: /Beam Analysis/ })).toBeHidden();
+  await expect(
+    page.locator('#catalog-grid').getByRole('link', { name: /Half-Wave Rectifier/ }),
+  ).toBeVisible();
+  await expect(
+    page.locator('#catalog-grid').getByRole('link', { name: /Beam Analysis/ }),
+  ).toBeHidden();
   await filter.selectOption('signals');
-  await expect(sidebar.getByRole('link', { name: /Signals/ })).toHaveAttribute('aria-current', 'location');
+  await expect(sidebar.getByRole('link', { name: /Signals/ })).toHaveAttribute(
+    'aria-current',
+    'location',
+  );
   await page.goBack();
   await expect(electronics).toHaveAttribute('aria-current', 'location');
   await sidebar.getByRole('link', { name: 'All disciplines' }).click();
@@ -92,7 +104,9 @@ test('catalog filters, searches, and opens the beam lab with the keyboard', asyn
   await page.getByLabel('Discipline', { exact: true }).selectOption('mechanical');
   await page.getByRole('searchbox').fill('mohr');
   await expect(page.getByRole('status')).toHaveText('1 experiment available');
-  await expect(page.locator('#catalog-grid').getByRole('link', { name: /Mohr’s Circle/ })).toBeVisible();
+  await expect(
+    page.locator('#catalog-grid').getByRole('link', { name: /Mohr’s Circle/ }),
+  ).toBeVisible();
   await page.getByRole('searchbox').fill('xyz');
   await expect(page.getByRole('status')).toContainText('No matching experiments');
   await page.getByRole('button', { name: 'Clear filters' }).click();
@@ -104,7 +118,7 @@ test('catalog filters, searches, and opens the beam lab with the keyboard', asyn
 });
 
 test('beam responds live, preserves units, probes the charts, and exports', async ({ page }) => {
-  await page.route('**/api/**', route => route.abort());
+  await page.route('**/api/**', (route) => route.abort());
   await page.goto('/beam.html');
   await expect(page.locator('#peak-moment')).toHaveText('36 kN·m');
   await page.getByText('8×', { exact: true }).click();
@@ -158,7 +172,9 @@ test('axial preset and Mohr rotation use the solver results', async ({ page }) =
   await expectNoHorizontalOverflow(page);
 });
 
-test('electrical, electronics, and signals labs open from the catalog and run', async ({ page }) => {
+test('electrical, electronics, and signals labs open from the catalog and run', async ({
+  page,
+}) => {
   const labs = [
     ['electrical', 'Loaded Voltage Divider', 'loaded', '4 V'],
     ['electrical', 'RC Charging', 'tau', '1,000 ms'],
@@ -171,7 +187,10 @@ test('electrical, electronics, and signals labs open from the catalog and run', 
     await page.goto('/');
     await page.getByLabel('Discipline', { exact: true }).selectOption(discipline);
     await expect(page.getByRole('status')).toHaveText('4 experiments available');
-    await page.locator('#catalog-grid').getByRole('link', { name: new RegExp(name) }).click();
+    await page
+      .locator('#catalog-grid')
+      .getByRole('link', { name: new RegExp(name) })
+      .click();
     await expect(page.locator(`#metric-${metric}`)).toHaveText(expected);
     await expect(page.locator('#wave-plot')).toBeVisible();
     await expect(page.locator('#wave-plot polyline').last()).toHaveAttribute('points', /\d,\d/);
@@ -189,12 +208,19 @@ test('catalog thumbnail, persistent theme, and print layout', async ({ page }) =
   await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.getByRole('status')).toHaveText('159 experiments available');
-  await expect(page.locator('#catalog-grid').getByRole('link', { name: /Axial Stress/ })).toHaveCount(1);
-  const thumbnail = page.locator('#catalog-grid').getByRole('link', { name: /Beam Analysis/ }).locator('.thumb');
+  await expect(
+    page.locator('#catalog-grid').getByRole('link', { name: /Axial Stress/ }),
+  ).toHaveCount(1);
+  const thumbnail = page
+    .locator('#catalog-grid')
+    .getByRole('link', { name: /Beam Analysis/ })
+    .locator('.thumb');
   await expect(thumbnail).toHaveScreenshot('beam-thumbnail.png', { maxDiffPixelRatio: 0.035 });
   await page.goto('/beam.html');
   await expect(page.locator('#plot .beam-curve')).toHaveCount(4);
-  await expect(page.locator('.beam-charts')).toHaveScreenshot('beam-charts.png', { maxDiffPixelRatio: 0.055 });
+  await expect(page.locator('.beam-charts')).toHaveScreenshot('beam-charts.png', {
+    maxDiffPixelRatio: 0.055,
+  });
   await page.getByRole('button', { name: 'Switch to light theme' }).click();
   await page.goto('/beam.html');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
@@ -218,7 +244,10 @@ const addedLabs = [
 for (const [discipline, name, metric, expected] of addedLabs) {
   test(`${name} opens from its discipline and renders a result`, async ({ page }) => {
     await page.goto(`/#${discipline}`);
-    await page.locator('#catalog-grid').getByRole('link', { name: new RegExp(name) }).click();
+    await page
+      .locator('#catalog-grid')
+      .getByRole('link', { name: new RegExp(name) })
+      .click();
     await expect(page.locator(`#metric-${metric}`)).toHaveText(expected);
     await expect(page.locator('#wave-plot polyline').first()).toHaveAttribute('points', /\d,\d/);
     await expectNoHorizontalOverflow(page);

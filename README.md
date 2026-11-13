@@ -12,25 +12,25 @@ Bring multiple engineering disciplines into one cohesive platform: explore a mod
 
 ## Disciplines and scope
 
-| Discipline | Example simulation modules |
-| --- | --- |
-| Solid mechanics / Civil | Stress–strain, axial deformation, torsion, beam shear and bending moment, deflection, Mohr's circle, trusses |
-| Dynamics / Mechanical | Rigid-body motion, kinematics, vibration, mechanisms, gears, theory of machines |
-| Electrical | DC/AC circuits, transient RLC response, transformers, magnetic circuits |
-| Electronics | Diodes, transistor characteristics, op-amp circuits, filters |
-| Signals & systems | Convolution, Fourier/Laplace transforms, sampling, time/frequency responses |
-| Control systems | PID tuning, motor/cruise/tank/temperature feedback, inverted pendulum, antiwindup, Bode, lead/lag, pole locus, Nyquist, discrete feedback |
-| Data Structures & Algorithms | 55 labs: sorting/searching, stacks/queues/lists, BST/AVL/heaps, hashing, union–find, tries, range-query trees, graph algorithms, string matching, dynamic programming, number theory, two pointers, sliding windows, Quickselect, Huffman coding, Tarjan SCCs and N-Queens |
-| Thermofluids | Bernoulli, Venturi, pipe losses, composite-wall conduction, transient cooling, heat exchangers, ideal-gas processes, Carnot efficiency, refrigeration COP |
-| Digital Logic & Computer Engineering | 16 labs: logic gates, full adder, flip-flops, counters, sequence detector, cache mapping, ALU flags, two’s complement, Booth multiplication, restoring division, Hamming codes, CRC, shift registers, round robin, page replacement and branch prediction |
-| Robotics & Mechatronics | Two-link forward/inverse kinematics, four-bar linkage, differential drive, holonomic trajectory tracking |
-| Computational Engineering | Bisection/Newton roots, Euler/RK4 integration, interpolation, seeded Monte Carlo, mesh convergence |
-| Materials Science | Bilinear plasticity, Basquin fatigue, Kelvin–Voigt creep/recovery, thermal expansion/restraint, composite stiffness bounds |
-| Communications & RF | AM, FM, BPSK, Gray QPSK, free-space link budget, Shannon capacity |
-| Power & Energy | Solar PV maximum power, wind/Betz limit, battery discharge, buck/boost converters, balanced three-phase power |
-| Aerospace & Flight | Ballistics, drag polar, banked turns, rocket equation, standard atmosphere, isentropic flow |
-| Chemical & Process Engineering | CSTR/PFR conversion, Arrhenius kinetics, consecutive reactions, mixing tank, Langmuir adsorption, osmosis |
-| Industrial & Reliability Engineering | M/M/1 queues, EOQ, critical path, Weibull survival, series/parallel reliability, X-bar control chart |
+| Discipline                           | Example simulation modules                                                                                                                                                                                                                                                 |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Solid mechanics / Civil              | Stress–strain, axial deformation, torsion, beam shear and bending moment, deflection, Mohr's circle, trusses                                                                                                                                                               |
+| Dynamics / Mechanical                | Rigid-body motion, kinematics, vibration, mechanisms, gears, theory of machines                                                                                                                                                                                            |
+| Electrical                           | DC/AC circuits, transient RLC response, transformers, magnetic circuits                                                                                                                                                                                                    |
+| Electronics                          | Diodes, transistor characteristics, op-amp circuits, filters                                                                                                                                                                                                               |
+| Signals & systems                    | Convolution, Fourier/Laplace transforms, sampling, time/frequency responses                                                                                                                                                                                                |
+| Control systems                      | PID tuning, motor/cruise/tank/temperature feedback, inverted pendulum, antiwindup, Bode, lead/lag, pole locus, Nyquist, discrete feedback                                                                                                                                  |
+| Data Structures & Algorithms         | 55 labs: sorting/searching, stacks/queues/lists, BST/AVL/heaps, hashing, union–find, tries, range-query trees, graph algorithms, string matching, dynamic programming, number theory, two pointers, sliding windows, Quickselect, Huffman coding, Tarjan SCCs and N-Queens |
+| Thermofluids                         | Bernoulli, Venturi, pipe losses, composite-wall conduction, transient cooling, heat exchangers, ideal-gas processes, Carnot efficiency, refrigeration COP                                                                                                                  |
+| Digital Logic & Computer Engineering | 16 labs: logic gates, full adder, flip-flops, counters, sequence detector, cache mapping, ALU flags, two’s complement, Booth multiplication, restoring division, Hamming codes, CRC, shift registers, round robin, page replacement and branch prediction                  |
+| Robotics & Mechatronics              | Two-link forward/inverse kinematics, four-bar linkage, differential drive, holonomic trajectory tracking                                                                                                                                                                   |
+| Computational Engineering            | Bisection/Newton roots, Euler/RK4 integration, interpolation, seeded Monte Carlo, mesh convergence                                                                                                                                                                         |
+| Materials Science                    | Bilinear plasticity, Basquin fatigue, Kelvin–Voigt creep/recovery, thermal expansion/restraint, composite stiffness bounds                                                                                                                                                 |
+| Communications & RF                  | AM, FM, BPSK, Gray QPSK, free-space link budget, Shannon capacity                                                                                                                                                                                                          |
+| Power & Energy                       | Solar PV maximum power, wind/Betz limit, battery discharge, buck/boost converters, balanced three-phase power                                                                                                                                                              |
+| Aerospace & Flight                   | Ballistics, drag polar, banked turns, rocket equation, standard atmosphere, isentropic flow                                                                                                                                                                                |
+| Chemical & Process Engineering       | CSTR/PFR conversion, Arrhenius kinetics, consecutive reactions, mixing tank, Langmuir adsorption, osmosis                                                                                                                                                                  |
+| Industrial & Reliability Engineering | M/M/1 queues, EOQ, critical path, Weibull survival, series/parallel reliability, X-bar control chart                                                                                                                                                                       |
 
 The catalog contains working labs in every section. Some broader examples above remain future scope; the release guides list exactly what is available.
 
@@ -45,6 +45,7 @@ The catalog contains working labs in every section. Some broader examples above 
 ## MVP proposal
 
 Start with **solid mechanics**, emphasizing engineering correctness:
+
 - Simply supported and cantilever beams under a small set of well-defined loads.
 - Shear force, bending moment, slope and deflection plots.
 - Axial stress/strain and Mohr's circle for plane stress.

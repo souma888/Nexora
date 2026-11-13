@@ -2,7 +2,11 @@ const root = document.documentElement;
 const toggle = document.querySelector<HTMLButtonElement>('#theme-toggle');
 const systemTheme = matchMedia('(prefers-color-scheme: light)');
 let theme: string | null = null;
-try { theme = localStorage.getItem('nexora-theme'); } catch { /* Use system preference. */ }
+try {
+  theme = localStorage.getItem('nexora-theme');
+} catch {
+  /* Use system preference. */
+}
 
 function applyTheme() {
   const light = theme ? theme === 'light' : systemTheme.matches;
@@ -11,7 +15,11 @@ function applyTheme() {
 }
 toggle?.addEventListener('click', () => {
   theme = root.dataset.theme === 'light' ? 'dark' : 'light';
-  try { localStorage.setItem('nexora-theme', theme); } catch { /* Keep choice for this page. */ }
+  try {
+    localStorage.setItem('nexora-theme', theme);
+  } catch {
+    /* Keep choice for this page. */
+  }
   applyTheme();
 });
 systemTheme.addEventListener('change', applyTheme);
@@ -23,15 +31,25 @@ export function setActiveDiscipline(discipline: string) {
       link.setAttribute('aria-current', 'location');
       const list = link.closest<HTMLElement>('.discipline-links');
       if (list) {
-        const scrollHost = matchMedia('(max-width: 740px)').matches ? list : link.closest<HTMLElement>('.discipline-nav');
+        const scrollHost = matchMedia('(max-width: 740px)').matches
+          ? list
+          : link.closest<HTMLElement>('.discipline-nav');
         if (!scrollHost) continue;
-        const top = link.getBoundingClientRect().top - scrollHost.getBoundingClientRect().top + scrollHost.scrollTop;
-        if (top < scrollHost.scrollTop || top + link.offsetHeight > scrollHost.scrollTop + scrollHost.clientHeight) {
-          scrollHost.scrollTop = Math.max(0, top - scrollHost.clientHeight / 2 + link.offsetHeight / 2);
+        const top =
+          link.getBoundingClientRect().top -
+          scrollHost.getBoundingClientRect().top +
+          scrollHost.scrollTop;
+        if (
+          top < scrollHost.scrollTop ||
+          top + link.offsetHeight > scrollHost.scrollTop + scrollHost.clientHeight
+        ) {
+          scrollHost.scrollTop = Math.max(
+            0,
+            top - scrollHost.clientHeight / 2 + link.offsetHeight / 2,
+          );
         }
       }
-    }
-    else link.removeAttribute('aria-current');
+    } else link.removeAttribute('aria-current');
   }
 }
 
@@ -41,7 +59,8 @@ if (document.body.classList.contains('lab-page')) {
   const nav = document.createElement('nav');
   nav.className = 'lab-nav';
   nav.setAttribute('aria-label', 'Lab sections');
-  nav.innerHTML = '<a href="#setup">Setup</a><a href="#results">Results</a><a href="#model">Notes</a>';
+  nav.innerHTML =
+    '<a href="#setup">Setup</a><a href="#results">Results</a><a href="#model">Notes</a>';
   document.querySelector('.intro')?.after(nav);
   const badge = document.createElement('a');
   badge.className = 'validated';
@@ -50,7 +69,9 @@ if (document.body.classList.contains('lab-page')) {
   nav.append(badge);
   document.querySelector('.setup')?.setAttribute('id', 'setup');
   document.querySelector('.results')?.setAttribute('id', 'results');
-  const notes = document.querySelector<HTMLDetailsElement>('.notes#model') ?? document.querySelector<HTMLDetailsElement>('.notes');
+  const notes =
+    document.querySelector<HTMLDetailsElement>('.notes#model') ??
+    document.querySelector<HTMLDetailsElement>('.notes');
   if (notes) notes.id = 'model';
   const update = () => {
     const section = location.hash || '#setup';
@@ -61,7 +82,9 @@ if (document.body.classList.contains('lab-page')) {
     if (section === '#model' && notes) notes.open = true;
   };
   window.addEventListener('hashchange', update);
-  nav.querySelector('[href="#model"]')?.addEventListener('click', () => { if (notes) notes.open = true; });
+  nav.querySelector('[href="#model"]')?.addEventListener('click', () => {
+    if (notes) notes.open = true;
+  });
   const print = document.createElement('button');
   print.className = 'quiet print-report';
   print.type = 'button';

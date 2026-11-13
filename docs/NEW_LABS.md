@@ -4,23 +4,23 @@ The initial control-system/algorithm release added 30 labs to the existing 19. T
 
 ## Control Systems — 15 labs
 
-| Lab | What to investigate |
-| --- | --- |
-| First-Order Step Response | Static gain, time constant, and the 63.2% rule |
-| Second-Order Step Response | Natural frequency, damping, overshoot, critical and overdamped limits |
-| PID Tuning | Proportional, integral, and derivative feedback around a second-order plant |
-| DC Motor Speed Control | Coupled armature current and rotor speed under proportional feedback |
-| Cruise Control | Vehicle mass, linear drag, tracking offset, and transient speed |
-| Tank Level Feedback | Cross-sectional area, linear outlet flow, and equilibrium level |
-| PI Temperature Regulation | Heat loss, integral action, and normalized temperature rise |
-| Inverted Pendulum Stabilization | Small-angle upright dynamics and the PD stability threshold |
-| Integrator Windup | Actuator saturation, a falling setpoint, and conditional integration |
-| First-Order Bode Magnitude | Logarithmic frequency, −3 dB corner, and magnitude rolloff |
-| Lead Compensator | Positive phase boost and geometric-mean peak frequency |
-| Lag Compensator | Negative phase and high-frequency attenuation |
-| Closed-Loop Pole Locus | Two real poles, breakaway, conjugate roots, selected gain markers |
-| First-Order Nyquist Plot | Complex response, frequency direction, and circular geometry |
-| Discrete-Time Feedback | Closed-loop pole, alternating responses, convergence, and divergence |
+| Lab                             | What to investigate                                                         |
+| ------------------------------- | --------------------------------------------------------------------------- |
+| First-Order Step Response       | Static gain, time constant, and the 63.2% rule                              |
+| Second-Order Step Response      | Natural frequency, damping, overshoot, critical and overdamped limits       |
+| PID Tuning                      | Proportional, integral, and derivative feedback around a second-order plant |
+| DC Motor Speed Control          | Coupled armature current and rotor speed under proportional feedback        |
+| Cruise Control                  | Vehicle mass, linear drag, tracking offset, and transient speed             |
+| Tank Level Feedback             | Cross-sectional area, linear outlet flow, and equilibrium level             |
+| PI Temperature Regulation       | Heat loss, integral action, and normalized temperature rise                 |
+| Inverted Pendulum Stabilization | Small-angle upright dynamics and the PD stability threshold                 |
+| Integrator Windup               | Actuator saturation, a falling setpoint, and conditional integration        |
+| First-Order Bode Magnitude      | Logarithmic frequency, −3 dB corner, and magnitude rolloff                  |
+| Lead Compensator                | Positive phase boost and geometric-mean peak frequency                      |
+| Lag Compensator                 | Negative phase and high-frequency attenuation                               |
+| Closed-Loop Pole Locus          | Two real poles, breakaway, conjugate roots, selected gain markers           |
+| First-Order Nyquist Plot        | Complex response, frequency direction, and circular geometry                |
+| Discrete-Time Feedback          | Closed-loop pole, alternating responses, convergence, and divergence        |
 
 Each model has input bounds and units, live sliders, a prediction question, a plot inspector, three numerical results, governing equations, a reproducible example, and explicit assumptions. Results labelled “at end of view” are finite-horizon samples, not a claim of convergence. Unstable linear systems are deliberately allowed; their large outputs illustrate model failure or instability.
 
@@ -28,14 +28,14 @@ Analytical solutions are used where available. Coupled time-domain systems use R
 
 ## Data Structures & Algorithms — 15 labs
 
-| Subject | Labs |
-| --- | --- |
-| Sorting | Bubble, Insertion, Selection, Merge, Quick, Heap |
-| Searching | Linear, Binary |
-| Graph traversal | Breadth-First Search (queue), Depth-First Search (stack) |
-| Shortest paths | Dijkstra, Bellman–Ford, A* |
-| Dynamic programming | 0/1 Knapsack |
-| Number theory | Euclidean GCD |
+| Subject             | Labs                                                     |
+| ------------------- | -------------------------------------------------------- |
+| Sorting             | Bubble, Insertion, Selection, Merge, Quick, Heap         |
+| Searching           | Linear, Binary                                           |
+| Graph traversal     | Breadth-First Search (queue), Depth-First Search (stack) |
+| Shortest paths      | Dijkstra, Bellman–Ford, A*                               |
+| Dynamic programming | 0/1 Knapsack                                             |
+| Number theory       | Euclidean GCD                                            |
 
 All support editable input, presets, worked examples, prediction questions, step explanations, pseudocode highlighting, counters, keyboard scrubbing, and reversible playback. Array algorithms use bars and state tables; graph algorithms use directed weighted diagrams and distance/parent tables; knapsack uses a capacity table and item backtracking; GCD records each quotient and remainder.
 

@@ -5,9 +5,22 @@ import { navigationGroups, disciplineIcon } from './backend/discipline-navigatio
 
 const root = resolve('frontend/public');
 const pages = ['index', 'beam', 'axial', 'mohr', 'simulation', 'algorithms'];
-const escape = label => label.replaceAll('&', '&amp;');
-const links = navigationGroups.map(([name,ids])=>`<p class="nav-group">${name}</p>`+ids.map(id=>`<a href="/#${id}" data-discipline="${id}">${disciplineIcon(id)}<span>${escape(disciplines[id])}</span></a>`).join('')).join('');
-const options = Object.entries(disciplines).map(([id, label]) => `<option value="${id}">${escape(label)}</option>`).join('');
+const escape = (label) => label.replaceAll('&', '&amp;');
+const links = navigationGroups
+  .map(
+    ([name, ids]) =>
+      `<p class="nav-group">${name}</p>` +
+      ids
+        .map(
+          (id) =>
+            `<a href="/#${id}" data-discipline="${id}">${disciplineIcon(id)}<span>${escape(disciplines[id])}</span></a>`,
+        )
+        .join(''),
+  )
+  .join('');
+const options = Object.entries(disciplines)
+  .map(([id, label]) => `<option value="${id}">${escape(label)}</option>`)
+  .join('');
 const header = `
   <a class="skip" href="#main">Skip to content</a>
   <header class="topbar">
@@ -37,16 +50,24 @@ export default defineConfig({
   root,
   publicDir: false,
   appType: 'mpa',
-  plugins: [{
-    name: 'nexora-shell',
-    transformIndexHtml: {
-      order: 'pre',
-      handler: html => html.replace('<!-- site-header -->', header).replace('<!-- discipline-options -->', options).replace('<!-- site-layout-end -->', '</div>'),
+  plugins: [
+    {
+      name: 'nexora-shell',
+      transformIndexHtml: {
+        order: 'pre',
+        handler: (html) =>
+          html
+            .replace('<!-- site-header -->', header)
+            .replace('<!-- discipline-options -->', options)
+            .replace('<!-- site-layout-end -->', '</div>'),
+      },
     },
-  }],
+  ],
   build: {
     outDir: resolve('dist'),
     emptyOutDir: true,
-    rollupOptions: { input: Object.fromEntries(pages.map(page => [page, resolve(root, `${page}.html`)])) },
+    rollupOptions: {
+      input: Object.fromEntries(pages.map((page) => [page, resolve(root, `${page}.html`)])),
+    },
   },
 });

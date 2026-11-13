@@ -2,16 +2,22 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { GET, POST } from '../api/materials.js';
 
-const run = (model, input) => POST(new Request('http://localhost/api/materials', {
-  method: 'POST', body: JSON.stringify({ model, input }),
-}));
+const run = (model, input) =>
+  POST(
+    new Request('http://localhost/api/materials', {
+      method: 'POST',
+      body: JSON.stringify({ model, input }),
+    }),
+  );
 
 test('axial benchmark preserves tension and compression signs', async () => {
   for (const sign of [-1, 1]) {
     const response = await run('axial', { force: sign * 50, length: 2, area: 500, modulus: 200 });
     assert.equal(response.status, 200);
     assert.deepEqual((await response.json()).summary, {
-      stress: sign * 100, strain: sign * 0.0005, displacement: sign,
+      stress: sign * 100,
+      strain: sign * 0.0005,
+      displacement: sign,
     });
   }
 });
@@ -42,7 +48,9 @@ test('materials API rejects invalid geometry and unknown models', async () => {
 });
 
 test('pure negative shear gives symmetric principal stresses and a negative angle', async () => {
-  const data = await run('mohr', { sigmaX: 0, sigmaY: 0, tauXY: -25 }).then(response => response.json());
+  const data = await run('mohr', { sigmaX: 0, sigmaY: 0, tauXY: -25 }).then((response) =>
+    response.json(),
+  );
   assert.equal(data.summary.principalMax, 25);
   assert.equal(data.summary.principalMin, -25);
   assert.equal(data.summary.principalAngle, -45);
@@ -50,8 +58,10 @@ test('pure negative shear gives symmetric principal stresses and a negative angl
 
 test('unloaded axial bar returns zero response with discoverable units', async () => {
   const { models } = await GET().json();
-  const axial = models.find(model => model.id === 'axial');
-  const data = await run('axial', { force: 0, length: 1, area: 10, modulus: 69 }).then(response => response.json());
+  const axial = models.find((model) => model.id === 'axial');
+  const data = await run('axial', { force: 0, length: 1, area: 10, modulus: 69 }).then((response) =>
+    response.json(),
+  );
   assert.deepEqual(data.summary, { stress: 0, strain: 0, displacement: 0 });
   assert.deepEqual(data.units, axial.outputs);
   assert.deepEqual(data.series, []);

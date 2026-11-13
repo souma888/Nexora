@@ -1,21 +1,235 @@
 import { disciplines } from '../../backend/disciplines.js';
 // Editorial metadata only. Preview data always comes from the existing solvers.
-export const studioSections={
-  civil:{title:'Follow the<br>load path',description:'From a bending beam to a slender column. Discover how geometry, materials, and supports carry a load.',art:'beam',model:'buckling',parameters:['length','factor'],prompt:'Change the column length and watch its critical load fall. Effective length matters just as much as the material.',paths:['/beam.html','/simulation.html?lab=buckling','/axial.html']},
-  mechanical:{title:'Put ideas<br>in motion',description:'Explore forces, deformation, and movement. Connect the mechanism you can see to the mathematics underneath.',art:'motor',model:'oscillator',parameters:['mass','stiffness'],prompt:'Change mass or stiffness and compare the period of a freely vibrating mass–spring system.',paths:['/simulation.html?lab=oscillator','/simulation.html?lab=torsion','/mohr.html']},
-  electrical:{title:'Trace the<br>flow of energy',description:'Follow voltage, current, and impedance through circuits. Build an intuition for steady states and transients.',art:'circuit',model:'divider',parameters:['voltage','load'],prompt:'Load a voltage divider and see why connecting a circuit changes the voltage you measure.',paths:['/simulation.html?lab=divider','/simulation.html?lab=rc','/simulation.html?lab=resonance']},
-  electronics:{title:'Shape the<br>signal',description:'From a diode’s threshold to an amplifier’s limits. Explore the components that transform an electrical signal.',art:'circuit',model:'rectifier',parameters:['amplitude','drop'],prompt:'Compare input amplitude with the diode’s forward drop. Below the threshold, no output reaches the load.',paths:['/simulation.html?lab=rectifier','/simulation.html?lab=opamp','/simulation.html?lab=lowpass']},
-  signals:{title:'Find the pattern<br>in the signal',description:'Explore sampling, filtering, and superposition. Move between the continuous signal and the samples that describe it.',art:'wave',model:'sampling',parameters:['frequency','rate'],prompt:'Change the sampling rate and watch a fast tone become indistinguishable from a slower one.',paths:['/simulation.html?lab=sampling','/simulation.html?lab=convolution','/simulation.html?lab=average']},
-  thermofluids:{title:'Follow the flow.<br>Track the heat',description:'Explore pressure, temperature, and energy in motion. Make the balances behind fluid and thermal systems visible.',art:'flow',model:'venturi',parameters:['drop','coefficient'],prompt:'Change the pressure difference across a Venturi meter and compare the inferred flow and throat velocity.',paths:['/simulation.html?lab=venturi','/simulation.html?lab=exchanger','/simulation.html?lab=cooling']},
-  digital:{title:'Build from<br>one and zero',description:'From a logic gate to a processor’s decisions. Inspect the bits, clocks, and state transitions behind a computer.',art:'chip',model:'gates',parameters:['gate','a','b'],prompt:'Choose a logic operation and change its input bits. Compare the selected output with the complete truth table.',paths:['/simulation.html?lab=gates','/simulation.html?lab=booth','/simulation.html?lab=paging']},
-  robotics:{title:'Give motion<br>a purpose',description:'Explore the geometry behind intelligent machines. Connect joint angles, end positions, and paths through space.',art:'robot',model:'arm',parameters:['shoulder','elbow'],prompt:'Rotate the two joints and follow the end effector. The diagram and coordinates use the same kinematic model.',paths:['/simulation.html?lab=arm','/simulation.html?lab=inversearm','/simulation.html?lab=differential']},
-  computational:{title:'Turn a question<br>into a method',description:'Explore numerical approximations, convergence, and error. Learn what changes when a calculation becomes an algorithm.',art:'numerical',model:'integration',parameters:['rate','step'],prompt:'Change the integration step and compare Euler and Runge–Kutta with the exact decay solution.',paths:['/simulation.html?lab=integration','/simulation.html?lab=roots','/simulation.html?lab=mesh']},
-  materials:{title:'Look inside<br>the material',description:'Investigate stiffness, permanent deformation, and time-dependent behavior. See how a material responds beyond a single number.',art:'lattice',model:'plasticity',parameters:['strain','yield'],prompt:'Increase the applied strain past yield and inspect the stress and permanent strain left after elastic unloading.',paths:['/simulation.html?lab=plasticity','/simulation.html?lab=creep','/simulation.html?lab=composite']},
-  algorithms:{title:'Make the<br>reasoning visible',description:'Follow each comparison, pointer, and decision. Explore data structures and algorithms as changing state, one step at a time.',art:'network',prompt:'Step through Quick Sort. Follow the pivot, inspect each partition, and compare the work done on different input orders.',paths:['/algorithms.html?lab=quick','/algorithms.html?lab=avl','/algorithms.html?lab=dijkstra']},
-  communications:{title:'Carry a signal.<br>Connect a world',description:'Explore modulation, digital symbols, channel limits, and RF propagation. Follow the information from a message to a receiver.',art:'radio',model:'amradio',parameters:['index','message'],prompt:'Change the modulation index and message frequency. Compare the AM waveform with its signed envelope, including the onset of overmodulation.',paths:['/simulation.html?lab=amradio','/simulation.html?lab=qpsk','/simulation.html?lab=radiolink']},
-  energy:{title:'Convert energy.<br>Understand the cost',description:'Explore renewable generation, storage, switched converters, and balanced AC power. Trace the energy before and after each conversion.',art:'power',model:'buckconverter',parameters:['duty','frequency'],prompt:'Change switch duty and frequency. Observe ideal step-down gain and current ripple, and check whether continuous conduction remains a valid assumption.',paths:['/simulation.html?lab=solarpv','/simulation.html?lab=buckconverter','/simulation.html?lab=threephase']},
-  aerospace:{title:'Explore the<br>mechanics of flight',description:'Follow a trajectory, inspect aerodynamic forces, and compare the states of a compressible flow. Build intuition from ground level to an ideal rocket burn.',art:'flight',model:'ballistic',parameters:['angle','speed'],prompt:'Change launch angle and speed. Follow the exact constant-gravity trajectory to its ground crossing, then compare range, apex, and flight time.',paths:['/simulation.html?lab=ballistic','/simulation.html?lab=dragpolar','/simulation.html?lab=rocketequation']},
-  chemical:{title:'Balance the flow.<br>Follow the reaction',description:'Explore reaction kinetics, mixing, adsorption, and membrane separation. Connect a governing balance to the composition that comes out.',art:'process',model:'reactorconversion',parameters:['reactor','residence'],prompt:'Choose a stirred tank or plug-flow reactor, then vary residence time. Compare their conversions at the same rate constant and feed conditions.',paths:['/simulation.html?lab=reactorconversion','/simulation.html?lab=consecutive','/simulation.html?lab=osmosis']},
-  industrial:{title:'Engineer a<br>better operation',description:'Explore waiting lines, inventory, project paths, process variation, and reliability. Inspect the assumptions behind operational performance.',art:'operations',model:'weibull',parameters:['shape','age'],prompt:'Change the lifetime shape and selected mission age. Distinguish survival probability from instantaneous hazard and inspect the lifetime distribution.',paths:['/simulation.html?lab=mm1queue','/simulation.html?lab=criticalpath','/simulation.html?lab=weibull']},
+export const studioSections = {
+  civil: {
+    title: 'Follow the<br>load path',
+    description:
+      'From a bending beam to a slender column. Discover how geometry, materials, and supports carry a load.',
+    art: 'beam',
+    model: 'buckling',
+    parameters: ['length', 'factor'],
+    prompt:
+      'Change the column length and watch its critical load fall. Effective length matters just as much as the material.',
+    paths: ['/beam.html', '/simulation.html?lab=buckling', '/axial.html'],
+  },
+  mechanical: {
+    title: 'Put ideas<br>in motion',
+    description:
+      'Explore forces, deformation, and movement. Connect the mechanism you can see to the mathematics underneath.',
+    art: 'motor',
+    model: 'oscillator',
+    parameters: ['mass', 'stiffness'],
+    prompt:
+      'Change mass or stiffness and compare the period of a freely vibrating mass–spring system.',
+    paths: ['/simulation.html?lab=oscillator', '/simulation.html?lab=torsion', '/mohr.html'],
+  },
+  electrical: {
+    title: 'Trace the<br>flow of energy',
+    description:
+      'Follow voltage, current, and impedance through circuits. Build an intuition for steady states and transients.',
+    art: 'circuit',
+    model: 'divider',
+    parameters: ['voltage', 'load'],
+    prompt:
+      'Load a voltage divider and see why connecting a circuit changes the voltage you measure.',
+    paths: [
+      '/simulation.html?lab=divider',
+      '/simulation.html?lab=rc',
+      '/simulation.html?lab=resonance',
+    ],
+  },
+  electronics: {
+    title: 'Shape the<br>signal',
+    description:
+      'From a diode’s threshold to an amplifier’s limits. Explore the components that transform an electrical signal.',
+    art: 'circuit',
+    model: 'rectifier',
+    parameters: ['amplitude', 'drop'],
+    prompt:
+      'Compare input amplitude with the diode’s forward drop. Below the threshold, no output reaches the load.',
+    paths: [
+      '/simulation.html?lab=rectifier',
+      '/simulation.html?lab=opamp',
+      '/simulation.html?lab=lowpass',
+    ],
+  },
+  signals: {
+    title: 'Find the pattern<br>in the signal',
+    description:
+      'Explore sampling, filtering, and superposition. Move between the continuous signal and the samples that describe it.',
+    art: 'wave',
+    model: 'sampling',
+    parameters: ['frequency', 'rate'],
+    prompt:
+      'Change the sampling rate and watch a fast tone become indistinguishable from a slower one.',
+    paths: [
+      '/simulation.html?lab=sampling',
+      '/simulation.html?lab=convolution',
+      '/simulation.html?lab=average',
+    ],
+  },
+  thermofluids: {
+    title: 'Follow the flow.<br>Track the heat',
+    description:
+      'Explore pressure, temperature, and energy in motion. Make the balances behind fluid and thermal systems visible.',
+    art: 'flow',
+    model: 'venturi',
+    parameters: ['drop', 'coefficient'],
+    prompt:
+      'Change the pressure difference across a Venturi meter and compare the inferred flow and throat velocity.',
+    paths: [
+      '/simulation.html?lab=venturi',
+      '/simulation.html?lab=exchanger',
+      '/simulation.html?lab=cooling',
+    ],
+  },
+  digital: {
+    title: 'Build from<br>one and zero',
+    description:
+      'From a logic gate to a processor’s decisions. Inspect the bits, clocks, and state transitions behind a computer.',
+    art: 'chip',
+    model: 'gates',
+    parameters: ['gate', 'a', 'b'],
+    prompt:
+      'Choose a logic operation and change its input bits. Compare the selected output with the complete truth table.',
+    paths: [
+      '/simulation.html?lab=gates',
+      '/simulation.html?lab=booth',
+      '/simulation.html?lab=paging',
+    ],
+  },
+  robotics: {
+    title: 'Give motion<br>a purpose',
+    description:
+      'Explore the geometry behind intelligent machines. Connect joint angles, end positions, and paths through space.',
+    art: 'robot',
+    model: 'arm',
+    parameters: ['shoulder', 'elbow'],
+    prompt:
+      'Rotate the two joints and follow the end effector. The diagram and coordinates use the same kinematic model.',
+    paths: [
+      '/simulation.html?lab=arm',
+      '/simulation.html?lab=inversearm',
+      '/simulation.html?lab=differential',
+    ],
+  },
+  computational: {
+    title: 'Turn a question<br>into a method',
+    description:
+      'Explore numerical approximations, convergence, and error. Learn what changes when a calculation becomes an algorithm.',
+    art: 'numerical',
+    model: 'integration',
+    parameters: ['rate', 'step'],
+    prompt:
+      'Change the integration step and compare Euler and Runge–Kutta with the exact decay solution.',
+    paths: [
+      '/simulation.html?lab=integration',
+      '/simulation.html?lab=roots',
+      '/simulation.html?lab=mesh',
+    ],
+  },
+  materials: {
+    title: 'Look inside<br>the material',
+    description:
+      'Investigate stiffness, permanent deformation, and time-dependent behavior. See how a material responds beyond a single number.',
+    art: 'lattice',
+    model: 'plasticity',
+    parameters: ['strain', 'yield'],
+    prompt:
+      'Increase the applied strain past yield and inspect the stress and permanent strain left after elastic unloading.',
+    paths: [
+      '/simulation.html?lab=plasticity',
+      '/simulation.html?lab=creep',
+      '/simulation.html?lab=composite',
+    ],
+  },
+  algorithms: {
+    title: 'Make the<br>reasoning visible',
+    description:
+      'Follow each comparison, pointer, and decision. Explore data structures and algorithms as changing state, one step at a time.',
+    art: 'network',
+    prompt:
+      'Step through Quick Sort. Follow the pivot, inspect each partition, and compare the work done on different input orders.',
+    paths: [
+      '/algorithms.html?lab=quick',
+      '/algorithms.html?lab=avl',
+      '/algorithms.html?lab=dijkstra',
+    ],
+  },
+  communications: {
+    title: 'Carry a signal.<br>Connect a world',
+    description:
+      'Explore modulation, digital symbols, channel limits, and RF propagation. Follow the information from a message to a receiver.',
+    art: 'radio',
+    model: 'amradio',
+    parameters: ['index', 'message'],
+    prompt:
+      'Change the modulation index and message frequency. Compare the AM waveform with its signed envelope, including the onset of overmodulation.',
+    paths: [
+      '/simulation.html?lab=amradio',
+      '/simulation.html?lab=qpsk',
+      '/simulation.html?lab=radiolink',
+    ],
+  },
+  energy: {
+    title: 'Convert energy.<br>Understand the cost',
+    description:
+      'Explore renewable generation, storage, switched converters, and balanced AC power. Trace the energy before and after each conversion.',
+    art: 'power',
+    model: 'buckconverter',
+    parameters: ['duty', 'frequency'],
+    prompt:
+      'Change switch duty and frequency. Observe ideal step-down gain and current ripple, and check whether continuous conduction remains a valid assumption.',
+    paths: [
+      '/simulation.html?lab=solarpv',
+      '/simulation.html?lab=buckconverter',
+      '/simulation.html?lab=threephase',
+    ],
+  },
+  aerospace: {
+    title: 'Explore the<br>mechanics of flight',
+    description:
+      'Follow a trajectory, inspect aerodynamic forces, and compare the states of a compressible flow. Build intuition from ground level to an ideal rocket burn.',
+    art: 'flight',
+    model: 'ballistic',
+    parameters: ['angle', 'speed'],
+    prompt:
+      'Change launch angle and speed. Follow the exact constant-gravity trajectory to its ground crossing, then compare range, apex, and flight time.',
+    paths: [
+      '/simulation.html?lab=ballistic',
+      '/simulation.html?lab=dragpolar',
+      '/simulation.html?lab=rocketequation',
+    ],
+  },
+  chemical: {
+    title: 'Balance the flow.<br>Follow the reaction',
+    description:
+      'Explore reaction kinetics, mixing, adsorption, and membrane separation. Connect a governing balance to the composition that comes out.',
+    art: 'process',
+    model: 'reactorconversion',
+    parameters: ['reactor', 'residence'],
+    prompt:
+      'Choose a stirred tank or plug-flow reactor, then vary residence time. Compare their conversions at the same rate constant and feed conditions.',
+    paths: [
+      '/simulation.html?lab=reactorconversion',
+      '/simulation.html?lab=consecutive',
+      '/simulation.html?lab=osmosis',
+    ],
+  },
+  industrial: {
+    title: 'Engineer a<br>better operation',
+    description:
+      'Explore waiting lines, inventory, project paths, process variation, and reliability. Inspect the assumptions behind operational performance.',
+    art: 'operations',
+    model: 'weibull',
+    parameters: ['shape', 'age'],
+    prompt:
+      'Change the lifetime shape and selected mission age. Distinguish survival probability from instantaneous hazard and inspect the lifetime distribution.',
+    paths: [
+      '/simulation.html?lab=mm1queue',
+      '/simulation.html?lab=criticalpath',
+      '/simulation.html?lab=weibull',
+    ],
+  },
 };
-export const sectionLabel=group=>disciplines[group]??'The experiment studio';
+export const sectionLabel = (group) => disciplines[group] ?? 'The experiment studio';

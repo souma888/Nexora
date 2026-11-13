@@ -4,13 +4,13 @@ Nexora now has 159 labs in 17 sections after [the next engineering expansion](EN
 
 ## Inventory
 
-| Section | New experiments |
-| --- | --- |
-| Thermofluids (9) | Bernoulli Energy Balance; Venturi Flow Meter; Pipe Pressure Loss; Composite Wall Conduction; Lumped Transient Cooling; Heat Exchanger Effectiveness; Ideal-Gas Expansion; Carnot Heat Engine; Refrigeration COP |
-| Digital Logic & Computer Engineering (6) | Logic Gate Playground; Full Adder; Clocked Flip-Flops; Binary Up/Down Counter; Finite-State Sequence Detector; Cache Mapping & LRU |
-| Robotics & Mechatronics (5) | Two-Link Arm Kinematics; Two-Link Inverse Kinematics; Four-Bar Linkage Closure; Differential-Drive Robot; Planar Trajectory Tracking |
-| Computational Engineering (5) | Root Finding: Bisection & Newton; Euler vs. Runge–Kutta; Interpolation & Extrapolation; Monte Carlo Area & π; Mesh Convergence Study |
-| Materials Science (5) | Elastic–Plastic Stress–Strain; Fatigue S–N Curve; Viscoelastic Creep & Recovery; Thermal Expansion & Restraint; Composite Stiffness Bounds |
+| Section                                  | New experiments                                                                                                                                                                                                 |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Thermofluids (9)                         | Bernoulli Energy Balance; Venturi Flow Meter; Pipe Pressure Loss; Composite Wall Conduction; Lumped Transient Cooling; Heat Exchanger Effectiveness; Ideal-Gas Expansion; Carnot Heat Engine; Refrigeration COP |
+| Digital Logic & Computer Engineering (6) | Logic Gate Playground; Full Adder; Clocked Flip-Flops; Binary Up/Down Counter; Finite-State Sequence Detector; Cache Mapping & LRU                                                                              |
+| Robotics & Mechatronics (5)              | Two-Link Arm Kinematics; Two-Link Inverse Kinematics; Four-Bar Linkage Closure; Differential-Drive Robot; Planar Trajectory Tracking                                                                            |
+| Computational Engineering (5)            | Root Finding: Bisection & Newton; Euler vs. Runge–Kutta; Interpolation & Extrapolation; Monte Carlo Area & π; Mesh Convergence Study                                                                            |
+| Materials Science (5)                    | Elastic–Plastic Stress–Strain; Fatigue S–N Curve; Viscoelastic Creep & Recovery; Thermal Expansion & Restraint; Composite Stiffness Bounds                                                                      |
 
 All use local pure solvers shared with `POST /api/waves`, discoverable input schemas/units, live inputs, predictions, examples, equations and assumptions. The workbench supports enum selectors, binary buttons, bounded integer traces, multiple curves, step plots, nullable infeasible states, model warnings and detailed tables. Digital clocks, cache accesses and robot previews share a keyboard-accessible inspector; robot targets can also be dragged. Playback is an inspection tool, not a real-time physics clock. Tall/wide tables and complex logic diagrams scroll within their panels. The mobile discipline list has bounded height so the workbench stays close to the top.
 
@@ -50,15 +50,15 @@ Plasticity is monotonic bilinear uniaxial small-strain loading with elastic unlo
 
 `tests/engineering-sections.test.js` includes:
 
-| Family | Benchmarks and checks |
-| --- | --- |
-| Fluids | Bernoulli total-head equality and continuity; Venturi 8.8876168847 L/s reference and √Δp scaling; laminar Darcy loss against Hagen–Poiseuille |
-| Heat transfer | Wall q″=400 W/m² and Ti=60°C; cooling τ=450 s and 1/e excess at τ; exchanger heat balance and spatial boundary temperatures for parallel/counterflow, Cr=1 and extreme capacity ratios |
-| Thermodynamics | Isothermal nRT ln2 work; zero adiabatic heat and first-law balance; Carnot 50% at 600/300 K; refrigerator COP 6.75 at 270/310 K |
-| Digital | All gate/full-adder combinations; D/T/JK transitions; counter wrap/width; overlapping 101 detections; cache conflict and LRU references |
-| Robotics | Analytic forward poses/Jacobian; both IK branches forward-substituted; unreachable/folded cases; link-length closure; straight/spin/stationary drive; tracking exponential and RMS integral |
-| Numerics | Known cubic/cosine roots and Newton derivative guard; Euler/RK4 amplification and refinement; interpolation at all nodes; seeded π=3.164 for N=1000, seed 42; discrete sine eigenvalue and second-order mesh error |
-| Materials | σ=267.5 MPa and residual strain 0.86625%; Basquin reference life; Kelvin–Voigt hold/recovery; ±240 MPa restraint signs; composite endpoint and bound inequalities |
+| Family         | Benchmarks and checks                                                                                                                                                                                              |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Fluids         | Bernoulli total-head equality and continuity; Venturi 8.8876168847 L/s reference and √Δp scaling; laminar Darcy loss against Hagen–Poiseuille                                                                      |
+| Heat transfer  | Wall q″=400 W/m² and Ti=60°C; cooling τ=450 s and 1/e excess at τ; exchanger heat balance and spatial boundary temperatures for parallel/counterflow, Cr=1 and extreme capacity ratios                             |
+| Thermodynamics | Isothermal nRT ln2 work; zero adiabatic heat and first-law balance; Carnot 50% at 600/300 K; refrigerator COP 6.75 at 270/310 K                                                                                    |
+| Digital        | All gate/full-adder combinations; D/T/JK transitions; counter wrap/width; overlapping 101 detections; cache conflict and LRU references                                                                            |
+| Robotics       | Analytic forward poses/Jacobian; both IK branches forward-substituted; unreachable/folded cases; link-length closure; straight/spin/stationary drive; tracking exponential and RMS integral                        |
+| Numerics       | Known cubic/cosine roots and Newton derivative guard; Euler/RK4 amplification and refinement; interpolation at all nodes; seeded π=3.164 for N=1000, seed 42; discrete sine eigenvalue and second-order mesh error |
+| Materials      | σ=267.5 MPa and residual strain 0.86625%; Basquin reference life; Kelvin–Voigt hold/recovery; ±240 MPa restraint signs; composite endpoint and bound inequalities                                                  |
 
 Typical analytical tolerances are 1e−8 absolute, tightened for discrete identities and relaxed to 1e−7 for extreme heat-exchanger profiles. Root reference checks use 1e−6 or 1e−7, consistent with the chosen stopping criterion. Valid presets and individual numeric bounds are exercised across all 30 models; incompatible cross-field choices return validation errors. Browser checks open every new lab from its discipline on desktop/mobile, compare with real API responses, check keyboard/bit controls, drag targets, step/play/reset previews, change presets, inspect warnings and capture schematic regressions.
 

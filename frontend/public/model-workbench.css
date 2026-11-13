@@ -1,30 +1,168 @@
-.model-visual { padding: 8px 12px; border-bottom: 1px solid var(--border); background: var(--plot-bg); overflow: auto; max-height: 400px; }
-.model-visual svg { display: block; width: 100%; min-height: 150px; max-height: 310px; }
-.model-visual svg text { fill: var(--text); font-size: 14px; paint-order: stroke; stroke: var(--plot-bg); stroke-width: 1px; }
-.model-visual .wide-model { min-width: 520px; max-height: none; }
-.model-visual:has(.project-model) { max-height: none; }
-.model-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 13px; border-bottom: 1px solid var(--border); }
-.model-actions .quiet { min-height: 38px; }
-.model-actions .field-hint { margin: 0; }
-.robot-target { cursor: grab; }
-#model-visual[data-draggable="true"] { touch-action: none; cursor: crosshair; }
-.model-warnings { padding: 10px 13px; margin: 14px 0; border: 1px solid color-mix(in srgb, var(--load) 50%, var(--border)); border-left: 3px solid var(--load); border-radius: 6px; color: var(--load); background: var(--surface-1); }
-.model-table { overflow: auto; max-height: 370px; margin-top: 14px; }
-.model-table table { width: 100%; border-collapse: collapse; font: 12px var(--mono); font-variant-numeric: tabular-nums; }
-.model-table caption { padding: 12px; text-align: left; color: var(--text-accent); font-family: Inter, sans-serif; font-size: 14px; }
-.model-table th, .model-table td { white-space: nowrap; padding: 9px 12px; text-align: right; border: 1px solid var(--border); }
-.model-table thead th { position: sticky; top: 0; background: var(--surface-2); color: var(--muted); }
-.model-table th:first-child { text-align: left; }
-.model-table tr.selected { color: var(--curve); background: var(--selection); }
-.bit-field { position: relative; min-height: 40px; }
-.bit-field .bit-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-.bit-toggle { width: 100%; min-height: 40px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); color: var(--muted); font: 600 16px var(--mono); }
-.bit-toggle[aria-pressed="true"] { color: var(--result); border-color: var(--result); background: color-mix(in srgb, var(--result) 9%, var(--surface-2)); }
-.setup .sequence-input { width: 100%; min-height: 40px; padding: 7px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); color: var(--text); font: 13px var(--mono); }
-.sequence-field { grid-column: 1 / -1; }
-.material-metrics:has(>div:nth-child(4)) { grid-template-columns: repeat(2, minmax(0,1fr)); }
-.material-metrics:has(>div:nth-child(4)) div:last-child { grid-column: auto; }
-#preset-row { margin-bottom: 12px; }
-.legend .other-trace { background: var(--result); }
-@media (max-width: 440px) { .model-visual svg:not(.wide-model) text { font-size: 17px; } }
-@media print { .model-actions, #preset-row, .bit-toggle { display: none; } .model-visual, .model-table { max-height: none; overflow: visible; } .model-visual .wide-model { min-width: 0; } .model-table thead th { position: static; } }
+.model-visual {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--plot-bg);
+  overflow: auto;
+  max-height: 400px;
+}
+.model-visual svg {
+  display: block;
+  width: 100%;
+  min-height: 150px;
+  max-height: 310px;
+}
+.model-visual svg text {
+  fill: var(--text);
+  font-size: 14px;
+  paint-order: stroke;
+  stroke: var(--plot-bg);
+  stroke-width: 1px;
+}
+.model-visual .wide-model {
+  min-width: 520px;
+  max-height: none;
+}
+.model-visual:has(.project-model) {
+  max-height: none;
+}
+.model-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border-bottom: 1px solid var(--border);
+}
+.model-actions .quiet {
+  min-height: 38px;
+}
+.model-actions .field-hint {
+  margin: 0;
+}
+.robot-target {
+  cursor: grab;
+}
+#model-visual[data-draggable='true'] {
+  touch-action: none;
+  cursor: crosshair;
+}
+.model-warnings {
+  padding: 10px 13px;
+  margin: 14px 0;
+  border: 1px solid color-mix(in srgb, var(--load) 50%, var(--border));
+  border-left: 3px solid var(--load);
+  border-radius: 6px;
+  color: var(--load);
+  background: var(--surface-1);
+}
+.model-table {
+  overflow: auto;
+  max-height: 370px;
+  margin-top: 14px;
+}
+.model-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 12px var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.model-table caption {
+  padding: 12px;
+  text-align: left;
+  color: var(--text-accent);
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+}
+.model-table th,
+.model-table td {
+  white-space: nowrap;
+  padding: 9px 12px;
+  text-align: right;
+  border: 1px solid var(--border);
+}
+.model-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-2);
+  color: var(--muted);
+}
+.model-table th:first-child {
+  text-align: left;
+}
+.model-table tr.selected {
+  color: var(--curve);
+  background: var(--selection);
+}
+.bit-field {
+  position: relative;
+  min-height: 40px;
+}
+.bit-field .bit-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.bit-toggle {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font: 600 16px var(--mono);
+}
+.bit-toggle[aria-pressed='true'] {
+  color: var(--result);
+  border-color: var(--result);
+  background: color-mix(in srgb, var(--result) 9%, var(--surface-2));
+}
+.setup .sequence-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: 13px var(--mono);
+}
+.sequence-field {
+  grid-column: 1 / -1;
+}
+.material-metrics:has(> div:nth-child(4)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.material-metrics:has(> div:nth-child(4)) div:last-child {
+  grid-column: auto;
+}
+#preset-row {
+  margin-bottom: 12px;
+}
+.legend .other-trace {
+  background: var(--result);
+}
+@media (max-width: 440px) {
+  .model-visual svg:not(.wide-model) text {
+    font-size: 17px;
+  }
+}
+@media print {
+  .model-actions,
+  #preset-row,
+  .bit-toggle {
+    display: none;
+  }
+  .model-visual,
+  .model-table {
+    max-height: none;
+    overflow: visible;
+  }
+  .model-visual .wide-model {
+    min-width: 0;
+  }
+  .model-table thead th {
+    position: static;
+  }
+}
