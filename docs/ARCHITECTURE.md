@@ -24,7 +24,7 @@ Node.js 24 / Vercel Functions
 - `backend/contract.js`: shared field types, finite numeric bounds, enum/list/text validation, generic relational rules, and the HTTP error envelope.
 - Each definition’s `validateValues` hook: model-specific constraints, such as root brackets, binary word width, CRC positions, circuit singularity, and graph cycles. Hooks execute after field checks in both browser and API. Functions are not serialized into discovery JSON.
 - `backend/experiment.js` / `lab-kit.js` and `schema.d.ts`: generic typed definition, input, result, unit and teaching metadata contracts.
-- `backend/linear.ts`: strict typed, scaled partial-pivot Gaussian elimination. `circuit-builder.js` owns circuit parsing and modified nodal assembly.
+- `backend/linear.js`: strictly checked JSDoc, scaled partial-pivot Gaussian elimination. `circuit-builder.js` owns circuit parsing and modified nodal assembly.
 - `backend/units.ts`: dimension-compatible scale/offset conversions. Contracts retain their declared units; the UI changes display units without changing the physical input.
 - `backend/run-record.ts`: bounded, versioned run-file shape and CSV cell protection. Each model still validates imported input values before use.
 - `frontend/public/run-tools.ts`: browser storage, download/import controls, and same-model/version comparison. Stored/exported numerical results are never a trusted solver input.
@@ -35,7 +35,7 @@ Node.js 24 / Vercel Functions
 
 ## Static checking: exact scope
 
-`tsconfig.json` checks the TypeScript UI/core modules in strict mode. `tsconfig.solvers.json` enables `allowJs` and `checkJs` for **all backend JavaScript and API handlers**, including the development server. Generic JSDoc contracts infer numeric versus string inputs for model callbacks and require numerical summaries and plot values. `type-tests/solvers.ts` contains deliberately invalid calls under `@ts-expect-error`; loss of those checks fails the build.
+`tsconfig.json` checks the TypeScript UI/core modules and the JSDoc-annotated `linear.js` numerical engine in strict mode. The latter remains plain ESM so Vercel’s JavaScript API bundles include it without runtime TypeScript imports. `tsconfig.solvers.json` enables `allowJs` and `checkJs` for **all backend JavaScript and API handlers**, including the development server. Generic JSDoc contracts infer numeric versus string inputs for model callbacks and require numerical summaries and plot values. `type-tests/solvers.ts` contains deliberately invalid calls under `@ts-expect-error`; loss of those checks fails the build.
 
 The legacy JavaScript pass does not enable every strict flag or prohibit every inferred `any` helper parameter. Runtime validators and reference tests remain necessary. Further helper-by-helper strict typing is tracked in the roadmap; excluding all solvers while claiming whole-project safety is no longer the workflow.
 

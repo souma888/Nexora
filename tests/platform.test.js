@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { solveLinear } from '../backend/linear.ts';
+import { solveLinear } from '../backend/linear.js';
 import { solveCircuit, circuitModels } from '../backend/circuit-builder.js';
 import { industrialModels, criticalSchedule, projectEdges } from '../backend/industrial.js';
 import { convert, compatibleUnits } from '../backend/units.ts';

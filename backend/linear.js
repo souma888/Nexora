@@ -1,5 +1,7 @@
 /** Dense Gaussian elimination with scaled partial pivoting for bounded teaching models. */
-export function solveLinear(matrix: number[][], rhs: number[]): number[] {
+// @ts-check
+/** @param {number[][]} matrix @param {number[]} rhs @returns {number[]} */
+export function solveLinear(matrix, rhs) {
   const n = rhs.length;
   if (!n || matrix.length !== n || matrix.some((row) => row.length !== n))
     throw new Error('A square system is required.');
@@ -24,7 +26,7 @@ export function solveLinear(matrix: number[][], rhs: number[]): number[] {
       for (let j = k + 1; j <= n; j++) a[i][j] -= factor * a[k][j];
     }
   }
-  const x = Array<number>(n).fill(0);
+  const x = Array.from({ length: n }, () => 0);
   for (let i = n - 1; i >= 0; i--)
     x[i] = (a[i][n] - a[i].slice(i + 1, n).reduce((s, v, j) => s + v * x[i + 1 + j], 0)) / a[i][i];
   if (!x.every(Number.isFinite)) throw new Error('The system has no finite solution.');

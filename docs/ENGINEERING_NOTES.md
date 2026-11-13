@@ -8,7 +8,7 @@ An exact beam or steady-state reactor formula is preferable to a less accurate n
 
 The netlist accepts `R|V|I name nodeA nodeB value`, in Ω, V or A, separated by semicolons/newlines. There are at most 20 components and node labels 0–8; ground is node 0. Names are bounded word characters, not markup. Resistors stamp a symmetric conductance matrix. Independent current sources contribute to the current balance. Voltage sources introduce branch-current unknowns and voltage constraints, producing the modified nodal system `[G B; Bᵀ 0]`.
 
-`linear.ts` copies the system, selects pivots using row-scaled magnitudes, eliminates below each pivot, and back-substitutes. Its cost is O(n³), appropriate for these bounded systems. A relative pivot threshold rejects singular/ill-conditioned systems rather than fabricating voltages. Row-scaled relative equation residuals and signed absorbed power are reported; normalization avoids mixing KCL ampere and voltage-constraint residual units. Tests independently check dividers, a non-ground voltage source, a resistor bridge, KCL at every node and power conservation. This is ideal linear DC analysis, not a SPICE replacement; no nonlinear devices, parasitics or arbitrary transient networks are claimed.
+`linear.js` copies the system, selects pivots using row-scaled magnitudes, eliminates below each pivot, and back-substitutes. Its cost is O(n³), appropriate for these bounded systems. A relative pivot threshold rejects singular/ill-conditioned systems rather than fabricating voltages. Row-scaled relative equation residuals and signed absorbed power are reported; normalization avoids mixing KCL ampere and voltage-constraint residual units. Tests independently check dividers, a non-ground voltage source, a resistor bridge, KCL at every node and power conservation. This is ideal linear DC analysis, not a SPICE replacement; no nonlinear devices, parasitics or arbitrary transient networks are claimed.
 
 ## Editable project scheduling
 
@@ -23,7 +23,7 @@ Canonical inputs and solver versions are the source of truth. Imports, restore a
 - Formatting/tooling changes are separated from behavioral changes. Use whitespace-insensitive diffs when reviewing the mechanical formatting commit.
 - Check shared model contracts, model-owned domain hooks, numerical method and reference tests before presentation code.
 - Discovery and documentation are generated from the executable catalog, so new labs do not require copying another list into navigation or docs.
-- The backend JavaScript pass checks every engine/API, with generic typed model boundaries; strict TypeScript covers the new numerical/unit/run modules and shared UI. Legacy helper typing remains an explicit roadmap item.
+- The backend JavaScript pass checks every engine/API, with generic typed model boundaries; strict checking covers the numerical engine and TypeScript unit/run modules and shared UI. Legacy helper typing remains an explicit roadmap item.
 - Browser tests exercise both viewport sizes and compare results with real HTTP handlers. Tests are evidence within their tested domains, not certification.
 
 ## Assistance and authorship
