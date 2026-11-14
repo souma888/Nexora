@@ -136,6 +136,10 @@ function drawPlot(definition, data) {
 }
 
 function initialize(definition) {
+  const reveal = () => {
+    byId('loading').hidden = true;
+    document.body.classList.remove('is-loading');
+  };
   const { id, title, discipline, lab, inputs, metrics, plot } = definition;
   document.body.dataset.workbench = discipline;
   document.title = `${title} · Nexora Engineering Lab`;
@@ -307,7 +311,10 @@ function initialize(definition) {
   const { applyInputs, analyze } = setupWorkbench({
     form,
     model: models[id],
-    validate,
+    validate:
+      id === 'trussfem'
+        ? (definition, input) => validate({ ...definition, validateValues: undefined }, input)
+        : validate,
     payload: () => readFields(form),
     onReset() {
       pause();
@@ -318,11 +325,13 @@ function initialize(definition) {
       byId('lab-preset').value = 'default';
     },
     onInvalid() {
+      void document.fonts.ready.then(reveal);
       pause();
       byId('preview-toggle').disabled = true;
       byId('preview-step').disabled = true;
     },
     render(data) {
+      void document.fonts.ready.then(reveal);
       result = data;
       byId('preview-toggle').disabled = false;
       byId('preview-step').disabled = false;
@@ -456,7 +465,6 @@ function initialize(definition) {
     });
   }).observe(byId('wave-plot').parentElement);
   byId('load-example').addEventListener('click', () => byId('reset').click());
-  byId('loading').hidden = true;
   byId('experiment').hidden = false;
   {
     const query = new URLSearchParams(location.search);

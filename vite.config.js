@@ -5,7 +5,7 @@ import { disciplines } from './backend/disciplines.js';
 import { navigationGroups, disciplineIcon } from './backend/discipline-navigation.js';
 
 const root = resolve('frontend/public');
-const pages = ['index', 'beam', 'axial', 'mohr', 'simulation', 'algorithms'];
+const pages = ['index', 'beam', 'axial', 'mohr', 'simulation', 'algorithms', 'embed', 'api-docs'];
 const links = navigationGroups
   .map(
     ([name, ids]) =>
@@ -48,6 +48,7 @@ const header = `
 
 export default defineConfig({
   root,
+  optimizeDeps: { include: ['@tensorflow/tfjs', 'three', 'jspdf'] },
   publicDir: false,
   appType: 'mpa',
   plugins: [
@@ -58,6 +59,7 @@ export default defineConfig({
         handler: (html) =>
           html
             .replace('<!-- site-header -->', header)
+            .replace('</head>', '<link rel="manifest" href="/manifest.webmanifest"></head>')
             .replace('<!-- discipline-options -->', options)
             .replace('<!-- site-layout-end -->', '</div>'),
       },

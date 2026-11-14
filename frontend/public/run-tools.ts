@@ -1,3 +1,4 @@
+import { analysisPlot } from './analysis-plot.ts';
 import { parseRun, csv, type Input, type Run } from '../../backend/run-record.ts';
 export type Report = {
   summary?: Record<string, unknown>;
@@ -59,9 +60,11 @@ export function installRunTools(config: {
   solve: (input: Input) => Report;
   load: (input: Input) => void;
 }) {
+  if (document.body.classList.contains('embed-mode'))
+    return { setCurrent(_input: Input, _data: Report) {}, invalidate() {} };
   const host = el('details'),
     heading = el('summary', 'Save, compare & export');
-  host.className = 'run-tools';
+  host.className = 'run-tools saved-run-tools';
   host.append(heading);
   const body = el('div'),
     label = el('label', 'Run name'),
@@ -72,6 +75,9 @@ export function installRunTools(config: {
   const save = el('button', 'Save run'),
     json = el('button', 'Export JSON'),
     sheet = el('button', 'Export CSV'),
+    png = el('button', 'Export PNG'),
+    pdf = el('button', 'PDF lab report'),
+    share = el('button', 'Classroom share link'),
     importLabel = el('label', 'Import run JSON'),
     file = el('input');
   file.type = 'file';
@@ -90,7 +96,7 @@ export function installRunTools(config: {
   comparison.tabIndex = 0;
   comparison.setAttribute('role', 'region');
   comparison.setAttribute('aria-label', 'Run comparison');
-  for (const button of [save, json, sheet, restore, compare, remove]) {
+  for (const button of [save, json, sheet, png, pdf, share, restore, compare, remove]) {
     button.type = 'button';
     button.className = 'quiet';
   }
@@ -101,6 +107,9 @@ export function installRunTools(config: {
     save,
     json,
     sheet,
+    png,
+    pdf,
+    share,
     importLabel,
     picker,
     restore,
@@ -127,7 +136,8 @@ export function installRunTools(config: {
       picker.add(new Option(run.label || run.createdAt, run.id));
     picker.value = selected;
     const valid = Boolean(picker.value);
-    restore.disabled = compare.disabled = remove.disabled = !valid;
+    restore.disabled = remove.disabled = !valid;
+    compare.disabled = !valid || !current;
   }
   const selected = () => {
     const run = savedRuns().find((r) => r.id === picker.value && r.model === config.model);
@@ -217,6 +227,51 @@ export function installRunTools(config: {
         'Exported canonical model units; text cells are protected against spreadsheet formulas.',
       );
     });
+  png.onclick = async () => {
+    try {
+      snapshot();
+      const { exportPNG } = await import('./report-export.ts');
+      await exportPNG(config.model);
+      note('Exported the visible plots as PNG.');
+    } catch (e) {
+      note(e instanceof Error ? e.message : 'Export failed.');
+    }
+  };
+  pdf.onclick = async () => {
+    try {
+      snapshot();
+      const { exportPDF } = await import('./report-export.ts');
+      await exportPDF(config.model, config.version, current!.input, current!.data, config.units);
+      note('Downloaded PDF lab report.');
+    } catch (e) {
+      note(e instanceof Error ? e.message : 'Export failed.');
+    }
+  };
+  share.onclick = async () => {
+    try {
+      const run = snapshot(),
+        url = new URL(location.href);
+      url.searchParams.delete('saved');
+      url.searchParams.set(
+        'share',
+        btoa(
+          unescape(
+            encodeURIComponent(
+              JSON.stringify({ ...run, id: 'classroom', createdAt: '2026-01-01T00:00:00.000Z' }),
+            ),
+          ),
+        ),
+      );
+      if (url.href.length > 12000)
+        throw new Error(
+          'This configuration is too large for a classroom URL. Export JSON instead.',
+        );
+      await navigator.clipboard.writeText(url.href);
+      note('Copied a portable classroom link. It contains inputs, not private browser storage.');
+    } catch (e) {
+      note(e instanceof Error ? e.message : 'Could not copy the link.');
+    }
+  };
   restore.onclick = () =>
     action(() => {
       const run = selected();
@@ -227,7 +282,8 @@ export function installRunTools(config: {
     action(() => {
       if (!current) throw new Error('Correct the current inputs before comparing.');
       const run = selected(),
-        saved = summary(config.solve(config.validate(run.input))),
+        prior = config.solve(config.validate(run.input)),
+        saved = summary(prior),
         now = summary(current.data),
         table = el('table'),
         caption = el(
@@ -259,7 +315,70 @@ export function installRunTools(config: {
           row.append(el('td', value));
         table.append(row);
       }
+      const series = (data: Report, input: Input): Record<string, unknown>[] => {
+        if (data.series?.length) return data.series;
+        const s = data.summary ?? {};
+        if (config.model === 'axial' && typeof s.displacement === 'number')
+          return [
+            { x: 0, y: 0 },
+            { x: Number(input.length), y: s.displacement },
+          ];
+        if (
+          config.model === 'mohr' &&
+          typeof s.center === 'number' &&
+          typeof s.radius === 'number'
+        ) {
+          const center = s.center,
+            radius = s.radius;
+          return Array.from({ length: 181 }, (_, i) => ({
+            x: center + radius * Math.cos((i * Math.PI) / 90),
+            y: radius * Math.sin((i * Math.PI) / 90),
+          }));
+        }
+        if (data.frames)
+          return data.frames.map((frame, x) => ({
+            x,
+            ...((frame as { stats?: Record<string, number> }).stats ?? {}),
+          }));
+        return [];
+      };
+      const a = series(current.data, current.input),
+        b = series(prior, run.input);
       comparison.replaceChildren(table);
+      if (a?.length && b?.length) {
+        const traces = Object.keys(a[0]).filter(
+          (k) => k !== 'x' && typeof a[0][k] === 'number' && typeof b[0][k] === 'number',
+        );
+        if (traces.length) {
+          const select = el('select');
+          select.setAttribute('aria-label', 'Overlay trace');
+          traces.forEach((key) =>
+            select.add(new Option(`${key} (${config.seriesUnits?.[key] ?? ''})`, key)),
+          );
+          const plot = el('div');
+          const draw = () => {
+            const key = select.value;
+            const points = (rows: Record<string, unknown>[]) =>
+              rows.map((p) => ({
+                x: Number(p.x),
+                y: typeof p[key] === 'number' ? Number(p[key]) : null,
+              }));
+            plot.replaceChildren(
+              analysisPlot(
+                [
+                  { label: 'Current run', points: points(a) },
+                  { label: run.label || 'Saved run', points: points(b) },
+                ],
+                `x (${config.seriesUnits?.x ?? ''})`,
+                key,
+              ),
+            );
+          };
+          select.onchange = draw;
+          comparison.append(select, plot);
+          draw();
+        }
+      }
       note('Compared the same model, solver version and canonical units.');
     });
   remove.onclick = () =>
@@ -292,6 +411,18 @@ export function installRunTools(config: {
   refresh();
   window.addEventListener('storage', refresh);
   window.addEventListener('nexora-runs', refresh);
+  const portable = new URLSearchParams(location.search).get('share');
+  if (portable)
+    queueMicrotask(() =>
+      action(() => {
+        if (portable.length > 12000) throw new Error('Classroom link too large.');
+        const value = JSON.parse(decodeURIComponent(escape(atob(portable))));
+        const accepted = parseRun(value, config.model, config.version);
+        config.load(config.validate(accepted.input));
+        name.value = accepted.label;
+        note('Loaded classroom inputs and recalculated locally.');
+      }),
+    );
   const shared = new URLSearchParams(location.search).get('saved');
   if (shared) {
     const run = savedRuns().find((r) => r.id === shared && r.model === config.model);
@@ -308,12 +439,26 @@ export function installRunTools(config: {
   return {
     setCurrent(input: Input, data: Report) {
       current = { input: { ...input }, data };
+      refresh();
       comparison.replaceChildren();
-      save.disabled = json.disabled = sheet.disabled = false;
+      save.disabled =
+        json.disabled =
+        sheet.disabled =
+        png.disabled =
+        pdf.disabled =
+        share.disabled =
+          false;
     },
     invalidate() {
       current = null;
-      save.disabled = json.disabled = sheet.disabled = true;
+      compare.disabled = true;
+      save.disabled =
+        json.disabled =
+        sheet.disabled =
+        png.disabled =
+        pdf.disabled =
+        share.disabled =
+          true;
       comparison.replaceChildren();
     },
   };

@@ -15,7 +15,7 @@ test('build a circuit, detect a singular network and restore a valid preset', as
   await ready(page, '/simulation.html?lab=circuitbuilder');
   expect(
     await page
-      .locator('.run-tools')
+      .locator('.saved-run-tools')
       .evaluate((node) =>
         Boolean(
           node.compareDocumentPosition(document.getElementById('experiment')) &
@@ -79,7 +79,9 @@ test('save, compare, restore, portable JSON, CSV and the browser library work en
   await page.getByText('Save, compare & export', { exact: true }).click();
   await page.getByLabel('Run name', { exact: true }).fill('Baseline <safe>');
   await page.getByRole('button', { name: 'Save run', exact: true }).click();
-  await expect(page.locator('.run-tools [role=status]')).toContainText('Saved in this browser');
+  await expect(page.locator('.saved-run-tools [role=status]')).toContainText(
+    'Saved in this browser',
+  );
   await page.getByLabel('Supply voltage', { exact: true }).fill('6');
   await expect(page.locator('#metric-loaded')).toHaveText('2 V');
   await page.getByRole('button', { name: 'Compare with current', exact: true }).click();
@@ -119,12 +121,12 @@ test('save, compare, restore, portable JSON, CSV and the browser library work en
     ),
   });
   // An incomplete/imported field map must fail normal model validation, never trust result payloads.
-  await expect(page.locator('.run-tools [role=status]')).toContainText('must be between');
+  await expect(page.locator('.saved-run-tools [role=status]')).toContainText('must be between');
   await page.getByRole('link', { name: 'Open saved-run library' }).click();
   await expect(page.locator('#saved-runs')).toContainText('Baseline <safe>');
   await page.locator('#saved-runs a').click();
   await expect(page.locator('#metric-loaded')).toHaveText('4 V');
-  await expect(page.locator('.run-tools')).toHaveAttribute('open', '');
+  await expect(page.locator('.saved-run-tools')).toHaveAttribute('open', '');
   await noOverflow(page);
 });
 test('portable imports recalculate results, reject versions, and never execute supplied markup', async ({
@@ -156,7 +158,9 @@ test('portable imports recalculate results, reject versions, and never execute s
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ ...record, solverVersion: '2.0' })),
   });
-  await expect(page.locator('.run-tools [role=status]')).toContainText('Solver version differs');
+  await expect(page.locator('.saved-run-tools [role=status]')).toContainText(
+    'Solver version differs',
+  );
   await page.getByRole('button', { name: 'Save run', exact: true }).click();
   await page.getByRole('link', { name: 'Open saved-run library' }).click();
   expect(await page.locator('#saved-runs img').count()).toBe(0);
@@ -178,7 +182,7 @@ test('algorithm URL values are validated and algorithm runs can be saved and res
   await page.getByText('Save, compare & export', { exact: true }).click();
   expect(
     await page
-      .locator('.run-tools')
+      .locator('.saved-run-tools')
       .evaluate((node) =>
         Boolean(
           node.compareDocumentPosition(document.getElementById('algorithm-lab')) &

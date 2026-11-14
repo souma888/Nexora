@@ -48,7 +48,7 @@ test('structure operation editing validates, preserves overflow events, and rese
   await expect(page.locator('#status')).toHaveAttribute('data-error', 'true');
   await expect(page.getByRole('button', { name: 'Play trace' })).toBeDisabled();
   await page.getByRole('button', { name: 'Reset', exact: true }).click();
-  await expect(page.getByLabel('Buffer capacity')).toHaveValue('4');
+  await expect(page.locator('#algorithm-form').getByLabel('Buffer capacity')).toHaveValue('4');
   await expect(page.getByRole('button', { name: 'Previous step' })).toBeDisabled();
   await page.getByRole('button', { name: 'Play trace' }).click();
   await expect(page.getByRole('button', { name: 'Pause trace' })).toBeVisible();
@@ -84,8 +84,8 @@ test('range-query controls reject indexes outside the edited array and recompute
   await page.goto('/algorithms.html?lab=fenwick');
   await page.getByLabel('Array values', { exact: true }).fill('1');
   await expect(page.locator('#status')).toHaveAttribute('data-error', 'true');
-  await page.getByLabel('Update index (zero-based)').fill('0');
-  await page.getByLabel('Prefix end (inclusive)').fill('0');
+  await page.locator('#algorithm-form').getByLabel('Update index (zero-based)').fill('0');
+  await page.locator('#algorithm-form').getByLabel('Prefix end (inclusive)').fill('0');
   await expect(page.locator('#status')).toHaveAttribute('data-error', 'false');
   await end(page);
   await expect(page.locator('#result-text')).toContainText('Prefix sum through index 0 = 4');

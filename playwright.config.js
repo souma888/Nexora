@@ -12,7 +12,9 @@ export default defineConfig({
   webServer: deployed
     ? undefined
     : {
-        command: 'node backend/dev-server.js',
+        command: process.env.NEXORA_TEST_DEV
+          ? 'node backend/dev-server.js'
+          : 'npm run build && node backend/preview-server.js',
         env: { PORT: '3099' },
         url: baseURL,
       },

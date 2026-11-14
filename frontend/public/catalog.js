@@ -64,14 +64,7 @@ const algorithmDrawing = (definition) =>
                   .join('');
 const labs = catalog.map((entry) => {
   if (entry.engine === 'numeric') {
-    const { definition, solve } = models[entry.id];
-    return {
-      ...entry,
-      graphic: solve(
-        Object.fromEntries(Object.entries(definition.inputs).map(([key, f]) => [key, f.initial])),
-      ).series,
-      step: definition.plot.step,
-    };
+    return { ...entry, step: models[entry.id].definition.plot.step };
   }
   if (entry.engine === 'algorithm')
     return { ...entry, drawing: algorithmDrawing(algorithms[entry.id]) };
@@ -101,6 +94,14 @@ function thumbnail({ drawing, graphic, step, href, groups }) {
             ? 'beam'
             : null;
   if (kind) return subjectArt(kind).replace('class="subject-art"', 'class="thumb subject-art"');
+  if (!drawing && !graphic && models[id]) {
+    const { definition, solve } = models[id];
+    graphic = solve(
+      Object.fromEntries(
+        Object.entries(definition.inputs).map(([key, field]) => [key, field.initial]),
+      ),
+    ).series;
+  }
   if (!drawing) {
     const xMin = Math.min(...graphic.map((p) => p.x)),
       xMax = Math.max(...graphic.map((p) => p.x));

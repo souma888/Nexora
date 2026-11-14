@@ -1,3 +1,4 @@
+import { advancedTools } from './advanced-tools.ts';
 import { installRunTools } from './run-tools.ts';
 import { algorithms, runAlgorithm, validateAlgorithm } from '../../backend/algorithms.js';
 import { coordinates, workedExamples } from '../../backend/algorithm-definitions.js';
@@ -12,6 +13,7 @@ let trace,
   debounce;
 const definition = Object.hasOwn(algorithms, id) ? algorithms[id] : null;
 const fields = {};
+let analysisTools;
 let runTools;
 const node = (tag, text) => {
   const element = document.createElement(tag);
@@ -247,6 +249,16 @@ function regenerate(overrides) {
     $('play').disabled = false;
     $('timeline').disabled = false;
     render();
+    analysisTools?.setCurrent(
+      Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, field.value])),
+      {
+        summary: { ...trace.stats, steps: trace.frames.length },
+        series: trace.frames.map((frame, x) => ({
+          x,
+          y: frame.stats?.comparisons ?? frame.stats?.visits ?? x,
+        })),
+      },
+    );
     runTools?.setCurrent(
       Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, field.value])),
       trace,
@@ -254,6 +266,7 @@ function regenerate(overrides) {
     if (overrides) $('feedback').textContent = '';
   } catch (error) {
     runTools?.invalidate();
+    analysisTools?.invalidate();
     trace = null;
     $('status').textContent = error.message;
     $('status').dataset.error = 'true';
@@ -389,6 +402,7 @@ function initialize() {
       pause();
       clearTimeout(debounce);
       runTools?.invalidate();
+      analysisTools?.invalidate();
       $('status').textContent = 'Updating trace…';
       $('status').removeAttribute('data-error');
       $('result-text').textContent = 'Updating trace for the new input…';
@@ -464,6 +478,20 @@ function initialize() {
       /* Ignore invalid shared input and retain the worked default. */
     }
   }
+  analysisTools = advancedTools(
+    $('algorithm-form'),
+    {
+      ...definition,
+      outputs: {
+        summary: { comparisons: 'checks', writes: 'writes', visits: 'visits', steps: 'frames' },
+        series: { x: 'frame', y: 'checks' },
+      },
+    },
+    (input) => {
+      clearTimeout(debounce);
+      load(input);
+    },
+  );
   runTools = installRunTools({
     form: $('algorithm-form'),
     model: id,

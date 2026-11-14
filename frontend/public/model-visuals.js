@@ -33,7 +33,84 @@ export function renderModelVisual(host, definition, data, index) {
   const frame = v.frames?.[Math.min(index, v.frames.length - 1)];
   const defs =
     '<defs><marker id="model-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker></defs>';
-  if (v.type === 'engineering-extension') {
+  if (v.type === 'truss') {
+    const span =
+      Math.max(1, ...v.nodes.map((p) => p[0])) - Math.min(0, ...v.nodes.map((p) => p[0]));
+    const peak = Math.max(...v.displacement.map(Math.abs)),
+      exaggeration = peak ? Math.min(1000, (0.1 * span) / peak) : 1;
+    const moved = v.nodes.map((p, i) => [
+        p[0] + exaggeration * v.displacement[2 * i],
+        p[1] + exaggeration * v.displacement[2 * i + 1],
+      ]),
+      all = [...v.nodes, ...moved];
+    const xmin = Math.min(...all.map((p) => p[0])),
+      xmax = Math.max(...all.map((p) => p[0])),
+      ymin = Math.min(...all.map((p) => p[1])),
+      ymax = Math.max(...all.map((p) => p[1]));
+    const scale = Math.min(390 / (xmax - xmin || 1), 160 / (ymax - ymin || 1)),
+      px = (p) => 65 + (p[0] - xmin) * scale,
+      py = (p) => 205 - (p[1] - ymin) * scale;
+    drawing = v.bars
+      .map(
+        ([a, b], i) =>
+          path(
+            `M${px(v.nodes[a])} ${py(v.nodes[a])}L${px(v.nodes[b])} ${py(v.nodes[b])}`,
+            'var(--muted)',
+            1,
+            'stroke-dasharray="5 4"',
+          ) +
+          path(
+            `M${px(moved[a])} ${py(moved[a])}L${px(moved[b])} ${py(moved[b])}`,
+            v.members[i].force >= 0 ? 'var(--result)' : 'var(--curve)',
+            4,
+          ),
+      )
+      .join('');
+    drawing += v.nodes
+      .map(
+        (p, i) =>
+          `<circle cx="${px(moved[i])}" cy="${py(moved[i])}" r="5" fill="var(--text)"/>` +
+          text(px(moved[i]) + 12, py(moved[i]) - 12, i),
+      )
+      .join('');
+    for (const [i, fixX, fixY] of v.supports) {
+      const x = px(v.nodes[i]),
+        y = py(v.nodes[i]);
+      drawing += path(`M${x} ${y + 6}l-10 14h20Z`, 'var(--muted)', 2);
+      if (!fixX && fixY) drawing += `<circle cx="${x}" cy="${y + 24}" r="3" fill="var(--muted)"/>`;
+    }
+    for (const [i, Fx, Fy] of v.loads) {
+      const magnitude = Math.hypot(Fx, Fy);
+      if (!magnitude || !v.loadScale) continue;
+      const sign = Math.sign(v.loadScale),
+        x = px(v.nodes[i]),
+        y = py(v.nodes[i]);
+      drawing += arrow(
+        x - ((sign * Fx) / magnitude) * 32,
+        y + ((sign * Fy) / magnitude) * 32,
+        x,
+        y,
+      );
+    }
+    drawing += text(
+      260,
+      245,
+      `Deformation ×${f(exaggeration, 0)} · green tension / blue compression`,
+      'var(--muted)',
+    );
+  } else if (v.type === 'phase-tie') {
+    const x = (composition) => 60 + 4 * composition;
+    drawing =
+      box(60, 55, 400, 115) +
+      text(260, 85, 'Supplied two-phase tie line') +
+      path(`M${x(v.alpha)} 135H${x(v.beta)}`, 'var(--curve)', 3) +
+      [v.alpha, v.beta]
+        .map((c) => path(`M${x(c)} 120V150`, 'var(--result)', 3) + text(x(c), 190, `${f(c)}%`))
+        .join('') +
+      path(`M${x(v.composition)} 105V160`, 'var(--load)', 3) +
+      text(x(v.composition), 220, `C₀ = ${f(v.composition)}%`) +
+      text(260, 245, 'Tie-line fractions, not calculated phase boundaries', 'var(--muted)');
+  } else if (v.type === 'engineering-extension') {
     const result = engineeringVisual(v, data, index, { text, path, box, arrow });
     drawing = result.drawing;
     height = result.height;

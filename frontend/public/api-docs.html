@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Solver API · Nexora</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/shell.ts"></script>
+    <script type="module" src="/api-docs.ts"></script>
+  </head>
+  <body>
+    <!-- site-header -->
+    <main class="standalone" id="main">
+      <header class="intro">
+        <p class="eyebrow">Developer tools</p>
+        <h1>Solver API</h1>
+        <p>Inspect the generated contract and try a validated request.</p>
+        <a href="/api/openapi">OpenAPI 3.1 JSON</a>
+      </header>
+      <section class="panel api-explorer">
+        <label
+          >Model
+          <select id="api-model"></select></label
+        ><label
+          >Request JSON <textarea id="api-request" rows="14" spellcheck="false"></textarea></label
+        ><button type="button" id="api-send" class="quiet">Send request</button>
+        <p id="api-status" role="status"></p>
+        <pre id="api-response" tabindex="0" aria-label="API response"></pre>
+      </section>
+    </main>
+    <!-- site-layout-end -->
+  </body>
+</html>

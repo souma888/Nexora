@@ -1,3 +1,6 @@
+import { learningTools } from './learning-tools.ts';
+import { advancedTools } from './advanced-tools.ts';
+import { solverClient } from './worker-client.ts';
 import { attachUnitControls } from './unit-controls.ts';
 import { installRunTools, type Report } from './run-tools.ts';
 type Inputs = Record<string, number | string>;
@@ -105,7 +108,11 @@ function predictionControl(form: HTMLFormElement, model: Model<unknown>['definit
   answer.className = 'prediction-feedback';
   answer.setAttribute('role', 'status');
   let selected: number | undefined;
-  for (const [index, choice] of choices.entries()) {
+  let graded = false;
+  for (const [index, choice] of [...choices.entries()]
+    .map((entry) => ({ entry, sort: crypto.getRandomValues(new Uint32Array(1))[0] }))
+    .sort((a, b) => a.sort - b.sort)
+    .map((item) => item.entry)) {
     const label = document.createElement('label');
     const radio = document.createElement('input');
     radio.type = 'radio';
@@ -122,6 +129,22 @@ function predictionControl(form: HTMLFormElement, model: Model<unknown>['definit
     reveal() {
       if (selected === undefined) return;
       answer.textContent = `${selected === correct ? 'Correct.' : 'Try comparing the outputs.'} ${explanation}`;
+      if (!graded) {
+        graded = true;
+        try {
+          const key = 'nexora-prediction-score',
+            prior = JSON.parse(localStorage.getItem(key) ?? '{"correct":0,"total":0}');
+          const total = Number(prior.total) || 0,
+            score = Number(prior.correct) || 0;
+          localStorage.setItem(
+            key,
+            JSON.stringify({ total: total + 1, correct: score + (selected === correct ? 1 : 0) }),
+          );
+          answer.textContent += ` Practice score: ${score + (selected === correct ? 1 : 0)}/${total + 1}.`;
+        } catch {
+          /* Scoring remains local to this question. */
+        }
+      }
     },
     reset() {
       selected = undefined;
@@ -157,6 +180,10 @@ export function setupWorkbench<Result extends Report>({
     if (!result.values) throw new Error(result.message ?? 'Invalid inputs.');
     return result.values;
   };
+  const learning = learningTools(form, model.definition, applyInputs);
+  const analysisTools = advancedTools(form, model.definition, applyInputs);
+  const worker = solverClient();
+  let generation = 0;
   const tools = installRunTools({
     form,
     model: model.definition.id,
@@ -225,7 +252,8 @@ export function setupWorkbench<Result extends Report>({
       slider.setAttribute('aria-valuetext', `${input.value || 'Unset'}${unit ? ` ${unit}` : ''}`);
     }
   }
-  function analyze() {
+  async function analyze() {
+    const revision = ++generation;
     clearTimeout(timer);
     syncSliders();
     const { values, message } = validate(model.definition, unitControls.canonical(payload()));
@@ -233,19 +261,48 @@ export function setupWorkbench<Result extends Report>({
       status.dataset.error = 'true';
       status.textContent = `${message ?? 'Enter values within the allowed ranges.'} The last valid result is still shown.`;
       tools.invalidate();
+      analysisTools.invalidate();
+      learning.invalidate();
       onInvalid?.();
       return;
     }
     status.dataset.error = 'false';
+    status.textContent =
+      model.definition.id === 'trussfem'
+        ? 'Solving stiffness equations in a worker…'
+        : 'Live results';
+    let data: Result;
+    try {
+      data =
+        model.definition.id === 'trussfem'
+          ? await worker.run<Result>(model.definition.id, values)
+          : model.solve(values);
+    } catch (e) {
+      if (revision !== generation) return;
+      status.dataset.error = 'true';
+      status.textContent = e instanceof Error ? e.message : 'Solver failed.';
+      tools.invalidate();
+      analysisTools.invalidate();
+      learning.invalidate();
+      onInvalid?.();
+      return;
+    }
+    if (revision !== generation) return;
     status.textContent = 'Live results';
-    const data = model.solve(values);
     render({ ...data, input: values, units: model.definition.outputs });
     tools.setCurrent(values, data);
+    analysisTools.setCurrent(values, data);
+    learning.setCurrent(values, data);
     const current = JSON.stringify(values);
     if (lastInput && current !== lastInput) prediction.reveal();
     lastInput = current;
   }
   function edited() {
+    status.textContent = 'Updating results…';
+    generation++;
+    worker.cancel();
+    analysisTools.invalidate();
+    learning.invalidate();
     clearTimeout(timer);
     tools.invalidate();
     timer = setTimeout(analyze, 80);

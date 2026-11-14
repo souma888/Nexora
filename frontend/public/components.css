@@ -900,3 +900,187 @@ svg .reaction-label {
     display: none;
   }
 }
+
+/* Shared analysis and teaching tools stay inside the workbench content width. */
+.analysis-studio .analysis-ranges,
+.analysis-output,
+.three-preview,
+.learning-tools h3,
+.learning-tools > div > div,
+.api-explorer label {
+  flex-basis: 100%;
+  min-width: 0;
+  width: 100%;
+}
+.analysis-ranges {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.analysis-range {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+.analysis-range label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1/-1;
+}
+.analysis-ranges input {
+  width: 100%;
+}
+.analysis-ranges input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+}
+.analysis-studio textarea,
+.api-explorer textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: 14px var(--mono);
+}
+.analysis-output figure,
+.run-comparison figure {
+  margin: 12px 0;
+  padding: 12px;
+  background: var(--plot-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.analysis-output svg,
+.run-comparison svg {
+  width: 100%;
+  height: auto;
+}
+.analysis-output dl {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) 2fr;
+  gap: 8px;
+  overflow-wrap: anywhere;
+}
+.analysis-output dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.analysis-output meter {
+  width: 100%;
+  height: 24px;
+  accent-color: var(--result);
+}
+.three-canvas {
+  width: 100%;
+  height: 340px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.three-preview button {
+  margin: 4px;
+}
+.three-preview input[type='range'] {
+  width: 100%;
+}
+.locale-picker {
+  display: grid;
+  gap: 8px;
+  margin: 16px 12px 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.locale-picker select {
+  padding: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.locale-note {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0 12px;
+  line-height: 1.5;
+}
+.offline-button {
+  margin: 4px 12px;
+}
+.api-explorer {
+  padding: 24px;
+  display: grid;
+  gap: 18px;
+}
+.api-explorer label {
+  display: grid;
+  gap: 8px;
+}
+.api-explorer pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 600px;
+  overflow: auto;
+}
+.embed-mode .topbar,
+.embed-mode .discipline-rail,
+.embed-mode footer,
+.embed-mode .breadcrumb,
+.embed-mode .print-report {
+  display: none;
+}
+.embed-mode main.standalone {
+  margin: 0;
+  padding: 16px;
+  width: 100%;
+  max-width: none;
+}
+.embed-mode .site-layout {
+  display: block;
+}
+@media (max-width: 740px) {
+  .locale-picker {
+    margin: 8px 0;
+    min-width: 180px;
+  }
+  .locale-note {
+    width: 100%;
+    padding: 0;
+  }
+  .offline-button {
+    margin: 8px 0;
+  }
+  .analysis-output dl {
+    grid-template-columns: 1fr;
+  }
+  .analysis-ranges {
+    grid-template-columns: 1fr;
+  }
+}
+@media print {
+  .analysis-studio,
+  .learning-tools,
+  .locale-picker,
+  .offline-button {
+    display: none;
+  }
+}
+
+/* Defer off-screen catalog paint; reserve the lab until its first validated result. */
+.sim-link {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 320px;
+}
+body.is-loading main {
+  visibility: hidden;
+  min-height: 100vh;
+}
+body.is-loading #loading {
+  visibility: visible;
+  min-height: 70vh;
+  padding: 24px 0;
+  color: var(--muted);
+}

@@ -19,7 +19,9 @@ test('discipline navigation remains available inside every lab template', async 
     await page.goto(path);
     const nav = page.getByRole('navigation', { name: 'Engineering disciplines' });
     await expect(nav).toBeVisible();
-    await expect(nav.getByRole('link')).toHaveCount(Object.keys(disciplineCounts).length + 1);
+    await expect(nav.locator('.discipline-links a')).toHaveCount(
+      Object.keys(disciplineCounts).length + 1,
+    );
     await expect(nav.locator(`[data-discipline="${active}"]`)).toHaveAttribute(
       'aria-current',
       'location',

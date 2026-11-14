@@ -1,3 +1,4 @@
+import './platform-shell.ts';
 const root = document.documentElement;
 const toggle = document.querySelector<HTMLButtonElement>('#theme-toggle');
 const systemTheme = matchMedia('(prefers-color-scheme: light)');
