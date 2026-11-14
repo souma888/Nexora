@@ -1,4 +1,10 @@
 import { customModels } from './custom-labs.js';
+import { calculusModels } from './mathematics-calculus.js';
+import { linearMathModels } from './mathematics-linear.js';
+import { odeMathModels } from './mathematics-ode.js';
+import { statisticsMathModels } from './mathematics-statistics.js';
+import { numericalMathModels } from './mathematics-numerical.js';
+import { machineLearningModels } from './machine-learning.js';
 import { trussModels } from './truss.js';
 import { advancedMaterialModels } from './advanced-materials.js';
 import { identificationModels } from './identification.js';
@@ -20,6 +26,12 @@ import { chemicalModels } from './chemical-process.js';
 import { industrialModels } from './industrial.js';
 
 export const models = {
+  ...calculusModels,
+  ...linearMathModels,
+  ...odeMathModels,
+  ...statisticsMathModels,
+  ...numericalMathModels,
+  ...machineLearningModels,
   ...customModels,
   ...trussModels,
   ...advancedMaterialModels,

@@ -598,11 +598,11 @@ export const odeMathModels = {
       id: 'mathwave',
       title: 'Wave Equation: String Modes by Separation of Variables',
       inputs: {
-        length: real('String length L', 0.5, 5, 2),
-        speed: real('Wave speed c', 0.2, 3, 1),
-        first: real('First-mode amplitude', -2, 2, 1),
-        second: real('Second-mode amplitude', -2, 2, 0.4),
-        time: real('Snapshot time', 0, 10, 0),
+        length: p('String length L', 'm', 0.5, 5, 2),
+        speed: p('Wave speed c', 'm/s', 0.2, 3, 1),
+        first: p('First-mode amplitude', 'm', -2, 2, 1),
+        second: p('Second-mode amplitude', 'm', -2, 2, 0.4),
+        time: p('Snapshot time', 's', 0, 10, 0),
       },
       metrics: {
         frequency: ['Fundamental frequency', 'Hz'],

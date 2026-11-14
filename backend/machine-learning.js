@@ -59,6 +59,7 @@ export const machineLearningModels = {
   mlgradient: make(
     {
       id: 'mlgradient',
+      topic: 'Optimization',
       title: 'Gradient Descent on Loss Surfaces',
       inputs: {
         rate: real('Learning rate', 0.005, 0.3, 0.08),
@@ -118,6 +119,7 @@ export const machineLearningModels = {
   mlregularization: make(
     {
       id: 'mlregularization',
+      topic: 'Supervised Learning',
       title: 'Ridge and Lasso Regularization Paths',
       inputs: { correlation: real('Feature correlation', 0, 0.95, 0.7), noise, seed },
       metrics: {
@@ -186,6 +188,7 @@ export const machineLearningModels = {
   mllogistic: make(
     {
       id: 'mllogistic',
+      topic: 'Supervised Learning',
       title: 'Logistic Regression Decision Boundary',
       inputs: {
         shape,
@@ -237,6 +240,7 @@ export const machineLearningModels = {
   mlkmeans: make(
     {
       id: 'mlkmeans',
+      topic: 'Unsupervised Learning',
       title: 'k-Means Clustering',
       inputs: {
         clusters: integer('Clusters k', 1, 4, 2),
@@ -294,6 +298,7 @@ export const machineLearningModels = {
   mlknn: make(
     {
       id: 'mlknn',
+      topic: 'Supervised Learning',
       title: 'k-Nearest Neighbors Decision Boundaries',
       inputs: { shape, neighbors: integer('Neighbors k', 1, 15, 5), noise, seed },
       metrics: {
@@ -336,6 +341,7 @@ export const machineLearningModels = {
   mlpca: make(
     {
       id: 'mlpca',
+      topic: 'Unsupervised Learning',
       title: 'Principal Component Analysis',
       inputs: {
         correlation: real('Population correlation', -0.95, 0.95, 0.8),
@@ -398,6 +404,7 @@ export const machineLearningModels = {
   mlsvm: make(
     {
       id: 'mlsvm',
+      topic: 'Supervised Learning',
       title: 'SVM Margins and Kernels',
       inputs: {
         shape,
@@ -457,6 +464,7 @@ export const machineLearningModels = {
   mltree: make(
     {
       id: 'mltree',
+      topic: 'Supervised Learning',
       title: 'Decision Tree Splitting: Gini and Entropy',
       inputs: {
         shape,
@@ -549,6 +557,7 @@ export const machineLearningModels = {
   mlbiasvariance: make(
     {
       id: 'mlbiasvariance',
+      topic: 'Model Evaluation',
       title: 'Bias–Variance Tradeoff and Overfitting',
       inputs: {
         degree: integer('Polynomial degree', 1, 10, 5),
@@ -625,6 +634,7 @@ export const machineLearningModels = {
   mlperceptron: make(
     {
       id: 'mlperceptron',
+      topic: 'Neural Networks',
       title: 'Perceptron and the XOR Limitation',
       inputs: {
         shape: choice(
@@ -695,6 +705,7 @@ export const machineLearningModels = {
   mlbackprop: make(
     {
       id: 'mlbackprop',
+      topic: 'Neural Networks',
       title: 'Neural Network Backpropagation Playground',
       inputs: {
         hidden: integer('Hidden tanh units', 2, 6, 4),
@@ -772,6 +783,7 @@ export const machineLearningModels = {
   mlroc: make(
     {
       id: 'mlroc',
+      topic: 'Model Evaluation',
       title: 'Confusion Matrix, ROC and Precision–Recall',
       inputs: {
         separation: real('Class score separation', 0, 4, 1.5),
@@ -861,6 +873,7 @@ export const machineLearningModels = {
   mlgmm: make(
     {
       id: 'mlgmm',
+      topic: 'Unsupervised Learning',
       title: 'Gaussian Mixture Model: Expectation–Maximization',
       inputs: {
         separation: real('Component mean separation', 0.5, 5, 3),
@@ -924,6 +937,7 @@ export const machineLearningModels = {
   mlconvolution: make(
     {
       id: 'mlconvolution',
+      topic: 'Neural Networks',
       title: 'Convolution Filters and Feature Maps',
       inputs: {
         image: choice(

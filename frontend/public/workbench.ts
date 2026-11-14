@@ -8,6 +8,7 @@ type Model<Result> = {
   definition: {
     id: string;
     version: string;
+    execution?: 'worker';
     outputs: { summary: Record<string, string>; series: Record<string, string> };
     inputs?: Record<
       string,
@@ -268,13 +269,13 @@ export function setupWorkbench<Result extends Report>({
     }
     status.dataset.error = 'false';
     status.textContent =
-      model.definition.id === 'trussfem'
-        ? 'Solving stiffness equations in a worker…'
+      model.definition.id === 'trussfem' || model.definition.execution === 'worker'
+        ? 'Computing in a background worker…'
         : 'Live results';
     let data: Result;
     try {
       data =
-        model.definition.id === 'trussfem'
+        model.definition.id === 'trussfem' || model.definition.execution === 'worker'
           ? await worker.run<Result>(model.definition.id, values)
           : model.solve(values);
     } catch (e) {

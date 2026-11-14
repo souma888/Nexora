@@ -1,6 +1,18 @@
 // Canonical discipline labels, grouping and icons.
 export const disciplineDefinitions = [
   {
+    id: 'mathematics',
+    label: 'Mathematics',
+    group: 'MATHEMATICS & DATA',
+    path: 'M5 5h14M5 19h14m-3-14-8 14M4 12h5m6 0h5',
+  },
+  {
+    id: 'machinelearning',
+    label: 'Machine Learning & Data Science',
+    group: 'MATHEMATICS & DATA',
+    path: 'M5 5l7 7-7 7m14-14-7 7 7 7M3 3h4v4H3Zm14 0h4v4h-4ZM10 10h4v4h-4ZM3 17h4v4H3Zm14 0h4v4h-4Z',
+  },
+  {
     id: 'civil',
     label: 'Civil engineering',
     group: 'PHYSICAL ENGINEERING',

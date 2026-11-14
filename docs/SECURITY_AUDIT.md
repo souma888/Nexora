@@ -28,6 +28,8 @@ The shared escape helper covers `&`, `<`, `>`, double quotes and apostrophes. Th
 
 ## Files, storage and spreadsheet handling
 
+The mathematics/ML addition parses matrices, point arrays and samples as bounded numeric data before they reach the SVG renderer. Array dimensions, lengths and finite magnitudes are checked; embedded markup is rejected as a nonnumeric value. `math-visuals.js` interpolates numerical coordinates and source-only colors, escapes all SVG text/title content, and appends captions with `textContent`. Classification and integration workloads have finite size/step/attempt limits. Tests include malicious matrix text and invalid dataset recovery. This does not introduce expression evaluation, user-written scripts or a remote training service.
+
 Run imports are limited to 200 kB and format/schema/model/solver-version checked. Inputs must be bounded scalar records; prototype-related keys and nonfinite numbers are rejected, then the actual model validator checks fields/relationships. Imported computed summaries are ignored. There is no object merge into application prototypes. Saved libraries are limited to 40 records and storage failures produce a visible export alternative. Corrupt records are ignored rather than executed.
 
 JSON export contains portable input/version metadata and a computed summary. CSV additionally carries canonical-unit series or trace states. Textual spreadsheet-formula prefixes are neutralized before quoting; negative numerical values retain their type. Downloads use generated blob URLs that are revoked after use. Comparison refuses different model/solver versions and recomputes both inputs.

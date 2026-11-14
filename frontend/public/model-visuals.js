@@ -1,6 +1,7 @@
 import { escapeHtml as escape } from '../../backend/html.js';
 import { computerVisual } from './computer-visuals.js';
 import { engineeringVisual } from './engineering-visuals.js';
+import { mathVisual } from './math-visuals.js';
 const f = (value, digits = 3) =>
   typeof value === 'number'
     ? value !== 0 && (Math.abs(value) < 0.0001 || Math.abs(value) >= 1e6)
@@ -27,13 +28,19 @@ export function renderModelVisual(host, definition, data, index) {
   )
     v = { type: 'feedback' };
   host.hidden = !v;
+  host.removeAttribute('aria-description');
   if (!v) return;
   let drawing = '',
     height = 260;
   const frame = v.frames?.[Math.min(index, v.frames.length - 1)];
   const defs =
     '<defs><marker id="model-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker></defs>';
-  if (v.type === 'truss') {
+  if (v.type === 'math-space') {
+    const result = mathVisual(v, index);
+    drawing = result.drawing;
+    height = result.height;
+    host.setAttribute('aria-description', result.caption);
+  } else if (v.type === 'truss') {
     const span =
       Math.max(1, ...v.nodes.map((p) => p[0])) - Math.min(0, ...v.nodes.map((p) => p[0]));
     const peak = Math.max(...v.displacement.map(Math.abs)),
@@ -586,6 +593,12 @@ export function renderModelVisual(host, definition, data, index) {
     'engineering-extension',
   ].includes(v.type);
   host.innerHTML = `<svg viewBox="0 0 520 ${height}" class="${wide ? 'wide-model' : ''}${v.kind === 'project' ? ' project-model' : ''}${v.kind === 'circuit-network' ? ' network-model' : ''}" role="img" aria-label="${escape(definition.title)} interactive schematic">${defs}${drawing}</svg>`;
+  if (v.type === 'math-space') {
+    const caption = document.createElement('p');
+    caption.className = 'model-caption';
+    caption.textContent = host.getAttribute('aria-description');
+    host.append(caption);
+  }
 }
 
 export function renderModelTable(host, data) {

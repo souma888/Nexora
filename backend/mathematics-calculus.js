@@ -469,7 +469,7 @@ export const calculusModels = {
         rate: real('Driving rate dx/dt or dh/dt', -0.5, 0.5, 0.2),
       },
       metrics: {
-        height: ['Dependent length', '1'],
+        height: ['Dependent geometric quantity', '1'],
         dependentRate: ['Dependent rate', '1'],
         factor: ['Local rate multiplier', '1'],
       },

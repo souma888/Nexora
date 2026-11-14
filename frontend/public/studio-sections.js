@@ -1,6 +1,36 @@
 import { disciplines } from '../../backend/disciplines.js';
 // Editorial metadata only. Preview data always comes from the existing solvers.
 export const studioSections = {
+  mathematics: {
+    title: 'See the idea.<br>Test the proof',
+    description:
+      'From a shrinking neighborhood to a chaotic trajectory. Connect geometric intuition with calculus, algebra, probability and numerical error.',
+    art: 'math',
+    model: 'mathwave',
+    parameters: ['time', 'second'],
+    prompt:
+      'Move through time and change the second harmonic. Watch two standing modes combine while their total energy stays constant.',
+    paths: [
+      '/simulation.html?lab=mathlimits',
+      '/simulation.html?lab=mathtransform',
+      '/simulation.html?lab=mathlorenz',
+    ],
+  },
+  machinelearning: {
+    title: 'Train a model.<br>Question the result',
+    description:
+      'Inspect what the optimizer learns, where a boundary fails, and how uncertainty changes the story. Small models with visible internals.',
+    art: 'learning',
+    model: 'mlgradient',
+    parameters: ['rate', 'momentum'],
+    prompt:
+      'Turn up the learning rate and add momentum. Follow the loss and watch convergence turn into oscillation or divergence.',
+    paths: [
+      '/simulation.html?lab=mllogistic',
+      '/simulation.html?lab=mlbackprop',
+      '/simulation.html?lab=mlkmeans',
+    ],
+  },
   civil: {
     title: 'Follow the<br>load path',
     description:

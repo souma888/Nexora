@@ -3,6 +3,79 @@ const line =
   'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
 export function subjectArt(kind) {
   const drawings = {
+    classifier:
+      '<path d="M90 70 205 10" stroke-dasharray="4 4"/>' +
+      [
+        [95, 25],
+        [120, 20],
+        [90, 43],
+        [105, 34],
+        [170, 57],
+        [195, 47],
+        [201, 63],
+        [183, 66],
+      ]
+        .map(
+          ([x, y], i) =>
+            `<circle cx="${x}" cy="${y}" r="5" class="${i < 4 ? 'art-load' : 'art-result'}"/>`,
+        )
+        .join(''),
+    clusters:
+      [
+        [90, 30],
+        [104, 21],
+        [112, 40],
+        [82, 45],
+        [190, 37],
+        [203, 49],
+        [178, 56],
+        [207, 30],
+      ]
+        .map(
+          ([x, y], i) =>
+            `<circle cx="${x}" cy="${y}" r="4" class="${i < 4 ? 'art-load' : 'art-result'}"/>`,
+        )
+        .join('') +
+      '<circle cx="98" cy="34" r="25" stroke-dasharray="3 4"/><circle cx="193" cy="44" r="27" stroke-dasharray="3 4"/>',
+    pixels:
+      Array.from(
+        { length: 25 },
+        (_, i) =>
+          `<rect x="${60 + (i % 5) * 11}" y="${12 + Math.floor(i / 5) * 11}" width="10" height="10" fill="currentColor" opacity="${i % 5 > 2 ? 0.7 : 0.12}"/>`,
+      ).join('') +
+      '<path d="M130 40h42m-7-6 7 6-7 6"/>' +
+      Array.from(
+        { length: 9 },
+        (_, i) =>
+          `<rect x="${190 + (i % 3) * 16}" y="${18 + Math.floor(i / 3) * 16}" width="14" height="14" class="art-result" opacity="${i % 3 === 1 ? 1 : 0.2}"/>`,
+      ).join(''),
+    math: '<path d="M40 67h220M55 72V9M62 62Q116 65 142 30T240 14"/><path d="m99 61 22-9v9Zm32-18 22-15v33h-22Zm32-24 22-6v48h-22Z" class="art-result"/><path d="m174 37 48-26" class="art-load"/>',
+    learning:
+      '<path d="M70 21l80-7 80 14M70 21l80 20 80-13M70 62l80-21 80 21M70 62l80 6 80-40M150 14v54"/>' +
+      [
+        [70, 21],
+        [70, 62],
+        [150, 14],
+        [150, 41],
+        [150, 68],
+        [230, 28],
+        [230, 62],
+      ]
+        .map(
+          ([x, y]) =>
+            `<circle cx="${x}" cy="${y}" r="7" fill="var(--surface-1)" class="art-result"/>`,
+        )
+        .join(''),
+    matrix:
+      '<path d="M40 66h220M150 74V8M84 60l20-40 92 10-20 40Z"/><path d="M150 66l46-36m-9 1 9-1-2 9" class="art-result"/>',
+    probability:
+      '<path d="M25 69h250M30 68C85 68 85 14 150 14S215 68 270 68"/>' +
+      [12, 22, 42, 51, 37, 28, 13]
+        .map(
+          (h, i) =>
+            `<rect x="${70 + i * 24}" y="${69 - h}" width="15" height="${h}" class="art-result"/>`,
+        )
+        .join(''),
     beam: '<path d="M42 28v44m-8-42 8-5m-8 15 8-5m-8 15 8-5m-8 15 8-5"/><path d="M43 45h208v13H43"/><path d="M80 12v24m-5-6 5 6 5-6m45-18v24m-5-6 5 6 5-6m45-18v24m-5-6 5 6 5-6m45-18v24m-5-6 5 6 5-6" class="art-load"/>',
     circuit:
       '<circle cx="55" cy="41" r="19"/><path d="M46 41q4-14 9 0t9 0M55 22V12h58v20l-7 5 14 8-14 8 7 5v12H55V60m58-48h90v23m-15 0h30m-30 10h30m-15 0v25h-90"/>',

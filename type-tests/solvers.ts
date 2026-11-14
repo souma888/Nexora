@@ -25,3 +25,20 @@ solveBeam({ ...beam, span: '6' });
 import { solveLinear } from '../backend/linear.js';
 // @ts-expect-error Linear systems require numerical coefficients.
 solveLinear([['not a coefficient']], [1]);
+
+import { calculusModels } from '../backend/mathematics-calculus.js';
+import { linearMathModels } from '../backend/mathematics-linear.js';
+import { machineLearningModels } from '../backend/machine-learning.js';
+// @ts-expect-error Mathematical tolerances must be numeric.
+calculusModels.mathlimits.solve({ a: 1, epsilon: '0.1', delta: 0.01 });
+// @ts-expect-error Required mathematical inputs remain required through the subject factory.
+calculusModels.mathlimits.solve({ a: 1 });
+linearMathModels.matheigen.solve({
+  // @ts-expect-error Matrices enter the validated boundary as JSON text, not nested arrays.
+  matrix: [
+    [1, 0],
+    [0, 1],
+  ],
+});
+// @ts-expect-error Network update counts are numeric.
+machineLearningModels.mlbackprop.solve({ hidden: 4, rate: 0.8, steps: '1200', seed: 42 });

@@ -1,5 +1,9 @@
 # Engineering Validation Policy
 
+## Mathematics and data science
+
+The 66 mathematics and ML labs have default/API parity checks plus independent analytical, numerical and property-based references in `tests/mathematics.test.js`. See [models, suggested experiments and limits](MATHEMATICS_DATA_SCIENCE.md). All new workbenches have desktop/mobile browser coverage in `e2e/mathematics.spec.js`; representative pages also receive axe scans. Live catalog totals come from the generated [catalog](CATALOG.md), while older release counts below describe those historical snapshots.
+
 ## Why validation matters
 
 A beautiful plot is not evidence of a correct engineering solution. Every simulation must be tested against a known analytical solution or trustworthy reference.

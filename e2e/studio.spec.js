@@ -1,4 +1,5 @@
 import { disciplineCounts } from '../backend/catalog.js';
+import { disciplineDefinitions } from '../backend/disciplines.js';
 import { expect, test } from '@playwright/test';
 const noOverflow = async (page) =>
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
@@ -62,7 +63,7 @@ test('Control Systems has its own studio, meaningful previews, and catalog navig
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Ideas into');
   await expect(
     page.getByRole('navigation', { name: 'Engineering disciplines' }).locator('.nav-icon'),
-  ).toHaveCount(18);
+  ).toHaveCount(disciplineDefinitions.length + 1);
   await noOverflow(page);
 });
 test('studio desktop/mobile themes and control instrument view stay readable', async ({

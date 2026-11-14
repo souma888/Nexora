@@ -78,8 +78,30 @@ const labs = catalog.map((entry) => {
   };
 });
 
-function thumbnail({ drawing, graphic, step, href, groups }) {
+function thumbnail({ drawing, graphic, step, href, groups, topic }) {
   const id = new URL(href, location.origin).searchParams.get('lab');
+  if (groups.includes('mathematics') || groups.includes('machinelearning')) {
+    const kind = groups.includes('machinelearning')
+      ? id === 'mlconvolution'
+        ? 'pixels'
+        : topic === 'Supervised Learning'
+          ? 'classifier'
+          : topic === 'Unsupervised Learning'
+            ? 'clusters'
+            : topic === 'Model Evaluation'
+              ? 'probability'
+              : topic === 'Optimization'
+                ? 'math'
+                : 'learning'
+      : topic === 'Linear Algebra'
+        ? 'matrix'
+        : topic === 'Probability & Statistics'
+          ? 'probability'
+          : topic === 'Differential Equations & Dynamical Systems'
+            ? 'wave'
+            : 'math';
+    return subjectArt(kind).replace('class="subject-art"', 'class="thumb subject-art"');
+  }
   if (expansionArt[id])
     return subjectArt(expansionArt[id]).replace('class="subject-art"', 'class="thumb subject-art"');
   const kind = groups.includes('control')
@@ -171,18 +193,45 @@ const cards = labs.map((lab) => {
   action.textContent = 'Open lab ↗';
   card.append(tags, title, description, action);
   grid.append(card);
-  return { card, groups: lab.groups, terms: card.textContent.toLowerCase() };
+  return { card, groups: lab.groups, topic: lab.topic, terms: card.textContent.toLowerCase() };
 });
 
+const subjectLabel = document.createElement('label');
+subjectLabel.textContent = 'Subject';
+subjectLabel.htmlFor = 'subject-filter';
+const subject = document.createElement('select');
+subject.id = 'subject-filter';
+const subjectField = document.createElement('div');
+subjectField.append(subjectLabel, subject);
+discipline.closest('div').after(subjectField);
+let selectedDiscipline;
+function updateSubjects() {
+  if (selectedDiscipline === discipline.value) return;
+  selectedDiscipline = discipline.value;
+  subject.replaceChildren(new Option('All subjects', ''));
+  const topics = [
+    ...new Set(
+      labs
+        .filter((lab) => !discipline.value || lab.groups.includes(discipline.value))
+        .map((lab) => lab.topic)
+        .filter(Boolean),
+    ),
+  ].sort();
+  for (const topic of topics) subject.add(new Option(topic, topic));
+}
+subject.addEventListener('change', filter);
+
 function filter() {
+  updateSubjects();
   setActiveDiscipline(discipline.value);
   showStudio(discipline.value);
   document.getElementById('studio').hidden ||= Boolean(search.value.trim());
   const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
   let count = 0;
-  for (const { card, groups, terms } of cards) {
+  for (const { card, groups, topic, terms } of cards) {
     card.hidden =
       Boolean(discipline.value && !groups.includes(discipline.value)) ||
+      Boolean(subject.value && topic !== subject.value) ||
       !words.every((word) => terms.includes(word));
     if (!card.hidden) count++;
   }
@@ -211,6 +260,7 @@ discipline.addEventListener('change', () => {
 form.addEventListener('reset', (event) => {
   event.preventDefault();
   search.value = '';
+  subject.value = '';
   discipline.value = '';
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   filter();

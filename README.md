@@ -6,13 +6,15 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 
 <!-- catalog-summary:start -->
 
-**175 working labs across 17 disciplines.**
+**241 working labs across 19 disciplines.**
 <!-- catalog-summary:end -->
 
 ## What works today
 
 - [Typed solver package on npm](https://www.npmjs.com/package/@souma88/solvers): `npm install @souma88/solvers`.
 - Searchable subject catalog, persistent navigation, live section previews, and shared responsive workbenches.
+- **Mathematics:** 52 labs across calculus, linear algebra, differential equations, probability/statistics and numerical methods, with a subject filter and worker-backed computation.
+- **Machine Learning & Data Science:** 14 labs that train and inspect small classifiers, clustering models, optimizers and networks. [Models, verification and limits](docs/MATHEMATICS_DATA_SCIENCE.md).
 - Mechanics, circuits, control, signals, thermofluids, robotics, materials, computation, communications, energy, aerospace, chemical processes, reliability, and 55 algorithm/data-structure traces.
 - **Build a truss:** define nodes, bars, supports and loads. A cancellable worker assembles stiffness equations and recovers displacement, member force, stress, reactions and strain energy.
 - **Analysis studio:** bounded sweeps, endpoint sensitivity tornadoes, seeded uncertainty propagation, CSV parameter fitting and a TensorFlow.js curve surrogate.

@@ -526,7 +526,7 @@ svg .reaction-label {
 }
 .catalog-controls {
   display: grid;
-  grid-template-columns: 2fr 1fr auto;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) auto;
   align-items: end;
   gap: 8px;
   margin-bottom: 14px;

@@ -5,6 +5,12 @@
   overflow: auto;
   max-height: 400px;
 }
+.model-caption {
+  margin: 4px 12px 12px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
 .model-visual svg {
   display: block;
   width: 100%;
