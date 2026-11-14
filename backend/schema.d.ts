@@ -69,6 +69,7 @@ export interface Result {
 export interface Definition<F extends Fields> {
   id: string;
   version: string;
+  execution?: 'worker';
   inputs: F;
   outputs: { summary: Record<string, string>; series: Record<string, string> };
   rules?: Rule[];
@@ -99,3 +100,15 @@ export interface LabConfig<F extends Fields> extends Omit<
   metrics: Record<string, string[]>;
   text: [string, string, string[], string, string, string, string];
 }
+export type MathLabConfig<F extends Fields> = Omit<LabConfig<F>, 'text' | 'discipline'> & {
+  ml?: boolean;
+  text: {
+    description: string;
+    predict: string;
+    answers: string[];
+    explain: string;
+    example: string;
+    equation: string;
+    limits: string;
+  };
+};
