@@ -11,6 +11,7 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 
 ## What works today
 
+- [Typed solver package on npm](https://www.npmjs.com/package/@souma88/solvers): `npm install @souma88/solvers`.
 - Searchable subject catalog, persistent navigation, live section previews, and shared responsive workbenches.
 - Mechanics, circuits, control, signals, thermofluids, robotics, materials, computation, communications, energy, aerospace, chemical processes, reliability, and 55 algorithm/data-structure traces.
 - **Build a truss:** define nodes, bars, supports and loads. A cancellable worker assembles stiffness equations and recovers displacement, member force, stress, reactions and strain energy.

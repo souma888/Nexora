@@ -27,7 +27,7 @@ No dates are promised. Completed items describe running code, not a proposed fra
 - [x] Sweeps, sensitivity, uncertainty, CSV fitting, neural curve surrogate, 3D previews and report exports.
 - [x] Seeded local practice, classroom configuration links, embed mode and opt-in offline PWA.
 - [x] OpenAPI, lab generator, typed solver-package build, coverage, axe checks, Lighthouse and CodeQL workflows.
-- [ ] Publish the prepared npm package after authentication and scope ownership are available.
+- [x] Publish the typed `@souma88/solvers` package under the maintainer’s personal npm scope.
 - [ ] Nonlinear/transient arbitrary circuit elements and larger graph editing with performance budgets.
 - [ ] Optional cloud synchronization/authentication if a real account-based workflow is introduced.
 - [ ] Classroom assignments and collaboration with an ownership/privacy design.

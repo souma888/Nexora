@@ -77,7 +77,7 @@ npm pack ./packages/solvers
 
 The generator creates a running Hooke-law reference model, an independent test and registration. Replace the example's model, teaching content and reference cases before release. It rejects duplicate identifiers and refuses to overwrite files. Generated models flow into discovery, navigation counts and documentation through the registry.
 
-`packages/solvers` builds an ESM package with TypeScript declarations, pure engines, unit conversion and analysis methods. `npm pack` is usable without publishing. Publishing `@souma88/solvers` requires an authenticated npm account with rights to that scope; repository preparation does not establish npm ownership.
+`packages/solvers` builds an ESM package with TypeScript declarations, pure engines, unit conversion and analysis methods. `npm pack` is usable without publishing. `@souma88/solvers@0.1.0` is [published on npm](https://www.npmjs.com/package/@souma88/solvers) under the maintainer’s personal scope. Install it with `npm install @souma88/solvers`. The public registry installation was checked against the single-bar FEM reference, unit conversion and the 175-model inventory. Future publishing requires an authenticated scope owner.
 
 Node's native coverage runner writes `coverage/lcov.info`; fast-check exercises physical invariants. Browser tests include axe checks on new workbench controls and complete worker/export/fit/share/embed flows. Lighthouse CI records accessibility, best practices, performance and SEO; configured budgets are not evidence that a run passed. GitHub Actions runs release checks and CodeQL separately. Hosted checks and publishing status must be inspected rather than inferred from configuration.
 
