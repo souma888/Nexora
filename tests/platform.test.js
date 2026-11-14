@@ -155,7 +155,7 @@ test('CSV text cells cannot become spreadsheet formulas; numerical signs remain 
 test('catalog discovery, counts, routes and the latest labs agree with executable registries', async () => {
   const registry = await discover().json(),
     discovery = await discoverCatalog().json();
-  assert.equal(catalog.length, 160);
+  assert.equal(catalog.length, 175);
   assert.equal(disciplineCounts.electrical, 5);
   assert.equal(discovery.labs.length, catalog.length);
   for (const d of registry.models) {

@@ -5,6 +5,8 @@ export default [
     ignores: [
       'node_modules/**',
       'dist/**',
+      'packages/solvers/dist/**',
+      '.lighthouseci/**',
       'tmp/**',
       'temp/**',
       'test-results/**',

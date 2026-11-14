@@ -1,4 +1,14 @@
 import { compatibleUnits, convert } from '../../backend/units.ts';
+export function snapUnitBoundary(value: number, min: number, max: number) {
+  for (const edge of [min, max])
+    if (
+      Math.abs(value - edge) <=
+      1e-10 * Math.max(Number.MIN_VALUE, Math.abs(value), Math.abs(edge))
+    )
+      return edge;
+  return value;
+}
+
 type Field = { type: string; unit?: string; min?: number; max?: number; integer?: boolean };
 /** Generic labs opt in; the dedicated mechanics pages retain their contextual load-case converters. */
 export function attachUnitControls(form: HTMLFormElement, fields: Record<string, Field>) {
@@ -56,10 +66,11 @@ export function attachUnitControls(form: HTMLFormElement, fields: Record<string,
     canonical(values: Record<string, number | string>) {
       const out = { ...values };
       for (const c of controls) {
-        let value = convert(Number(out[c.field.name]), c.old, c.base);
-        for (const edge of [c.min, c.max])
-          if (Math.abs(value - edge) <= 1e-10 * Math.max(1, Math.abs(edge))) value = edge;
-        out[c.field.name] = value;
+        out[c.field.name] = snapUnitBoundary(
+          convert(Number(out[c.field.name]), c.old, c.base),
+          c.min,
+          c.max,
+        );
       }
       return out;
     },

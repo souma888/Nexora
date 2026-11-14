@@ -1,3 +1,4 @@
+import { disciplineCounts } from '../backend/catalog.js';
 import { expect, test } from '@playwright/test';
 import { controlModels } from '../backend/control-experiments.js';
 import { algorithms } from '../backend/algorithm-definitions.js';
@@ -16,7 +17,9 @@ for (const [id, { definition }] of Object.entries(controlModels)) {
   test(`control: ${definition.title} opens, plots, and agrees with its API`, async ({ page }) => {
     const errors = monitor(page);
     await page.goto('/#control');
-    await expect(page.getByRole('status')).toHaveText('15 experiments available');
+    await expect(page.locator('#catalog-status')).toHaveText(
+      `${disciplineCounts.control} experiments available`,
+    );
     await page.locator(`.sim-link[href="/simulation.html?lab=${id}"]`).click();
     await expect(page.getByRole('heading', { level: 1 })).toContainText(definition.title);
     await expect(page.locator('#status')).toHaveText('Live results');

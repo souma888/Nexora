@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { Readable } from 'node:stream';
 import { createServer as createViteServer } from 'vite';
+import * as openapi from '../api/openapi.js';
 import * as catalog from '../api/catalog.js';
 import * as beam from '../api/beam.js';
 import * as materials from '../api/materials.js';
@@ -8,6 +9,7 @@ import * as waves from '../api/waves.js';
 import * as algorithms from '../api/algorithms.js';
 
 const routes = {
+  '/api/openapi': openapi,
   '/api/catalog': catalog,
   '/api/beam': beam,
   '/api/materials': materials,

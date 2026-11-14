@@ -1,0 +1,33 @@
+{
+  "name": "@souma88/solvers",
+  "version": "0.1.0",
+  "description": "Typed educational engineering solvers used by Nexora",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/souma888/Nexora.git",
+    "directory": "packages/solvers"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepack": "node ../../scripts/build-solvers.mjs"
+  }
+}

@@ -1,3 +1,4 @@
+import { disciplineCounts } from '../backend/catalog.js';
 import { expect, test } from '@playwright/test';
 const noOverflow = async (page) =>
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
@@ -46,7 +47,9 @@ test('Control Systems has its own studio, meaningful previews, and catalog navig
 }) => {
   await page.goto('/#control');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Find your');
-  await expect(page.locator('#catalog-status')).toHaveText('15 experiments available');
+  await expect(page.locator('#catalog-status')).toHaveText(
+    `${disciplineCounts.control} experiments available`,
+  );
   await expect(page.locator('.studio-paths a')).toHaveCount(3);
   await expect(page.locator('.sim-link:not([hidden]) .subject-art')).toHaveCount(15);
   await page.getByRole('button', { name: 'Reset preview' }).click();

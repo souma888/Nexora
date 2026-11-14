@@ -1,3 +1,4 @@
+import { convert } from './physical-units.js';
 /** @returns {import("./schema.js").NumberField} */
 export const number = (label, unit, min, max) => ({ label, type: 'number', unit, min, max });
 
@@ -8,7 +9,14 @@ export function validate(definition, input) {
       values[key] = field.initial;
       continue;
     }
-    const value = input?.[key];
+    let value = input?.[key];
+    if (field.type === 'number' && value && typeof value === 'object') {
+      try {
+        value = convert(value.value, value.unit, field.unitByCase?.[input.case] ?? field.unit);
+      } catch {
+        return { key, message: `${field.label}: incompatible or unknown physical units.` };
+      }
+    }
     if (field.type === 'enum') {
       if (!field.options.includes(value))
         return { key, message: `Choose a supported ${field.label.toLowerCase()}.` };

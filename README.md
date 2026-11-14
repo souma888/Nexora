@@ -6,7 +6,7 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 
 <!-- catalog-summary:start -->
 
-**160 working labs across 17 disciplines.**
+**175 working labs across 17 disciplines.**
 <!-- catalog-summary:end -->
 
 ## What works today
