@@ -22,6 +22,20 @@ jobs:
       - run: npm run docs:check
       - run: npm run typecheck
       - run: npm run build
-      - run: npm test
+      - run: npm run test:coverage
+      - run: npm run package:check
+      - uses: actions/upload-artifact@v6
+        with:
+          name: solver-coverage
+          path: coverage/lcov.info
       - run: npx playwright install --with-deps --only-shell chromium
       - run: npm run test:e2e
+
+      - run: npm run test:lighthouse
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/reports

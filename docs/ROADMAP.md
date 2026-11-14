@@ -23,7 +23,12 @@ No dates are promised. Completed items describe running code, not a proposed fra
 - [x] Separate teaching prose for the 71 lab-kit models from their numerical implementations; metadata is unchanged.
 - [ ] Additional numerical convergence/stiffness studies and independent benchmark datasets.
 - [ ] More physical/composite unit dimensions and optional output display-unit conversion.
-- [ ] User-defined trusses, nonlinear/transient circuit elements, and larger graph editing with performance budgets.
+- [x] User-defined linear 2D truss FEM in a worker with equilibrium and energy checks.
+- [x] Sweeps, sensitivity, uncertainty, CSV fitting, neural curve surrogate, 3D previews and report exports.
+- [x] Seeded local practice, classroom configuration links, embed mode and opt-in offline PWA.
+- [x] OpenAPI, lab generator, typed solver-package build, coverage, axe checks, Lighthouse and CodeQL workflows.
+- [ ] Publish the prepared npm package after authentication and scope ownership are available.
+- [ ] Nonlinear/transient arbitrary circuit elements and larger graph editing with performance budgets.
 - [ ] Optional cloud synchronization/authentication if a real account-based workflow is introduced.
 - [ ] Classroom assignments and collaboration with an ownership/privacy design.
 - [ ] An independent accessibility audit and assisted-technology testing beyond the automated keyboard/mobile checks.

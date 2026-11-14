@@ -6,6 +6,7 @@ const result = spawnSync(
   [
     '--experimental-test-coverage',
     '--test',
+    '--test-concurrency=2',
     '--test-coverage-include=backend/**',
     '--test-coverage-include=api/**',
     '--test-reporter=spec',

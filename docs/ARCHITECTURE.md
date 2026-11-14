@@ -4,10 +4,11 @@
 
 ```text
 Vite multi-page browser app (vanilla JS + strict TS workbench modules)
-  ├─ backend/catalog.js → catalog, routes, subject filters
+  ├─ backend/lab-manifest.js → catalog, routes, API schema, subject filters
   ├─ pure model/algorithm engines → immediate local updates
   ├─ SVG/DOM diagrams, plot inspector, tables, learning notes
-  └─ local run library → validated JSON/CSV, same-model comparison
+  ├─ local run library → validated JSON/CSV, overlays, PNG/PDF
+  └─ cancellable workers → FEM, analysis, fitting and optional TensorFlow.js surrogate
 
 Node.js 24 / Vercel Functions
   ├─ GET /api/catalog → shared catalog and discipline counts
@@ -25,13 +26,13 @@ Node.js 24 / Vercel Functions
 - Each definition’s `validateValues` hook: model-specific constraints, such as root brackets, binary word width, CRC positions, circuit singularity, and graph cycles. Hooks execute after field checks in both browser and API. Functions are not serialized into discovery JSON.
 - `backend/experiment.js` / `lab-kit.js` and `schema.d.ts`: generic typed definition, input, result, unit and teaching metadata contracts.
 - `backend/linear.js`: strictly checked JSDoc, scaled partial-pivot Gaussian elimination. `circuit-builder.js` owns circuit parsing and modified nodal assembly.
-- `backend/units.ts`: dimension-compatible scale/offset conversions. Contracts retain their declared units; the UI changes display units without changing the physical input.
+- `backend/physical-units.js` (re-exported by `units.ts`): dimension-compatible scale/offset and registered composite-unit conversions. Contracts retain their declared units; the UI changes display units without changing the physical input.
 - `backend/run-record.ts`: bounded, versioned run-file shape and CSV cell protection. Each model still validates imported input values before use.
 - `frontend/public/run-tools.ts`: browser storage, download/import controls, and same-model/version comparison. Stored/exported numerical results are never a trusted solver input.
 
 ## Single catalog source
 
-`backend/catalog.js` derives the lab list from `waves.js`, `algorithm-definitions.js`, and the three dedicated mechanics entries. The frontend supplies artwork only. `disciplines.js` owns label/group/icon metadata, and navigation derives from it. `scripts/catalog-docs.mjs` generates `docs/CATALOG.md` and the README count; CI rejects stale output. Release guides document historical releases rather than becoming additional runtime registries.
+`backend/lab-manifest.js` combines executable numeric/algorithm definitions and dedicated mechanics entries into one inventory. `backend/catalog.js` is a serializable view; OpenAPI, documentation and active navigation groups consume that manifest. The frontend supplies artwork only. `disciplines.js` owns label/group/icon metadata. `scripts/catalog-docs.mjs` generates `docs/CATALOG.md` and the README count; CI rejects stale output. Release guides document historical releases rather than becoming additional runtime registries.
 
 ## Static checking: exact scope
 
@@ -46,3 +47,7 @@ A run records format/schema version, lab ID, solver version, canonical input, la
 ## Deployment
 
 Vercel root directory is the repository root; framework preset **Other**; build `npm run build`; output `dist`. `vercel.json` defines these and browser security headers. There are no production secrets or additional services. See DEVELOPMENT.md for local setup and API payloads.
+
+## Optional analysis and teaching modules
+
+The truss engine, analysis routines, CSV fitting and parameter adapters remain independent of HTTP and DOM code. The browser worker dispatches registered model IDs and bounded tasks, returning structured-clone data. Stale requests are ignored and explicit cancellation terminates the worker. TensorFlow.js, Three.js and PDF generation are loaded only when requested; the opt-in offline cache includes their production chunks. The dedicated embed route loads known repository templates and omits local storage/export controls. See [advanced platform details](ADVANCED_PLATFORM.md) for numerical assumptions, localization limits, PWA behavior and package publication requirements.

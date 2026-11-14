@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { openapi } from '../backend/openapi.js';
 import { catalog } from '../backend/catalog.js';
 import { models } from '../backend/waves.js';
 import { models as materials } from '../backend/materials.js';
@@ -50,6 +51,23 @@ async function verify() {
   if (origin.protocol === 'https:') {
     assert.match(home.headers.get('content-security-policy') ?? '', /script-src 'self'/);
     assert.equal(home.headers.get('x-content-type-options'), 'nosniff');
+  }
+  const schema = await request('/api/openapi');
+  assert.equal(schema.openapi, '3.1.0');
+  assert.deepEqual(
+    Object.keys(schema.components.schemas).sort(),
+    Object.keys(openapi.components.schemas).sort(),
+  );
+  for (const path of [
+    '/embed.html?lab=hallpetch',
+    '/manifest.webmanifest',
+    '/sw.js',
+    '/api-docs.html',
+  ]) {
+    const response = await send(path);
+    assert.equal(response.status, 200, path);
+    if (path.startsWith('/embed') && origin.protocol === 'https:')
+      assert.match(response.headers.get('content-security-policy') ?? '', /frame-ancestors https:/);
   }
   const discovery = await request('/api/catalog');
   assert.equal(discovery.labs.length, catalog.length);

@@ -59,7 +59,7 @@ The earlier five-section engineering release added 30 models to this contract. I
 
 The browser and API validate the same relationships, including throat/pipe diameters, hot/cold temperature order, binary register width, JK sequence length and root brackets. Invalid inputs keep the last valid browser result clearly labelled and pause preview controls. These labs require no new environment variables or database. See [the engineering release guide](ENGINEERING_SECTIONS.md) for the inventory, numerical conventions and independent cases.
 
-The 15 Control Systems models use this endpoint too. Phase/magnitude sweeps explicitly use log10 angular frequency as their horizontal coordinate. Pole-locus plots use `locus` points for the gain sweep and `sample` points for the selected roots. The plot inspector is operable with the mouse or arrow keys.
+The original 15 Control Systems models use this endpoint too. Phase/magnitude sweeps explicitly use log10 angular frequency as their horizontal coordinate. Pole-locus plots use `locus` points for the gain sweep and `sample` points for the selected roots. The plot inspector is operable with the mouse or arrow keys.
 
 ## Algorithm traces API
 
@@ -94,3 +94,11 @@ Quality gates are `npm run format:check`, `npm run lint`, `npm run typecheck`, `
 ## Verify the deployed API bundle
 
 After Vercel reports Ready, run `npm run verify:deployment -- https://soumadip-nexora.vercel.app` and the deployed browser checks. This command compares every registered lab’s default result with the local engine, checks all discovery endpoints, exercises model-owned invalid-input hooks, and verifies production security headers. A successful static build is not sufficient evidence that API dependencies were bundled. Server numerical imports deliberately use plain, strictly checked ESM JavaScript; the browser-only unit/run modules may use TypeScript.
+
+## Advanced platform tooling
+
+`GET /api/openapi` provides the generated OpenAPI 3.1 schema; `/api-docs.html` is the request explorer. Physical numeric inputs accept canonical numbers or dimension-compatible `{value,unit}` objects. Algorithm inputs retain their original discrete schema.
+
+`npm run preview` serves a completed `dist` build and the real API adapters with production security headers at localhost:3100. Browser tests build and use this preview by default, including service workers and lazy ML/report assets. Set `NEXORA_TEST_DEV=1` only when testing the Vite development flow. `NEXORA_TEST_URL` still targets a deployed URL.
+
+The [advanced platform guide](ADVANCED_PLATFORM.md) covers the lab generator, solver package, analysis adapters, report downloads, portable classroom links, embedding, offline caching and partial interface localization.
