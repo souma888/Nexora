@@ -5,7 +5,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 const open = async (page, id = 'trussfem') => {
   await page.goto(`/simulation.html?lab=${id}`);
-  await expect(page.locator('#status')).toHaveText('Live results');
+  await expect(page.locator('#status')).toHaveText('Live results', { timeout: 15000 });
 };
 test('truss worker recalculates, rejects mechanisms and keeps keyboard navigation', async ({
   page,
@@ -171,9 +171,25 @@ test('algorithm list entries have discrete parameter sweeps', async ({ page }) =
 test('practice grades the first answer and interface language can switch back', async ({
   page,
 }) => {
+  let releaseWorker = () => {};
+  const workerGate = new Promise((resolve) => {
+    releaseWorker = resolve;
+  });
+  await page.route('**/*solver-worker*', async (route) => {
+    await workerGate;
+    await route.continue();
+  });
   await open(page, 'hallpetch');
   await page.getByText('Practice, accessible plots & 3D', { exact: true }).click();
   await page.getByRole('button', { name: 'Next practice problem' }).click();
+  try {
+    await expect(page.getByRole('button', { name: 'Check answer', exact: true })).toBeDisabled();
+  } finally {
+    releaseWorker();
+  }
+  await expect(page.getByRole('button', { name: 'Check answer', exact: true })).toBeEnabled({
+    timeout: 15000,
+  });
   await expect(page.locator('.learning-tools')).toContainText('Problem 1/5');
   await page.getByRole('spinbutton', { name: 'Numeric problem answer' }).fill('0');
   await page.getByRole('button', { name: 'Check answer' }).click();

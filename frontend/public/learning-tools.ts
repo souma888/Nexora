@@ -126,10 +126,16 @@ export function learningTools(
     attempt = 0,
     expected: number | undefined,
     caseInput: Input | undefined,
-    graded = false;
+    graded = false,
+    problemRevision = 0;
   const client = solverClient();
   async function problem() {
     if (!current) return;
+    const revision = ++problemRevision;
+    client.cancel();
+    grade.disabled = true;
+    loadGraded.disabled = true;
+    gradeStatus.textContent = 'Calculating the reference answer…';
     if (attempt >= 5) {
       attempt = score = 0;
     }
@@ -161,10 +167,13 @@ export function learningTools(
     question.textContent = `Problem ${attempt + 1}/5. Set ${field.label ?? key} to ${Number(caseInput[key]).toPrecision(6)} ${field.unit ?? ''}, keeping other inputs fixed. Predict ${metric[0]} (${model.outputs.summary[metric[0]] ?? ''}). Show your work before checking.`;
     try {
       const result = await client.run<Report>(model.id, caseInput);
+      if (revision !== problemRevision) return;
       expected = Number(result.summary?.[metric[0]]);
       if (!Number.isFinite(expected)) throw new Error('Output undefined.');
+      grade.disabled = false;
       gradeStatus.textContent = 'Answer within 1% relative tolerance or 10⁻⁸ absolute tolerance.';
     } catch {
+      if (revision !== problemRevision) return;
       gradeStatus.textContent =
         'That randomized configuration is invalid. Change the seed and generate another problem.';
     }
@@ -172,6 +181,8 @@ export function learningTools(
   const grade = button('Check answer', () => {
     if (graded || expected === undefined || !answer.value) return;
     graded = true;
+    grade.disabled = true;
+    loadGraded.disabled = false;
     attempt++;
     const correct =
       Math.abs(Number(answer.value) - expected) <= Math.max(1e-8, 0.01 * Math.abs(expected));
@@ -186,6 +197,11 @@ export function learningTools(
       /* Session scoring remains available. */
     }
   });
+  grade.disabled = true;
+  const loadGraded = button('Load graded problem', () => {
+    if (graded && caseInput) load(caseInput);
+  });
+  loadGraded.disabled = true;
   body.append(
     el(
       'p',
@@ -214,9 +230,7 @@ export function learningTools(
     question,
     answer,
     grade,
-    button('Load graded problem', () => {
-      if (graded && caseInput) load(caseInput);
-    }),
+    loadGraded,
     gradeStatus,
     status,
   );
@@ -230,6 +244,9 @@ export function learningTools(
       dispose3d();
       stop();
       client.cancel();
+      problemRevision++;
+      grade.disabled = true;
+      loadGraded.disabled = true;
       expected = undefined;
     },
   };

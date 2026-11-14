@@ -31,6 +31,12 @@ jobs:
       - run: npx playwright install --with-deps --only-shell chromium
       - run: npm run test:e2e
 
+      - uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: browser-failures
+          path: test-results
+          retention-days: 7
       - run: npm run test:lighthouse
         env:
           CHROME_PATH: /usr/bin/google-chrome

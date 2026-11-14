@@ -224,6 +224,15 @@ test('catalog thumbnail, persistent theme, and print layout', async ({ page }) =
     .locator('#catalog-grid')
     .getByRole('link', { name: /Beam Analysis/ })
     .locator('.thumb');
+  await thumbnail.scrollIntoViewIfNeeded();
+  // Fractional aspect-ratio bounds otherwise gain an extra cropped pixel on Linux.
+  await thumbnail.evaluate((svg) => {
+    const box = svg.getBoundingClientRect();
+    svg.style.width = `${Math.ceil(box.width)}px`;
+    svg.style.height = `${Math.ceil(box.height)}px`;
+    const bounds = svg.getBoundingClientRect();
+    svg.style.transform = `translate(${Math.round(bounds.x) - bounds.x}px,${Math.round(bounds.y) - bounds.y}px)`;
+  });
   await expect(thumbnail).toHaveScreenshot('beam-thumbnail.png', { maxDiffPixelRatio: 0.035 });
   await page.goto('/beam.html');
   await expect(page.locator('#plot .beam-curve')).toHaveCount(4);
