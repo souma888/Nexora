@@ -1,6 +1,36 @@
 import { disciplines } from '../../backend/disciplines.js';
 // Editorial metadata only. Preview data always comes from the existing solvers.
 export const studioSections = {
+  networks: {
+    title: 'Follow the packet.<br>Inspect the scheduler',
+    description:
+      'Trace congestion windows, retransmissions, translations and resource ownership. Make the hidden state of a computing system visible.',
+    art: 'network',
+    model: 'tcp',
+    parameters: ['threshold', 'rounds'],
+    prompt:
+      'Move the slow-start threshold and inspect the transition from doubling to additive window growth. Loss epochs stay fixed unless you open the workbench.',
+    paths: [
+      '/simulation.html?lab=arq',
+      '/simulation.html?lab=virtualmemory',
+      '/simulation.html?lab=cpuscheduling',
+    ],
+  },
+  cryptography: {
+    title: 'Inspect the bits.<br>Explain the information',
+    description:
+      'Connect source entropy, modular arithmetic and error correction. Use small transparent examples to understand the mechanisms and their limits.',
+    art: 'lock',
+    model: 'hashavalanche',
+    parameters: ['width', 'samples'],
+    prompt:
+      'Change the deliberately truncated hash width and the birthday sample count. The bit-flip comparison still uses full SHA-256; short-hash collisions do not break the full digest.',
+    paths: [
+      '/simulation.html?lab=sourcecoding',
+      '/simulation.html?lab=hashavalanche',
+      '/simulation.html?lab=viterbicode',
+    ],
+  },
   mathematics: {
     title: 'See the idea.<br>Test the proof',
     description:

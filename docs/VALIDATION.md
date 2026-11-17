@@ -1,5 +1,9 @@
 # Engineering Validation Policy
 
+## Algorithms, computing systems and machine design
+
+The 56 new labs and two reused mechanical labs are documented in [MACHINE_SYSTEMS_RELEASE.md](MACHINE_SYSTEMS_RELEASE.md). `tests/deep-algorithms.test.js` uses independent invariant reconstruction, enumeration, cuts, removals and naive string/geometry references. `tests/machine-systems.test.js` checks discrete protocol/resource invariants, standard digest vectors, exhaustive coding paths, SI conversions and mechanical conservation/limiting cases. Desktop/mobile workflows and representative visual/accessibility checks are in `e2e/machine-systems.spec.js`. These implementation checks do not certify network protocol conformance, secure encryption or an engineering design.
+
 ## Mathematics and data science
 
 The 66 mathematics and ML labs have default/API parity checks plus independent analytical, numerical and property-based references in `tests/mathematics.test.js`. See [models, suggested experiments and limits](MATHEMATICS_DATA_SCIENCE.md). All new workbenches have desktop/mobile browser coverage in `e2e/mathematics.spec.js`; representative pages also receive axe scans. Live catalog totals come from the generated [catalog](CATALOG.md), while older release counts below describe those historical snapshots.

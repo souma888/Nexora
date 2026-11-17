@@ -292,6 +292,7 @@ function initialize(definition) {
   updateVisibility();
   form.addEventListener('input', updateVisibility);
   let result;
+  let previousProbeInput;
   let resetProbe = true,
     playing = false,
     timer;
@@ -337,10 +338,24 @@ function initialize(definition) {
       byId('preview-step').disabled = false;
       syncBits();
       updateVisibility();
-      if (resetProbe) {
+      const probeInput =
+        definition.initialProbe && definition.initialProbe !== 'end'
+          ? data.input[definition.initialProbe]
+          : undefined;
+      if (resetProbe || (Number.isFinite(probeInput) && probeInput !== previousProbeInput)) {
         byId('wave-probe').max = data.series.length - 1;
+        const nearest = Number.isFinite(probeInput)
+          ? data.series.reduce(
+              (best, point, i) =>
+                Math.abs(point.x - probeInput) < Math.abs(data.series[best].x - probeInput)
+                  ? i
+                  : best,
+              0,
+            )
+          : 0;
         byId('wave-probe').value =
-          definition.initialProbe === 'end' ? String(data.series.length - 1) : '0';
+          definition.initialProbe === 'end' ? String(data.series.length - 1) : String(nearest);
+        previousProbeInput = probeInput;
         resetProbe = false;
       }
       for (const [key, value] of Object.entries(data.summary)) {

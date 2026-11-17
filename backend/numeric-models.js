@@ -1,4 +1,9 @@
 import { customModels } from './custom-labs.js';
+import { networkModels } from './networks-os.js';
+import { cryptoModels } from './cryptography.js';
+import { machineDynamicsModels } from './machine-dynamics.js';
+import { machineDesignModels } from './machine-design.js';
+import { machineMotionModels } from './machine-motion.js';
 import { calculusModels } from './mathematics-calculus.js';
 import { linearMathModels } from './mathematics-linear.js';
 import { odeMathModels } from './mathematics-ode.js';
@@ -26,6 +31,11 @@ import { chemicalModels } from './chemical-process.js';
 import { industrialModels } from './industrial.js';
 
 export const models = {
+  ...networkModels,
+  ...cryptoModels,
+  ...machineDynamicsModels,
+  ...machineDesignModels,
+  ...machineMotionModels,
   ...calculusModels,
   ...linearMathModels,
   ...odeMathModels,

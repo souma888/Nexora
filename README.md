@@ -6,7 +6,7 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 
 <!-- catalog-summary:start -->
 
-**241 working labs across 19 disciplines.**
+**297 working labs across 21 disciplines.**
 <!-- catalog-summary:end -->
 
 ## What works today
@@ -15,7 +15,9 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 - Searchable subject catalog, persistent navigation, live section previews, and shared responsive workbenches.
 - **Mathematics:** 52 labs across calculus, linear algebra, differential equations, probability/statistics and numerical methods, with a subject filter and worker-backed computation.
 - **Machine Learning & Data Science:** 14 labs that train and inspect small classifiers, clustering models, optimizers and networks. [Models, verification and limits](docs/MATHEMATICS_DATA_SCIENCE.md).
-- Mechanics, circuits, control, signals, thermofluids, robotics, materials, computation, communications, energy, aerospace, chemical processes, reliability, and 55 algorithm/data-structure traces.
+- **Networks, operating systems and cryptography:** protocol/event traces, memory and CPU/resource scheduling, entropy/source coding, small public-key examples, SHA-256 avalanche and Viterbi decoding.
+- **Machine design and advanced DSA:** vibration, gears, joints, contact and balancing models; balanced trees, string indexing, flow/matching/assignment and subset optimization. [Release models and reference checks](docs/MACHINE_SYSTEMS_RELEASE.md).
+- Mechanics, circuits, control, signals, thermofluids, robotics, materials, computation, communications, energy, aerospace, chemical processes, reliability, and algorithm/data-structure traces.
 - **Build a truss:** define nodes, bars, supports and loads. A cancellable worker assembles stiffness equations and recovers displacement, member force, stress, reactions and strain energy.
 - **Analysis studio:** bounded sweeps, endpoint sensitivity tornadoes, seeded uncertainty propagation, CSV parameter fitting and a TensorFlow.js curve surrogate.
 - **Build a DC circuit:** enter resistors and independent voltage/current sources. The solver assembles modified nodal equations, solves them with scaled partial pivoting, and reports branch currents, absorbed power, and equation residuals.

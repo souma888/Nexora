@@ -21,47 +21,59 @@ const drawings = {
   mohr: '<circle cx="150" cy="41" r="29" fill="none" stroke="var(--curve)" stroke-width="2"/><path d="M127 59l46-36" stroke="var(--curve)" stroke-dasharray="4 3"/><circle cx="173" cy="23" r="4" fill="var(--load)"/>',
 };
 const algorithmDrawing = (definition) =>
-  definition.kind === 'tree'
-    ? '<path d="M150 18l-60 40m60-40 60 40" fill="none" stroke="var(--curve)" stroke-width="2"/>' +
-      [
-        [150, 18],
-        [90, 58],
-        [210, 58],
-      ]
-        .map(
-          ([x, y]) =>
-            `<circle cx="${x}" cy="${y}" r="9" fill="var(--surface-1)" stroke="var(--result)" stroke-width="2"/>`,
-        )
-        .join('')
-    : definition.kind === 'structure'
-      ? [65, 125, 185]
+  definition.runner === 'deep'
+    ? subjectArt(
+        ['Balanced search trees', 'Trees & range queries'].includes(definition.topic)
+          ? 'learning'
+          : definition.topic === 'Computational geometry'
+            ? 'matrix'
+            : definition.topic === 'String algorithms'
+              ? 'pixels'
+              : definition.topic === 'Probabilistic structures'
+                ? 'probability'
+                : 'network',
+      ).replace(/^<svg[^>]*>|<\/svg>$/g, '')
+    : definition.kind === 'tree'
+      ? '<path d="M150 18l-60 40m60-40 60 40" fill="none" stroke="var(--curve)" stroke-width="2"/>' +
+        [
+          [150, 18],
+          [90, 58],
+          [210, 58],
+        ]
           .map(
-            (x, i) =>
-              `<rect x="${x}" y="25" width="42" height="32" rx="4" fill="none" stroke="var(--curve)" stroke-width="2"/>${i < 2 ? `<path d="M${x + 44} 41h14m-4-4 4 4-4 4" fill="none" stroke="var(--result)"/>` : ''}`,
+            ([x, y]) =>
+              `<circle cx="${x}" cy="${y}" r="9" fill="var(--surface-1)" stroke="var(--result)" stroke-width="2"/>`,
           )
           .join('')
-      : ['graph', 'graph-extra'].includes(definition.kind)
-        ? '<path d="M70 41l70-22 65 22-65 22Zm70-22v44m-70-22h135" fill="none" stroke="var(--curve)" stroke-width="2"/>' +
-          [
-            [70, 41],
-            [140, 19],
-            [140, 63],
-            [205, 41],
-          ]
-            .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="var(--result)"/>`)
+      : definition.kind === 'structure'
+        ? [65, 125, 185]
+            .map(
+              (x, i) =>
+                `<rect x="${x}" y="25" width="42" height="32" rx="4" fill="none" stroke="var(--curve)" stroke-width="2"/>${i < 2 ? `<path d="M${x + 44} 41h14m-4-4 4 4-4 4" fill="none" stroke="var(--result)"/>` : ''}`,
+            )
             .join('')
-        : definition.kind === 'string'
-          ? '<text x="150" y="32" text-anchor="middle" style="fill:var(--muted);font-size:17px">A B A B A B C</text><text x="165" y="59" text-anchor="middle" style="fill:var(--result);font-size:17px">A B A B C</text>'
-          : ['dp', 'dp-extra'].includes(definition.kind)
-            ? '<path d="M90 12h120v58H90Zm0 19h120M90 50h120m-90-38v58m30-58v58m30-58v58" fill="none" stroke="var(--curve)" stroke-width="2"/><rect x="151" y="32" width="28" height="17" fill="var(--result)" opacity=".6"/>'
-            : definition.kind === 'number'
-              ? '<text x="150" y="48" text-anchor="middle" style="fill:var(--result);font-size:22px">48 mod 18 = 12</text>'
-              : [38, 12, 27, 8, 43, 19, 5, 31]
-                  .map(
-                    (v, i) =>
-                      `<rect x="${45 + i * 27}" y="${68 - v}" width="18" height="${v}" rx="2" fill="${i === 2 ? 'var(--load)' : 'var(--curve)'}"/>`,
-                  )
-                  .join('');
+        : ['graph', 'graph-extra'].includes(definition.kind)
+          ? '<path d="M70 41l70-22 65 22-65 22Zm70-22v44m-70-22h135" fill="none" stroke="var(--curve)" stroke-width="2"/>' +
+            [
+              [70, 41],
+              [140, 19],
+              [140, 63],
+              [205, 41],
+            ]
+              .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="var(--result)"/>`)
+              .join('')
+          : definition.kind === 'string'
+            ? '<text x="150" y="32" text-anchor="middle" style="fill:var(--muted);font-size:17px">A B A B A B C</text><text x="165" y="59" text-anchor="middle" style="fill:var(--result);font-size:17px">A B A B C</text>'
+            : ['dp', 'dp-extra'].includes(definition.kind)
+              ? '<path d="M90 12h120v58H90Zm0 19h120M90 50h120m-90-38v58m30-58v58m30-58v58" fill="none" stroke="var(--curve)" stroke-width="2"/><rect x="151" y="32" width="28" height="17" fill="var(--result)" opacity=".6"/>'
+              : definition.kind === 'number'
+                ? '<text x="150" y="48" text-anchor="middle" style="fill:var(--result);font-size:22px">48 mod 18 = 12</text>'
+                : [38, 12, 27, 8, 43, 19, 5, 31]
+                    .map(
+                      (v, i) =>
+                        `<rect x="${45 + i * 27}" y="${68 - v}" width="18" height="${v}" rx="2" fill="${i === 2 ? 'var(--load)' : 'var(--curve)'}"/>`,
+                    )
+                    .join('');
 const labs = catalog.map((entry) => {
   if (entry.engine === 'numeric') {
     return { ...entry, step: models[entry.id].definition.plot.step };
@@ -80,6 +92,22 @@ const labs = catalog.map((entry) => {
 
 function thumbnail({ drawing, graphic, step, href, groups, topic }) {
   const id = new URL(href, location.origin).searchParams.get('lab');
+  if (
+    groups.includes('networks') ||
+    groups.includes('cryptography') ||
+    groups.includes('mechanical')
+  ) {
+    const kind = groups.includes('networks')
+      ? 'network'
+      : groups.includes('cryptography')
+        ? 'lock'
+        : topic === 'Machine design'
+          ? 'gear'
+          : topic === 'Mechanisms & dynamics'
+            ? 'motor'
+            : 'wave';
+    return subjectArt(kind).replace('class="subject-art"', 'class="thumb subject-art"');
+  }
   if (groups.includes('mathematics') || groups.includes('machinelearning')) {
     const kind = groups.includes('machinelearning')
       ? id === 'mlconvolution'

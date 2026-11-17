@@ -40,5 +40,17 @@ linearMathModels.matheigen.solve({
     [0, 1],
   ],
 });
-// @ts-expect-error Network update counts are numeric.
+// @ts-expect-error Neural-network update counts are numeric.
 machineLearningModels.mlbackprop.solve({ hidden: 4, rate: 0.8, steps: '1200', seed: 42 });
+
+import { networkModels } from '../backend/networks-os.js';
+import { machineMotionModels } from '../backend/machine-motion.js';
+// @ts-expect-error Network study inputs preserve numeric controls through the shared study factory.
+networkModels.cidr.solve({ address: '192.0.2.1', prefix: '24' });
+machineMotionModels.rotorbalance.solve({
+  // @ts-expect-error Geometry is validated from bounded JSON text at the trust boundary.
+  unbalances: [[20, 40, 0, 0]],
+  spacing: 100,
+  radius: 50,
+  speed: 1000,
+});

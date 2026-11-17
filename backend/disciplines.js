@@ -1,6 +1,18 @@
 // Canonical discipline labels, grouping and icons.
 export const disciplineDefinitions = [
   {
+    id: 'networks',
+    label: 'Networks & Operating Systems',
+    group: 'COMPUTING & MACHINES',
+    path: 'M3 3h6v6H3Zm12 0h6v6h-6ZM9 6h6M6 9v6h12V9M9 15v6h6v-6',
+  },
+  {
+    id: 'cryptography',
+    label: 'Cryptography & Information Theory',
+    group: 'MATHEMATICS & DATA',
+    path: 'M6 10V7a6 6 0 0 1 12 0v3M4 10h16v11H4Zm8 4v3',
+  },
+  {
     id: 'mathematics',
     label: 'Mathematics',
     group: 'MATHEMATICS & DATA',

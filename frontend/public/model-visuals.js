@@ -2,6 +2,7 @@ import { escapeHtml as escape } from '../../backend/html.js';
 import { computerVisual } from './computer-visuals.js';
 import { engineeringVisual } from './engineering-visuals.js';
 import { mathVisual } from './math-visuals.js';
+import { releaseVisual } from './release-visuals.js';
 const f = (value, digits = 3) =>
   typeof value === 'number'
     ? value !== 0 && (Math.abs(value) < 0.0001 || Math.abs(value) >= 1e6)
@@ -35,7 +36,11 @@ export function renderModelVisual(host, definition, data, index) {
   const frame = v.frames?.[Math.min(index, v.frames.length - 1)];
   const defs =
     '<defs><marker id="model-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker></defs>';
-  if (v.type === 'math-space') {
+  if (v.type === 'release-system') {
+    const result = releaseVisual(v, index);
+    drawing = result.drawing;
+    height = result.height;
+  } else if (v.type === 'math-space') {
     const result = mathVisual(v, index);
     drawing = result.drawing;
     height = result.height;

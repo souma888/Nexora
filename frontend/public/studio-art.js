@@ -3,6 +3,30 @@ const line =
   'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
 export function subjectArt(kind) {
   const drawings = {
+    network:
+      '<path d="M65 22h70l60 38h40M65 60h70l60-38h40M135 22v38"/>' +
+      [
+        [65, 22],
+        [65, 60],
+        [135, 22],
+        [135, 60],
+        [195, 22],
+        [195, 60],
+        [235, 22],
+        [235, 60],
+      ]
+        .map(
+          ([x, y]) =>
+            `<circle cx="${x}" cy="${y}" r="6" fill="var(--surface-1)" class="art-result"/>`,
+        )
+        .join(''),
+    lock: '<path d="M125 35V21a25 25 0 0 1 50 0v14M110 35h80v40h-80Z"/><circle cx="150" cy="50" r="5"/><path d="M150 55v9M60 34h28m-28 14h28m125-14h28m-28 14h28" class="art-result"/>',
+    gear:
+      '<circle cx="115" cy="42" r="24"/><circle cx="174" cy="42" r="35"/><circle cx="115" cy="42" r="7"/><circle cx="174" cy="42" r="10"/>' +
+      Array.from({ length: 10 }, (_, i) => {
+        const t = (i * Math.PI) / 5;
+        return `<path d="M${115 + 24 * Math.cos(t)} ${42 + 24 * Math.sin(t)}l${5 * Math.cos(t)} ${5 * Math.sin(t)}"/>`;
+      }).join(''),
     classifier:
       '<path d="M90 70 205 10" stroke-dasharray="4 4"/>' +
       [
