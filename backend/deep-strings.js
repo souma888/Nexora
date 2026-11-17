@@ -1,4 +1,18 @@
 import { sequenceView, stateTable } from './deep-trace.js';
+// Native Array.sort may call its comparator a different number of times in
+// different JS engines. A fixed merge order makes the replay counter portable.
+function mergeOrder(values, compare) {
+  if (values.length <= 1) return [...values];
+  const mid = Math.floor(values.length / 2),
+    left = mergeOrder(values.slice(0, mid), compare),
+    right = mergeOrder(values.slice(mid), compare),
+    out = [];
+  let i = 0,
+    j = 0;
+  while (i < left.length && j < right.length)
+    out.push(compare(left[i], right[j]) <= 0 ? left[i++] : right[j++]);
+  return [...out, ...left.slice(i), ...right.slice(j)];
+}
 export function runString(id, input, { show, stats }) {
   if (id === 'zmatch') {
     const s = input.pattern + '#' + input.text,
@@ -42,8 +56,9 @@ export function runString(id, input, { show, stats }) {
       start = 0;
     for (let i = 1; i < s.length - 1; i++) {
       if (i < right) radius[i] = Math.min(right - i, radius[2 * center - i]);
-      while (s[i + radius[i] + 1] === s[i - radius[i] - 1]) {
+      while (true) {
         stats.comparisons++;
+        if (s[i + radius[i] + 1] !== s[i - radius[i] - 1]) break;
         radius[i]++;
       }
       if (i + radius[i] > right) {
@@ -80,7 +95,7 @@ export function runString(id, input, { show, stats }) {
     let sa = Array.from({ length: n }, (_, i) => i),
       rank = [...s].map((c) => c.charCodeAt(0));
     for (let k = 1; k < n; k *= 2) {
-      sa.sort((a, b) => {
+      sa = mergeOrder(sa, (a, b) => {
         stats.comparisons++;
         return rank[a] - rank[b] || (rank[a + k] ?? -1) - (rank[b + k] ?? -1);
       });
@@ -114,9 +129,10 @@ export function runString(id, input, { show, stats }) {
         continue;
       }
       const j = sa[r - 1];
-      while (i + h < n && j + h < n && s[i + h] === s[j + h]) {
-        h++;
+      while (i + h < n && j + h < n) {
         stats.comparisons++;
+        if (s[i + h] !== s[j + h]) break;
+        h++;
       }
       lcp[r] = h;
       if (h) h--;
@@ -133,18 +149,31 @@ export function runString(id, input, { show, stats }) {
     return { suffixArray: sa, lcp, text: `SA=[${sa}]; LCP=[${lcp}].` };
   }
   if (id === 'ahocorasick') {
-    const nodes = [{ next: {}, fail: 0, out: [] }];
+    const nodes = [{ next: {}, fail: 0, outputLink: -1, out: [] }];
     for (const word of input.patterns) {
       let state = 0;
       for (const c of word) {
         if (nodes[state].next[c] === undefined) {
           nodes[state].next[c] = nodes.length;
-          nodes.push({ next: {}, fail: 0, out: [] });
+          nodes.push({ next: {}, fail: 0, outputLink: -1, out: [] });
         }
         state = nodes[state].next[c];
       }
       nodes[state].out.push(word);
     }
+    const transitions = nodes.map(() => new Map());
+    const go = (state, c) => {
+      if (transitions[state].has(c)) return transitions[state].get(c);
+      stats.visits++;
+      const target = nodes[state].next[c] ?? (state ? go(nodes[state].fail, c) : 0);
+      transitions[state].set(c, target);
+      return target;
+    };
+    const outputs = (state) => {
+      const words = [];
+      for (let at = state; at >= 0; at = nodes[at].outputLink) words.push(...nodes[at].out);
+      return words;
+    };
     const emit = (message, active = -1) =>
       show(
         1,
@@ -154,7 +183,7 @@ export function runString(id, input, { show, stats }) {
           nodes: nodes.map((n, i) => ({
             id: i,
             label: i,
-            detail: `fail ${n.fail}${n.out.length ? ' · ' + n.out.join('/') : ''}`,
+            detail: `fail ${n.fail}${outputs(i).length ? ' · ' + outputs(i).join('/') : ''}`,
             active: i === active,
           })),
           edges: nodes.flatMap((n, i) => Object.entries(n.next).map(([c, j]) => [i, j, c])),
@@ -162,7 +191,7 @@ export function runString(id, input, { show, stats }) {
         },
         stateTable(
           ['State', 'Failure', 'Outputs'],
-          nodes.map((n, i) => [i, n.fail, n.out.join(',')]),
+          nodes.map((n, i) => [i, n.fail, outputs(i).join(',')]),
           'Trie failure/output table',
         ),
       );
@@ -170,10 +199,9 @@ export function runString(id, input, { show, stats }) {
     for (let head = 0; head < queue.length; head++) {
       const u = queue[head];
       for (const [c, v] of Object.entries(nodes[u].next)) {
-        let f = nodes[u].fail;
-        while (f && nodes[f].next[c] === undefined) f = nodes[f].fail;
-        nodes[v].fail = nodes[f].next[c] ?? 0;
-        nodes[v].out.push(...nodes[nodes[v].fail].out);
+        const f = go(nodes[u].fail, c);
+        nodes[v].fail = f;
+        nodes[v].outputLink = nodes[f].out.length ? f : nodes[f].outputLink;
         queue.push(v);
       }
       emit(`Build failure links from state ${u}.`, u);
@@ -182,16 +210,12 @@ export function runString(id, input, { show, stats }) {
     const matches = [];
     for (let i = 0; i < input.text.length; i++) {
       const c = input.text[i];
-      while (state && nodes[state].next[c] === undefined) {
-        state = nodes[state].fail;
-        stats.visits++;
-      }
-      state = nodes[state].next[c] ?? 0;
-      for (const word of nodes[state].out)
+      state = go(state, c);
+      for (const word of outputs(state))
         matches.push({ pattern: word, start: i - word.length + 1, end: i + 1 });
       stats.visits++;
       emit(
-        `Read text[${i}]=${c}; state ${state}; outputs ${nodes[state].out.join(', ') || 'none'}.`,
+        `Read text[${i}]=${c}; state ${state}; outputs ${outputs(state).join(', ') || 'none'}.`,
         state,
       );
     }

@@ -65,7 +65,7 @@ function rbInvariant(result) {
     return L + +!n.red;
   }
   assert.equal(nodes.get(result.root).red, false);
-  assert.equal(visit(result.root), result.blackHeight);
+  assert.equal(visit(result.root) - 1, result.blackHeight);
 }
 test('red–black insertion satisfies independently reconstructed BST, red-parent and black-height invariants', () => {
   fc.assert(
@@ -121,6 +121,19 @@ test('skip-list search matches set membership and Bloom filters have no false ne
       const r = solve('skiplist', { target, seed });
       assert.equal(r.found, r.values.includes(target));
       assert.ok(r.heights.every((h) => h >= 1 && h <= 6));
+      for (let level = 0; level < r.forward[0].length; level++) {
+        const linked = [];
+        let at = r.forward[0][level];
+        while (at >= 0) {
+          assert.ok(!linked.includes(at), 'forward links must not cycle');
+          linked.push(at);
+          at = r.forward[at + 1][level];
+        }
+        assert.deepEqual(
+          linked,
+          r.heights.flatMap((h, i) => (h > level ? [i] : [])),
+        );
+      }
     }
   }
   for (const bits of [8, 32, 128])

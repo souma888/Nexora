@@ -62,7 +62,7 @@ export const deepAlgorithms = {
       'Recolor the root black',
       'Verify black-height and red-parent invariants',
     ],
-    'Duplicate keys are ignored. Null leaves are black; every root-to-null path must have the same black height. Up to 24 keys; snapshots include transient repair states.',
+    'Duplicate keys are ignored. Null leaves are black; every root-to-null path has the same black height. The displayed black height excludes the root and includes its null leaf. Up to 24 keys; snapshots include transient repair states.',
     '41,38,31 causes a right rotation; final root is 38.',
     'What must happen if a red node has a red parent and red uncle?',
     [
@@ -106,7 +106,7 @@ export const deepAlgorithms = {
       'Move right while the next key is below target',
       'Drop a level and test equality',
     ],
-    'Maximum six levels; duplicate keys are deduplicated. Seeded heights make traces reproducible; expected complexity is not a guarantee for a particular seed.',
+    'Build cost includes sorting and linking towers. Search follows forward pointers, with a maximum of six levels for the bounded input here; duplicate keys are deduplicated. Expected logarithmic search assumes an uncapped geometric tower model; a particular seed does not guarantee it.',
     'Searching 19 in the default keys ends at its sorted index 5.',
     'Why does a search move down a level?',
     [

@@ -123,16 +123,19 @@ export function runStructure(id, input, { show, stats }) {
       emit(2, `Root is black after inserting ${key}.`);
       const properties = redBlackProperties(root);
       if (!properties.valid) throw Error('Red–black invariant failed.');
-      emit(3, `Verified black height ${properties.height}.`);
+      emit(
+        3,
+        `Verified black height ${properties.height - 1} (root excluded, null leaf included).`,
+      );
     }
     const properties = redBlackProperties(root);
     return {
       root: root?.key ?? null,
-      blackHeight: properties.height,
+      blackHeight: properties.height - 1,
       valid: properties.valid,
       nodes: view().nodes,
       edges: view().edges,
-      text: `${properties.size} distinct keys; black height ${properties.height}; all red–black invariants hold.`,
+      text: `${properties.size} distinct keys; black height ${properties.height - 1} (root excluded); all red–black invariants hold.`,
     };
   }
   if (id === 'btree') {
@@ -241,7 +244,17 @@ export function runStructure(id, input, { show, stats }) {
         while (h < 6 && rng() < 0.5) h++;
         return h;
       }),
-      top = Math.max(...heights);
+      top = Math.max(...heights),
+      // Row zero is the head; row j + 1 contains node j's forward links.
+      forward = Array.from({ length: values.length + 1 }, () => Array(top).fill(-1));
+    for (let level = 0; level < top; level++) {
+      let previous = -1;
+      for (let j = 0; j < values.length; j++) {
+        if (heights[j] <= level) continue;
+        forward[previous + 1][level] = j;
+        previous = j;
+      }
+    }
     let i = -1;
     const emit = (level, message) => {
       const matrix = Array.from({ length: top }, (_, r) =>
@@ -261,22 +274,20 @@ export function runStructure(id, input, { show, stats }) {
     };
     emit(top - 1, 'Begin at the top sentinel, before every key.');
     for (let level = top - 1; level >= 0; level--) {
-      let next = i + 1;
-      while (next < values.length) {
-        if (heights[next] <= level) {
-          next++;
-          continue;
-        }
+      let next = forward[i + 1][level];
+      while (next >= 0) {
         stats.comparisons++;
         if (values[next] >= input.target) break;
         i = next;
         stats.visits++;
         emit(level, `Move right to ${values[i]} on level ${level}.`);
-        next = i + 1;
+        next = forward[i + 1][level];
       }
       emit(level, `Drop below level ${level} without overshooting.`);
     }
-    const index = values.indexOf(input.target),
+    const candidate = forward[i + 1][0];
+    if (candidate >= 0) stats.comparisons++;
+    const index = candidate >= 0 && values[candidate] === input.target ? candidate : -1,
       found = index >= 0;
     show(
       3,
@@ -292,6 +303,7 @@ export function runStructure(id, input, { show, stats }) {
       index,
       values,
       heights,
+      forward,
       text: found ? `Found at sorted index ${index}.` : 'Target is absent.',
     };
   }
