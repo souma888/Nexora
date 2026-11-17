@@ -112,8 +112,8 @@ test('Euclid gives known GCDs and records valid division identities', () => {
       assert.equal(row.a, row.quotient * row.b + row.remainder);
   }
 });
-test('algorithm API discovers 55 models, returns traces, and rejects malformed or invalid input', async () => {
-  assert.equal((await GET().json()).models.length, 55);
+test('algorithm API discovers its executable registry, returns traces, and rejects invalid input', async () => {
+  assert.equal((await GET().json()).models.length, Object.keys(algorithms).length);
   for (const [model, definition] of Object.entries(algorithms)) {
     const response = await call({ model, input: definition.defaults });
     assert.equal(response.status, 200);

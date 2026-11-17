@@ -1,12 +1,14 @@
 import { algorithms, coordinates, validateAlgorithm } from './algorithm-definitions.js';
 import { runAdditional } from './advanced-algorithms.js';
 import { runDsaMore } from './dsa-more.js';
+import { runDeep } from './deep-algorithms.js';
 export { algorithms, validateAlgorithm } from './algorithm-definitions.js';
 
 // Frames are independent snapshots: scrubbing never mutates an earlier state.
 export function runAlgorithm(id, raw) {
   const input = validateAlgorithm(id, raw),
     definition = algorithms[id];
+  if (definition.runner === 'deep') return runDeep(id, input, definition);
   if (definition.runner === 'dsa-more') return runDsaMore(id, input, definition);
   if (definition.engine === 'extended') return runAdditional(id, input, definition);
   const frames = [],

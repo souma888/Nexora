@@ -22,7 +22,9 @@ test('Data Structures & Algorithms uses consistent capitalization in navigation 
   await expect(page.locator('#discipline-filter option:checked')).toHaveText(
     'Data Structures & Algorithms',
   );
-  await expect(page.locator('#catalog-status')).toHaveText('55 experiments available');
+  await expect(page.locator('#catalog-status')).toHaveText(
+    `${Object.keys(algorithms).length} experiments available`,
+  );
   await page.getByRole('searchbox').fill('AVL');
   await expect(page.locator('#catalog-status')).toHaveText('1 experiment available');
   await page

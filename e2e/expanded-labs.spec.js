@@ -66,7 +66,9 @@ for (const [id, definition] of Object.entries(algorithms)) {
   }) => {
     const errors = monitor(page);
     await page.goto('/#algorithms');
-    await expect(page.getByRole('status')).toHaveText('55 experiments available');
+    await expect(page.getByRole('status')).toHaveText(
+      `${disciplineCounts.algorithms} experiments available`,
+    );
     await page.locator(`.sim-link[href="/algorithms.html?lab=${id}"]`).click();
     await expect(page.locator('#algorithm-lab')).toBeVisible();
     await expect(page.locator('a[data-discipline="algorithms"]')).toHaveAttribute(

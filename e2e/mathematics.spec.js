@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { models } from '../backend/numeric-models.js';
+import { catalog } from '../backend/catalog.js';
 const additions = Object.entries(models).filter(([, m]) =>
   ['mathematics', 'machinelearning'].includes(m.definition.discipline),
 );
@@ -58,7 +59,9 @@ test('mathematics subject filters compose with search, clear correctly and prese
   await expect(page.locator('#catalog-status')).toHaveText('14 experiments available');
   await expect(page.locator('.section-preview')).toBeVisible();
   await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
-  await expect(page.locator('#catalog-status')).toHaveText('241 experiments available');
+  await expect(page.locator('#catalog-status')).toHaveText(
+    `${catalog.length} experiments available`,
+  );
 });
 test('matrix validation, continuous updates, nonlinear training and accessible mathematical views', async ({
   page,

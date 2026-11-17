@@ -1,5 +1,6 @@
 import { additionalAlgorithms, validateAdditional } from './advanced-definitions.js';
 import { dsaMore } from './dsa-more-definitions.js';
+import { deepAlgorithms, validateDeep } from './deep-algorithm-definitions.js';
 import { integer, list, invalid } from './algorithm-input.js';
 export { AlgorithmInputError } from './algorithm-input.js';
 const array = { values: '38, 12, 27, 8, 43, 19, 5, 31' };
@@ -320,6 +321,7 @@ export const algorithms = {
   ),
   ...additionalAlgorithms,
   ...dsaMore,
+  ...deepAlgorithms,
 };
 
 export const coordinates = [
@@ -393,6 +395,7 @@ export const workedExamples = {
 
 export function validateAlgorithm(id, input) {
   if (!Object.hasOwn(algorithms, id)) invalid('model', 'Choose a supported algorithm.');
+  if (algorithms[id].runner === 'deep') return validateDeep(algorithms[id], input);
   if (algorithms[id].engine === 'extended') return validateAdditional(algorithms[id], input);
   const { kind } = algorithms[id];
   if (kind === 'sort' || kind === 'search') {

@@ -46,6 +46,11 @@ export function renderAdditional(frame, visual, table, caption) {
       })
       .join('');
   } else if (view.type === 'tree') {
+    const block = view.nodes.some((n) => n.block),
+      blockWidth = block
+        ? Math.max(156, ...view.nodes.map((n) => String(n.label).length * 8 + 20))
+        : 46,
+      spacing = block ? blockWidth + 24 : 100;
     const children = new Map(view.nodes.map((n) => [n.id, []])),
       positions = new Map();
     view.edges.forEach(([from, to]) => children.get(from).push(to));
@@ -55,7 +60,7 @@ export function renderAdditional(frame, visual, table, caption) {
       const list = children.get(id);
       maxDepth = Math.max(maxDepth, depth);
       if (!list.length) {
-        positions.set(id, [55 + cursor++ * 100, 50 + depth * 100]);
+        positions.set(id, [(block ? spacing / 2 : 55) + cursor++ * spacing, 50 + depth * 100]);
         return;
       }
       list.forEach((child) => place(child, depth + 1));
@@ -68,9 +73,9 @@ export function renderAdditional(frame, visual, table, caption) {
       if (i) cursor++;
       place(root, 0);
     });
-    width = Math.max(520, cursor * 100 + 30);
+    width = Math.max(520, cursor * spacing + 30);
     height = Math.max(250, 110 + maxDepth * 100);
-    const dx = (width - Math.max(100, cursor * 100 + 30)) / 2;
+    const dx = (width - Math.max(spacing, cursor * spacing + 30)) / 2;
     for (const [id, [x, y]] of positions) positions.set(id, [x + dx, y]);
     drawing = view.edges
       .map(([from, to, edgeLabel]) => {
@@ -82,7 +87,12 @@ export function renderAdditional(frame, visual, table, caption) {
     drawing += view.nodes
       .map((item) => {
         const [x, y] = positions.get(item.id);
-        return `<circle cx="${x}" cy="${y}" r="23" fill="var(--surface-1)" stroke="${color(item)}" stroke-width="2"/>${label(x, y + 5, item.label, color(item))}${label(x, y + 45, item.detail, 'var(--muted)')}`;
+        const rb = typeof item.red === 'boolean',
+          fill = rb ? (item.red ? 'var(--brand)' : '#16181d') : 'var(--surface-1)';
+        const shape = item.block
+          ? `<rect x="${x - blockWidth / 2}" y="${y - 23}" width="${blockWidth}" height="46" rx="6" fill="${fill}" stroke="${color(item)}"/>`
+          : `<circle cx="${x}" cy="${y}" r="23" fill="${fill}" stroke="${rb ? 'var(--muted)' : color(item)}" stroke-width="2"/>`;
+        return `${shape}${label(x, y + 5, item.label, rb ? '#f2f3f5' : color(item))}${label(x, y + 45, item.detail, 'var(--muted)')}`;
       })
       .join('');
     if (!view.nodes.length) drawing = label(width / 2, 110, 'Empty tree', 'var(--muted)');
@@ -130,6 +140,53 @@ export function renderAdditional(frame, visual, table, caption) {
         ([x, y], i) =>
           `<circle cx="${x}" cy="${y}" r="21" fill="var(--surface-1)" stroke="${view.active.includes(i) ? 'var(--load)' : view.visited.includes(i) ? 'var(--result)' : 'var(--curve)'}" stroke-width="2"/>${label(x, y + 5, i)}${view.groups?.[i] === null || view.groups?.[i] === undefined ? '' : label(x, y + 39, `C${view.groups[i]}`, 'var(--result)')}`,
       )
+      .join('');
+  } else if (view.type === 'geometry') {
+    const xs = view.points.map((p) => p[0]),
+      ys = view.points.map((p) => p[1]),
+      xmin = Math.min(...xs),
+      xmax = Math.max(...xs),
+      ymin = Math.min(...ys),
+      ymax = Math.max(...ys),
+      scale = Math.min(420 / (xmax - xmin || 1), 170 / (ymax - ymin || 1)),
+      point = ([x, y]) => [50 + (x - xmin) * scale, 205 - (y - ymin) * scale];
+    drawing = `<path d="M35 215H490M40 220V20" stroke="var(--border)"/>`;
+    if (view.chain.length)
+      drawing += `<polyline points="${view.chain
+        .map(point)
+        .map((p) => p.join(','))
+        .join(' ')}" fill="none" stroke="var(--result)" stroke-width="3"/>`;
+    if (view.pair.length === 2) {
+      const a = point(view.points[view.pair[0]]),
+        b = point(view.points[view.pair[1]]);
+      drawing += `<path d="M${a}L${b}" stroke="var(--load)" stroke-width="3"/>`;
+    }
+    drawing += view.points
+      .map((p, i) => {
+        const [x, y] = point(p);
+        return `<circle cx="${x}" cy="${y}" r="5" fill="var(--curve)"/>${label(x + 9, y - 9, i, 'var(--text)')}`;
+      })
+      .join('');
+  } else if (view.type === 'intervals') {
+    height = Math.max(250, 50 + view.intervals.length * 27);
+    const lo = Math.min(...view.intervals.map((p) => p[0])),
+      hi = Math.max(...view.intervals.map((p) => p[1])),
+      x = (t) => 65 + (400 * (t - lo)) / (hi - lo || 1);
+    drawing = view.intervals
+      .map(([a, b], i) => {
+        const y = 25 + i * 27,
+          c = view.selected.includes(i)
+            ? 'var(--result)'
+            : i === view.active
+              ? 'var(--load)'
+              : 'var(--muted)';
+        return (
+          label(30, y + 5, i) +
+          `<path d="M${x(a)} ${y}H${x(b)}" stroke="${c}" stroke-width="8"/>` +
+          label(x(a), y - 8, a) +
+          label(x(b), y - 8, b)
+        );
+      })
       .join('');
   } else if (view.type === 'text') {
     width = Math.max(520, 34 * Math.max(view.text.length, view.pattern.length + view.offset) + 40);

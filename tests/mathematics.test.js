@@ -39,7 +39,7 @@ test('all requested labs are unique manifest entries in their six subject groups
   const counts = {};
   for (const m of math) counts[m.definition.topic] = (counts[m.definition.topic] ?? 0) + 1;
   assert.deepEqual(Object.values(counts), [14, 8, 10, 12, 8]);
-  assert.equal(labManifest.length, 241);
+  assert.equal(new Set(labManifest.map((lab) => lab.id)).size, labManifest.length);
   for (const id of Object.keys(additions))
     assert.equal(labManifest.filter((m) => m.id === id).length, 1);
 });

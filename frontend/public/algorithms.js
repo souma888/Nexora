@@ -328,7 +328,9 @@ function initialize() {
     const row = node('div'),
       label = node('label', schema.label ?? labels[key]);
     label.htmlFor = `algo-${key}`;
-    const input = node(key === 'edges' || schema.type === 'commands' ? 'textarea' : 'input');
+    const input = node(
+      key === 'edges' || schema.type === 'commands' || schema.multiline ? 'textarea' : 'input',
+    );
     input.id = `algo-${key}`;
     input.name = key;
     input.className = 'algorithm-input';
