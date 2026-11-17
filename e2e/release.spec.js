@@ -92,7 +92,11 @@ test('discipline sidebar follows direct links, filters, and browser history', as
   const bounds = await sidebar.boundingBox();
   expect(bounds.x).toBe(0);
   if (page.viewportSize().width > 740) {
-    expect(bounds.y).toBe(52);
+    // Keyboard/history restoration can leave the viewport slightly scrolled.
+    // Check alignment with the header, rather than assuming scrollY is zero.
+    const header = await page.locator('.topbar').boundingBox();
+    expect(header.y + header.height).toBeGreaterThan(0);
+    expect(bounds.y).toBeCloseTo(header.y + header.height, 1);
     await page.evaluate(() => window.scrollTo(0, 500));
     await expect.poll(async () => (await sidebar.boundingBox()).y).toBe(0);
   } else {
