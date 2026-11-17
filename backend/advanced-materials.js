@@ -380,6 +380,7 @@ export const advancedMaterialModels = {
         L = (capacity / load) ** exponent;
       return {
         summary: { revolutions: L, hours: (1e6 * L) / (60 * speed) },
+        visualization: { type: 'release-system', kind: 'rolling-bearing', speed, load },
         series: samples(Math.max(0.1, load / 2), load * 2, (x) => ({
           y: (capacity / x) ** exponent,
         })),
@@ -431,6 +432,14 @@ export const advancedMaterialModels = {
           { x: 1, y: modes[0][0], reference: modes[1][0] },
           { x: 2, y: modes[0][1], reference: modes[1][1] },
         ],
+        visualization: {
+          type: 'release-system',
+          kind: 'absorber',
+          modal: true,
+          mass1,
+          mass2,
+          frames: modes.map((m, i) => ({ primary: m[0], absorber: m[1], mode: i + 1 })),
+        },
         table: table(
           'Normalized mode shapes',
           ['Mass', 'Mode 1', 'Mode 2'],
@@ -443,3 +452,5 @@ export const advancedMaterialModels = {
     },
   ),
 };
+advancedMaterialModels.bearinglife.definition.topic = 'Machine design';
+advancedMaterialModels.modal2dof.definition.topic = 'Vibration & rotor dynamics';
