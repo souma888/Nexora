@@ -171,6 +171,8 @@ test('algorithm list entries have discrete parameter sweeps', async ({ page }) =
 test('practice grades the first answer and interface language can switch back', async ({
   page,
 }) => {
+  // The lab itself also uses a worker; only gate the later practice request.
+  await open(page, 'hallpetch');
   let releaseWorker = () => {};
   const workerGate = new Promise((resolve) => {
     releaseWorker = resolve;
@@ -179,7 +181,6 @@ test('practice grades the first answer and interface language can switch back', 
     await workerGate;
     await route.continue();
   });
-  await open(page, 'hallpetch');
   await page.getByText('Practice, accessible plots & 3D', { exact: true }).click();
   await page.getByRole('button', { name: 'Next practice problem' }).click();
   try {
