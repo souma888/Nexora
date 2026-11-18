@@ -686,3 +686,13 @@ test('Miller plane polygon lies on its indexed plane and clips to the actual cub
     }
   }
 });
+test('tiny cold reverse diode current does not disappear through voltage subtraction', () => {
+  for (const temperature of [250, 270, 300])
+    for (const saturation of [1e-14, 1e-12]) {
+      const a = { ...defaults('pnjunction'), temperature, saturation, bias: -5 },
+        r = diodeState(a);
+      assert.ok(r.current < 0);
+      near(r.current / r.Is, -1, 1e-12);
+      near(a.bias - r.junction, r.current * a.resistance, 1e-14);
+    }
+});

@@ -25,7 +25,9 @@ export function diodeState(a, V = a.bias) {
       Math.exp((-1.12 / KB) * (1 / a.temperature - 1 / 300)),
     f = (v) => Is * Math.expm1(v / (a.ideality * vt)) - (V - v) / a.resistance,
     v = V === 0 ? 0 : bisect(f, Math.min(0, V), Math.max(0, V)),
-    I = (V - v) / a.resistance,
+    // The resistor drop can be smaller than one ULP of a reverse voltage.
+    // Evaluate the diode law to retain the small reverse saturation current.
+    I = Is * Math.expm1(v / (a.ideality * vt)),
     ni = siliconNi(a.temperature),
     built = vt * Math.log((a.acceptors * a.donors) / (ni * ni)),
     W =
@@ -78,6 +80,7 @@ export const semiconductorModels = {
   pnjunction: make(
     {
       id: 'pnjunction',
+      version: '1.1',
       title: 'PN Junction I–V and Depletion Width',
       inputs: {
         bias: p('Applied terminal voltage', 'V', -5, 0.9, 0.7),

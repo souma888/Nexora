@@ -114,6 +114,8 @@ Nulls consistently mean a model quantity is undefined: no pump intersection, no 
 
 The expanded `leverrule` input contract is solver version 2.0. Its route and original default numerical example are preserved, but version-1 saved runs are deliberately refused by the shared version guard rather than silently compared with a different contract. The six other materials upgrades only add worker execution/diagrams and retain their numerical version.
 
+The PN-junction solver is version 1.1: it evaluates current directly from the Shockley law after locating the junction voltage. This preserves tiny low-temperature reverse currents when the external resistor drop is smaller than a floating-point step of the terminal voltage.
+
 ## Verification evidence
 
 [`tests/engineering-depth.test.js`](../tests/engineering-depth.test.js) covers all 90 lab results, worker metadata, teaching content, deterministic native diagrams, every single numeric bound/enum and HTTP agreement. Reference checks go beyond calling the same solver through two paths:
