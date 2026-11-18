@@ -256,14 +256,14 @@ export function studyVisual(v, index = 0) {
         2,
         'var(--selection)',
       );
-      for (const [u, label, color] of [
+      for (const [i, [u, label, color]] of [
         [n, 'Plane normal', 'var(--result)'],
         [s, 'Slip direction', 'var(--curve)'],
         [load, 'Load axis', 'var(--load)'],
-      ]) {
+      ].entries()) {
         const p = project(u);
         drawing += arrow(...origin, ...p, color);
-        drawing += text(p[0], p[1] - 10, label, color);
+        drawing += text(35, 30 + i * 20, label, color, 'start');
       }
       drawing += text(260, 270, `(${v.normal.join(' ')}) [${v.slip.join(' ')}]`);
       caption = 'Cubic plane h·x+k·y+l·z=1; the supplied slip direction lies parallel to it.';
