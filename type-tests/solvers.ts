@@ -1,6 +1,19 @@
 import { energyModels } from '../backend/power-energy.js';
+import { semiconductorModels } from '../backend/semiconductors.js';
+import { structuralModels } from '../backend/structures.js';
 import { lab, p } from '../backend/lab-kit.js';
 // These fail the type check if the public solver boundary ever degrades to any.
+semiconductorModels.cmosinverter.solve({
+  // @ts-expect-error Semiconductor voltages remain numeric through the subject factory.
+  supply: '3.3',
+  nthreshold: 0.7,
+  pthreshold: 0.7,
+  nbeta: 1,
+  pbeta: 1,
+  input: 1.65,
+});
+// @ts-expect-error Structural geometry is bounded JSON text, not a mutable object.
+structuralModels.trussjoints.solve({ geometry: { nodes: [] } });
 const settings = { voltage: 24, duty: 0.5, resistance: 10, inductance: 2, frequency: 20 };
 // @ts-expect-error Duty must be numeric.
 energyModels.buckconverter.solve({ ...settings, duty: 'bad' });

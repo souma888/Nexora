@@ -7,6 +7,7 @@ import { algorithms } from '../../backend/algorithm-definitions.js';
 import { disciplines } from '../../backend/disciplines.js';
 import { initStudio } from './studio.js';
 import { subjectArt, controlArt, expansionArt } from './studio-art.js';
+import { engineeringThumbnail } from './engineering-art.js';
 
 const form = document.getElementById('catalog-filters');
 const search = document.getElementById('lab-search');
@@ -92,6 +93,8 @@ const labs = catalog.map((entry) => {
 
 function thumbnail({ drawing, graphic, step, href, groups, topic }) {
   const id = new URL(href, location.origin).searchParams.get('lab');
+  const engineeringArt = engineeringThumbnail(id);
+  if (engineeringArt) return engineeringArt;
   if (
     groups.includes('networks') ||
     groups.includes('cryptography') ||

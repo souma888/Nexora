@@ -62,8 +62,12 @@ function drawPlot(definition, data) {
     .filter((key) => !['sample', 'locus'].includes(key))
     .map((key) => {
       const stroke =
-        { y: 'var(--curve)', reference: 'var(--muted)', other: 'var(--result)' }[key] ??
-        'var(--curve)';
+        {
+          y: 'var(--curve)',
+          reference: 'var(--muted)',
+          other: 'var(--result)',
+          third: 'var(--result)',
+        }[key] ?? 'var(--curve)';
       const style = `fill="none" stroke="${stroke}" stroke-width="${key === 'y' ? 2.4 : 2}" ${key === 'reference' ? 'stroke-dasharray="5 4"' : ''}`;
       if (series.every((p) => Number.isFinite(p[key])))
         return `<polyline points="${points(key)}" ${style}/>`;
@@ -278,6 +282,7 @@ function initialize(definition) {
       sample: 'sample-trace',
       locus: 'curve-swatch',
       other: 'other-trace',
+      third: 'other-trace',
     }[key];
     item.append(swatch, name);
     byId('traces').append(item);

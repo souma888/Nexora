@@ -6,7 +6,7 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 
 <!-- catalog-summary:start -->
 
-**297 working labs across 21 disciplines.**
+**380 working labs across 21 disciplines.**
 <!-- catalog-summary:end -->
 
 ## What works today
@@ -17,6 +17,8 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 - **Machine Learning & Data Science:** 14 labs that train and inspect small classifiers, clustering models, optimizers and networks. [Models, verification and limits](docs/MATHEMATICS_DATA_SCIENCE.md).
 - **Networks, operating systems and cryptography:** protocol/event traces, memory and CPU/resource scheduling, entropy/source coding, small public-key examples, SHA-256 avalanche and Viterbi decoding.
 - **Machine design and advanced DSA:** vibration, gears, joints, contact and balancing models; balanced trees, string indexing, flow/matching/assignment and subset optimization. [Release models and reference checks](docs/MACHINE_SYSTEMS_RELEASE.md).
+- **Metallurgy, structures and thermal systems:** phase equilibria and kinetics, laminate ABD coupling, continuous beams, virtual work, IF97 Rankine states, heat-transfer eigenfunctions and fluid-network balances.
+- **Civil infrastructure, electrical machines and semiconductors:** geotechnical/water/traffic models, machine equivalent circuits, sequence faults and relay curves, transistor operating points and stateful timing circuits. [All 90 requested topics, assumptions and verification](docs/ENGINEERING_DEPTH_RELEASE.md).
 - Mechanics, circuits, control, signals, thermofluids, robotics, materials, computation, communications, energy, aerospace, chemical processes, reliability, and algorithm/data-structure traces.
 - **Build a truss:** define nodes, bars, supports and loads. A cancellable worker assembles stiffness equations and recovers displacement, member force, stress, reactions and strain energy.
 - **Analysis studio:** bounded sweeps, endpoint sensitivity tornadoes, seeded uncertainty propagation, CSV parameter fitting and a TensorFlow.js curve surrogate.
