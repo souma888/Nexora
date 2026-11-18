@@ -15,7 +15,9 @@
     "dist",
     "index.d.ts",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "steam-library-license.txt"
   ],
   "sideEffects": false,
   "license": "MIT",

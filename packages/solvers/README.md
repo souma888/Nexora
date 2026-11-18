@@ -1,6 +1,6 @@
 # @souma88/solvers
 
-Pure educational engineering solvers with TypeScript declarations. No DOM, server, database or browser dependency is required. MIT licensed.
+Pure educational engineering solvers with TypeScript declarations. No DOM, server, database or browser dependency is required. Nexora code is MIT licensed; the bundled IAPWS steam-property implementation retains its CC BY 4.0 license and attribution in `THIRD_PARTY_NOTICES.md` and `steam-library-license.txt`.
 
 ```js
 import { solveLab, solveTruss, convert } from '@souma88/solvers';

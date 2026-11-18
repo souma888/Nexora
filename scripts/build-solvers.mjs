@@ -16,3 +16,8 @@ await build({
   },
 });
 await copyFile('LICENSE', 'packages/solvers/LICENSE');
+await copyFile('THIRD_PARTY_NOTICES.md', 'packages/solvers/THIRD_PARTY_NOTICES.md');
+await copyFile(
+  'frontend/public/steam-library-license.txt',
+  'packages/solvers/steam-library-license.txt',
+);
