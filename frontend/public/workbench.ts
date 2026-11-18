@@ -22,7 +22,7 @@ type Model<Result> = {
 type Check = (
   definition: Model<unknown>['definition'],
   input: Inputs,
-) => { values?: Inputs; message?: string };
+) => { values?: Inputs; message?: string; key?: string };
 
 export function setMetric(id: string, value: string, unit = '') {
   const cell = document.getElementById(id);
@@ -199,6 +199,25 @@ export function setupWorkbench<Result extends Report>({
   const sliders = new Map<HTMLInputElement, HTMLInputElement>();
   const prediction = predictionControl(form, model.definition);
   let timer: ReturnType<typeof setTimeout> | undefined;
+  const invalidFields = new Set<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>();
+  function clearFieldErrors() {
+    for (const field of invalidFields) {
+      field.removeAttribute('aria-invalid');
+      field.removeAttribute('aria-errormessage');
+    }
+    invalidFields.clear();
+  }
+  function markFieldError(field: Element | RadioNodeList | null) {
+    if (
+      field instanceof HTMLInputElement ||
+      field instanceof HTMLTextAreaElement ||
+      field instanceof HTMLSelectElement
+    ) {
+      field.setAttribute('aria-invalid', 'true');
+      field.setAttribute('aria-errormessage', status.id);
+      invalidFields.add(field);
+    }
+  }
   let lastInput = '';
   const logScale = (input: HTMLInputElement) =>
     input.step === 'any' && Number(input.min) > 0 && Number(input.max) / Number(input.min) >= 1000;
@@ -257,8 +276,11 @@ export function setupWorkbench<Result extends Report>({
     const revision = ++generation;
     clearTimeout(timer);
     syncSliders();
-    const { values, message } = validate(model.definition, unitControls.canonical(payload()));
+    clearFieldErrors();
+    const { values, message, key } = validate(model.definition, unitControls.canonical(payload()));
     if (!values || [...sliders.keys()].some((input) => !input.validity.valid)) {
+      if (key) markFieldError(form.elements.namedItem(key));
+      for (const field of sliders.keys()) if (!field.validity.valid) markFieldError(field);
       status.dataset.error = 'true';
       status.textContent = `${message ?? 'Enter values within the allowed ranges.'} The last valid result is still shown.`;
       tools.invalidate();
