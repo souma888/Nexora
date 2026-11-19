@@ -4,6 +4,7 @@ import { energyModels } from '../backend/power-energy.js';
 import { aerospaceModels } from '../backend/aerospace.js';
 import { chemicalModels } from '../backend/chemical-process.js';
 import { industrialModels } from '../backend/industrial.js';
+import { disciplineCounts } from '../backend/catalog.js';
 const models = {
   ...communicationModels,
   ...energyModels,
@@ -29,7 +30,9 @@ for (const [id, { definition: d }] of Object.entries(models))
     const errors = [];
     page.on('pageerror', (e) => errors.push(e.message));
     await page.goto(`/#${d.discipline}`, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('#catalog-status')).toHaveText('6 experiments available');
+    await expect(page.locator('#catalog-status')).toHaveText(
+      `${disciplineCounts[d.discipline]} experiments available`,
+    );
     await page.locator(`.sim-link[href="/simulation.html?lab=${id}"]`).click();
     await expect(page.locator('#status')).toHaveText('Live results');
     await expect(page.getByRole('heading', { level: 1 })).toContainText(d.title);
