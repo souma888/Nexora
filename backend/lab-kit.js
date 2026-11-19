@@ -58,13 +58,18 @@ export function lab(config, solve) {
         y: plot.y ?? 'Response',
         traces: plot.traces ?? { y: 'Response' },
         step: plot.step ?? false,
+        ...(plot.xScale ? { xScale: plot.xScale } : {}),
+        ...(plot.yScale ? { yScale: plot.yScale } : {}),
       },
       outputs: {
         summary: Object.fromEntries(Object.entries(metrics).map(([key, value]) => [key, value[1]])),
         series: {
           x: plot.xUnit ?? 's',
           ...Object.fromEntries(
-            Object.keys(plot.traces ?? { y: '' }).map((key) => [key, plot.yUnit ?? '']),
+            Object.keys(plot.traces ?? { y: '' }).map((key) => [
+              key,
+              plot.traceUnits?.[key] ?? plot.yUnit ?? '',
+            ]),
           ),
         },
       },

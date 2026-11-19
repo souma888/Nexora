@@ -59,6 +59,9 @@ export interface Plot {
   xUnit?: string;
   yUnit?: string;
   traces?: Record<string, string>;
+  traceUnits?: Record<string, string>;
+  xScale?: 'linear' | 'log';
+  yScale?: 'linear' | 'log';
   step?: boolean;
 }
 export type Point = { x: number; [trace: string]: number | null };
@@ -82,6 +85,7 @@ export interface Definition<F extends Fields> {
   description?: string;
   predict?: string;
   example?: string;
+  exampleInputs?: Partial<InputValues<F>>;
   equation?: string;
   limits?: string;
   prediction?: [string[], number, string];
