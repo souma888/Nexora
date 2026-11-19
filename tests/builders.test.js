@@ -181,6 +181,7 @@ test('unsolvable builder projects return field-specific HTTP errors', async () =
     assert.equal(error.field, 'project');
     assert.equal(error.code, 'INVALID_INPUT');
     assert.match(error.error, pattern);
+    if (id === 'fem2d') assert.doesNotMatch(error.error, /circuit|voltage/i);
   }
 });
 test('unexpected programming errors are not disguised as model input failures', async () => {

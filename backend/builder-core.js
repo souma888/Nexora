@@ -54,8 +54,9 @@ export function solve(A, b) {
   try {
     return solveLinear(A, b);
   } catch (e) {
+    if (e instanceof TypeError) throw e;
     throw new SolverInputError(
-      `Singular or ill-conditioned system: check disconnected components, incompatible constraints or missing restraints. ${e.message}`,
+      'Singular or ill-conditioned system: check disconnected components, incompatible constraints or missing restraints.',
     );
   }
 }
