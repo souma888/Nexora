@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { runAlgorithm, algorithms } from '../backend/algorithms.js';
+import { disciplineCounts } from '../backend/catalog.js';
 
 const end = async (page) => {
   await page.locator('#timeline').focus();
@@ -23,7 +24,7 @@ test('Data Structures & Algorithms uses consistent capitalization in navigation 
     'Data Structures & Algorithms',
   );
   await expect(page.locator('#catalog-status')).toHaveText(
-    `${Object.keys(algorithms).length} experiments available`,
+    `${disciplineCounts.algorithms} experiments available`,
   );
   await page.getByRole('searchbox').fill('AVL');
   await expect(page.locator('#catalog-status')).toHaveText('1 experiment available');
