@@ -560,6 +560,25 @@ test('integration order agrees with exact harmonic oscillator without energy dri
   near(r[1], 0, 1e-9);
 });
 
+test('plane-change diagram preserves speed ratios and shows no burn arrow for identical velocities', () => {
+  const unchanged = explorationVisual(
+    solve('planechange', { speed: 7.5, final: 7.5, angle: 0 }).visualization,
+  ).drawing;
+  assert.doesNotMatch(unchanged, /stroke="var\(--load\)"/);
+  const changed = explorationVisual(
+    solve('planechange', { speed: 4, final: 8, angle: 60 }).visualization,
+  ).drawing;
+  const length = (color) => {
+    const regex = new RegExp(
+      `d="M([-\\d.e+]+) ([-\\d.e+]+)L([-\\d.e+]+) ([-\\d.e+]+)"[^>]*stroke="var\\(--${color}\\)"`,
+    );
+    const m = changed.match(regex);
+    assert.ok(m);
+    return Math.hypot(Number(m[3]) - Number(m[1]), Number(m[4]) - Number(m[2]));
+  };
+  near(length('result') / length('curve'), 2);
+});
+
 test('mixed traces retain physical units, logarithmic plots declare their scales, and a zero field has no direction', () => {
   for (const [id, key, unit] of [
     ['faraday', 'reference', 'Wb'],

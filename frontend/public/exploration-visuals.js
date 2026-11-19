@@ -13,6 +13,7 @@ const circle = (x, y, r, color = palette[0], fill = 'var(--surface-1)') =>
 const box = (x, y, w, h, color = 'var(--border)', fill = 'var(--surface-2)') =>
   `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" stroke="${color}" fill="${fill}"/>`;
 const arrow = (x, y, a, b, color = palette[0]) => {
+  if (Math.hypot(a - x, b - y) < 1e-9) return '';
   const angle = Math.atan2(b - y, a - x);
   return (
     line(x, y, a, b, color) +
@@ -712,13 +713,17 @@ export function explorationVisual(v, index = 0) {
         ? 'Attached-shock angle from the numerical θ–β–M solution'
         : 'No attached solution · detached bow-shock shape is not solved';
     } else if (v.kind === 'velocity-vectors') {
-      const t = (v.angle * Math.PI) / 180;
+      const t = (v.angle * Math.PI) / 180,
+        scale = 200 / Math.max(v.speed, v.final),
+        initialX = 130 + v.speed * scale,
+        targetX = 130 + v.final * scale * Math.cos(t),
+        targetY = 200 - v.final * scale * Math.sin(t);
       drawing =
-        arrow(130, 200, 370, 200, palette[0]) +
-        arrow(130, 200, 130 + 200 * Math.cos(t), 200 - 200 * Math.sin(t), palette[1]) +
-        arrow(370, 200, 130 + 200 * Math.cos(t), 200 - 200 * Math.sin(t), palette[2]);
+        arrow(130, 200, initialX, 200, palette[0]) +
+        arrow(130, 200, targetX, targetY, palette[1]) +
+        arrow(initialX, 200, targetX, targetY, palette[2]);
       caption =
-        'Initial velocity (blue), target velocity (green), required vector difference (amber)';
+        'Common speed scale · initial velocity (blue), target (green), required difference (amber)';
     } else if (v.kind === 'airfoil') {
       drawing = path('M85 145Q180 85 420 145Q190 165 85 145Z', palette[0], 3);
       for (let y = 60; y <= 220; y += 40) drawing += arrow(25, y, 75, y, 'var(--muted)');
