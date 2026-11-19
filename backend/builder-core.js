@@ -1,10 +1,11 @@
 import { solveLinear } from './linear.js';
+import { SolverInputError } from './solver-error.js';
 export const zeros = (n, m = n) => Array.from({ length: n }, () => Array(m).fill(0));
 export const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0);
 export const norm = (a) => Math.hypot(...a);
 export const maxabs = (a) => Math.max(0, ...a.map(Math.abs));
 export const check = (condition, message) => {
-  if (!condition) throw Error(message);
+  if (!condition) throw new SolverInputError(message);
 };
 export const number = (value, min, max, label) => {
   check(
@@ -28,7 +29,7 @@ export function jsonProject(source, max = 64000) {
   try {
     data = JSON.parse(source);
   } catch {
-    throw Error('Project must be valid JSON.');
+    throw new SolverInputError('Project must be valid JSON.');
   }
   check(data && typeof data === 'object' && !Array.isArray(data), 'Project must be a JSON object.');
   if (data.positions !== undefined) {
@@ -53,7 +54,7 @@ export function solve(A, b) {
   try {
     return solveLinear(A, b);
   } catch (e) {
-    throw Error(
+    throw new SolverInputError(
       `Singular or ill-conditioned system: check disconnected components, incompatible constraints or missing restraints. ${e.message}`,
     );
   }

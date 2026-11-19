@@ -1,4 +1,5 @@
 import { convert } from './physical-units.js';
+import { SolverInputError } from './solver-error.js';
 /** @returns {import("./schema.js").NumberField} */
 export const number = (label, unit, min, max) => ({ label, type: 'number', unit, min, max });
 
@@ -76,13 +77,21 @@ export function simulationHandler(select) {
     const { definition, solve, input } = model;
     const { values, key, message } = validate(definition, input);
     if (message) return failure(message, 'INVALID_INPUT', 422, key);
+    let result;
+    try {
+      result = solve(values);
+    } catch (error) {
+      if (error instanceof SolverInputError)
+        return failure(error.message, 'INVALID_INPUT', 422, error.field);
+      throw error;
+    }
     return Response.json({
       model: definition.id,
       input: values,
       version: definition.version,
       units: definition.outputs,
       series: [],
-      ...solve(values),
+      ...result,
     });
   };
 }

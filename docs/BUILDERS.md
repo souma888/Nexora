@@ -1,6 +1,6 @@
 # Build your own models
 
-Seven workbenches extend the catalog with editable systems. Open a lab, edit its canvas or property tables, and switch from **Design** to **Inspect result**. Accepted changes solve in a cancellable Web Worker; `/api/waves` uses the same pure solvers. These are bounded educational engines with explicit failure messages and model limits.
+Seven workbenches extend the catalog with editable systems. Open a lab, edit its canvas or property tables, and switch from **Design** to **Inspect result**. Accepted changes solve in a cancellable Web Worker; `/api/waves` uses the same pure solvers. Expected domain and convergence failures return HTTP 422 with `code: INVALID_INPUT` and `field: project`; unexpected programming exceptions remain server errors. These are bounded educational engines with explicit failure messages and model limits.
 
 | Lab                          | Route                                   | Start here                                                     |
 | ---------------------------- | --------------------------------------- | -------------------------------------------------------------- |

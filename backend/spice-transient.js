@@ -1,4 +1,5 @@
 import { check, number, identifier, jsonProject, zeros, solve, maxabs } from './builder-core.js';
+import { SolverInputError } from './solver-error.js';
 export const spiceExample = JSON.stringify({
   components: [
     { id: 'V1', type: 'V', a: 1, b: 0, value: 5, wave: 'step', delay: 0.001 },
@@ -265,7 +266,7 @@ export function solveSpice(source, { duration = 0.01, steps = 500, initial = 'ze
         'Newton line search stalled. Reduce the timestep, check diode polarity or remove incompatible ideal sources.',
       );
     }
-    throw Error(
+    throw new SolverInputError(
       'Newton did not converge in 70 iterations; reduce the timestep or simplify the circuit.',
     );
   }
@@ -323,7 +324,8 @@ export function solveSpice(source, { duration = 0.01, steps = 500, initial = 'ze
     try {
       r = newton(x, t, h, 'trap');
     } catch (e) {
-      if (depth >= 7) throw Error(`t=${t.toPrecision(6)} s: ${e.message}`);
+      if (!(e instanceof SolverInputError)) throw e;
+      if (depth >= 7) throw new SolverInputError(`t=${t.toPrecision(6)} s: ${e.message}`);
       halves++;
       advance(t - h / 2, h / 2, depth + 1);
       advance(t, h / 2, depth + 1);

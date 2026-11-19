@@ -23,7 +23,7 @@ import {
 } from '../backend/multibody-builder.js';
 import { traceDsa, dsaExample, benchmarkDsa } from '../backend/custom-dsa.js';
 import { builderVisual, builderThumbnail } from '../frontend/public/builder-visuals.js';
-import { validate } from '../backend/contract.js';
+import { validate, simulationHandler } from '../backend/contract.js';
 import { POST } from '../api/waves.js';
 const defaults = (id) =>
   Object.fromEntries(Object.entries(models[id].definition.inputs).map(([k, f]) => [k, f.initial]));
@@ -150,6 +150,50 @@ test('floating nets and incompatible initial capacitor sources are rejected', ()
   assert.throws(
     () => parseSpice(json({ ...JSON.parse(spiceExample), positions: { 1: ['bad', 0] } })),
     /Layout/,
+  );
+});
+test('unsolvable builder projects return field-specific HTTP errors', async () => {
+  const free = JSON.parse(femExample);
+  free.supports = [];
+  const cold = JSON.parse(femExample);
+  cold.thermal.fixed = [];
+  const unstable = JSON.parse(controlGraphExample);
+  unstable.blocks.find((b) => b.id === 'plant').den = [1, -100];
+  for (const [id, changes, pattern] of [
+    [
+      'spicetransient',
+      { project: json({ components: [{ id: 'R', type: 'R', a: 1, b: 2, value: 100 }], probe: 1 }) },
+      /Singular/,
+    ],
+    ['fem2d', { project: json(free) }, /Singular/],
+    ['femheat', { project: json(cold) }, /temperature/i],
+    ['mechanismbuilder', { analysis: 'kinematics' }, /driven|DOF/i],
+    ['controlbuilder', { project: json(unstable) }, /bounded/],
+  ]) {
+    const response = await POST(
+      new Request('http://localhost/api/waves', {
+        method: 'POST',
+        body: json({ model: id, input: { ...defaults(id), ...changes } }),
+      }),
+    );
+    assert.equal(response.status, 422, id);
+    const error = await response.json();
+    assert.equal(error.field, 'project');
+    assert.equal(error.code, 'INVALID_INPUT');
+    assert.match(error.error, pattern);
+  }
+});
+test('unexpected programming errors are not disguised as model input failures', async () => {
+  const handler = simulationHandler(() => ({
+    definition: models.fem2d.definition,
+    input: defaults('fem2d'),
+    solve() {
+      throw new TypeError('internal regression');
+    },
+  }));
+  await assert.rejects(
+    () => handler(new Request('http://localhost/api/waves', { method: 'POST', body: '{}' })),
+    /internal regression/,
   );
 });
 test('CST uniform traction patch matches stress, strain, energy and force balance', () => {

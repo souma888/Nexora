@@ -62,6 +62,22 @@ test('mesh refinement preserves editable restraints and transfers mesh to heat a
   await expect(page.locator('#status')).toHaveText('Live results');
   await expect(page.getByLabel('Nodes 8 x (m)', { exact: true })).toBeVisible();
 });
+test('an unrestrained mesh explains the solve failure in the browser and API', async ({
+  page,
+  request,
+}) => {
+  await open(page, 'fem2d');
+  await page.getByRole('button', { name: 'Delete Supports 0', exact: true }).click();
+  await page.getByRole('button', { name: 'Delete Supports 0', exact: true }).click();
+  await expect(page.locator('#status')).toContainText('Singular');
+  const input = Object.fromEntries(
+    Object.entries(builderModels.fem2d.definition.inputs).map(([k, f]) => [k, f.initial]),
+  );
+  input.project = await page.locator('[name="project"]').inputValue();
+  const response = await request.post('/api/waves', { data: { model: 'fem2d', input } });
+  expect(response.status()).toBe(422);
+  expect((await response.json()).field).toBe('project');
+});
 test('circuit fields change nonlinear device models without editing JSON', async ({ page }) => {
   await open(page, 'spicetransient');
   await page.locator('#lab-preset').selectOption({ label: 'MOS switch' });

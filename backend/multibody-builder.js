@@ -8,6 +8,7 @@ import {
   maxabs,
   dot,
 } from './builder-core.js';
+import { SolverInputError } from './solver-error.js';
 const DEG = Math.PI / 180;
 export const mechanismExample = JSON.stringify({
   bodies: [
@@ -178,7 +179,7 @@ export function projectMechanism(p, initial, t, mass) {
       'Constraint projection stalled: the requested assembly may be infeasible or at a toggle.',
     );
   }
-  throw Error('Constraint projection did not converge in 40 iterations.');
+  throw new SolverInputError('Constraint projection did not converge in 40 iterations.');
 }
 export function solveMechanism(
   source,
