@@ -454,7 +454,7 @@ export const builderModels = {
         ['No, it only measures these inputs and sizes', 'Yes', 'Only if it looks smooth'],
         'Runtime includes finite-size, allocation, JIT and timer effects; operation counters and analytical reasoning complement timings.',
         'The default directed graph has shortest path distances [0,3,1,4,6,7,9,10] from A. Unreachable vertices remain null.',
-        'BFS/DFS O(V+E); this array-selection Dijkstra O(V²+E); Bellman–Ford O(VE); Kruskal O(E log E); merge O(n log n); insertion O(n²).',
+        'BFS/DFS O(V+E); this array-selection Dijkstra O(V²+E); Bellman–Ford O(VE); Kruskal with rank/compression O(V+E log E); merge O(n log n); insertion O(n²); quicksort average O(n log n), worst O(n²).',
         'Up to 64 vertices/256 edges or 128 array entries. No hard-wired six-node topology. Dijkstra rejects negative weights; Bellman–Ford reports reachable negative cycles; Kruskal returns a forest for disconnected undirected graphs. Replay capped at 12000 frames; the final result and operation counters are complete. Benchmarking is separate from deterministic saved solver results.',
       ],
     },

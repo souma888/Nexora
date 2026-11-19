@@ -310,8 +310,17 @@ export function traceDsa(source, algorithm, { capture = true } = {}) {
     }
     if (algorithm === 'kruskal') {
       const roots = Array.from({ length: n }, (_, i) => i),
+        rank = Array(n).fill(0),
         find = (i) => {
-          while (roots[i] !== i) i = roots[i];
+          while (roots[i] !== i) {
+            stats.comparisons++;
+            const parent = roots[i];
+            if (roots[i] !== roots[parent]) {
+              roots[i] = roots[parent];
+              stats.writes++;
+            }
+            i = roots[i];
+          }
           return i;
         };
       const sorted = p.edges
@@ -328,7 +337,11 @@ export function traceDsa(source, algorithm, { capture = true } = {}) {
         const a = find(u),
           b = find(v);
         if (a !== b) {
-          roots[a] = b;
+          if (rank[a] < rank[b]) roots[a] = b;
+          else {
+            roots[b] = a;
+            if (rank[a] === rank[b]) rank[a]++;
+          }
           accepted.push([u, v, w]);
           stats.writes++;
           emit(3, 'Union components and accept edge', [u, v], [u, v]);
