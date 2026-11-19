@@ -1,5 +1,9 @@
 # Engineering Validation Policy
 
+## Editable numerical systems
+
+[BUILDERS.md](BUILDERS.md) describes the seven builder routes, reference cases, tolerances and model limits. Tests cover RC/RL convergence, LC energy conservation, an independent diode root, transistor current balance, CST stress/strain and heat patches, modal scaling, feedback response, mechanism constraint closure and timestep convergence, arbitrary graph results and property-based sorting. Desktop/mobile tests compare worker results with HTTP and exercise geometry, wiring, keyboard edits, refinement/analysis transfer, breakpoints and empirical timing. These checks do not establish industrial certification or exhaustive numerical stability.
+
 ## Optics, intelligent systems and applied engineering
 
 Topics 215–300 use 84 new labs and two existing routes. [EXPLORATION_RELEASE.md](EXPLORATION_RELEASE.md) maps all 86 topics, examples, assumptions and primary references. Reference checks include a direct DFT against FFT, CARE residuals, a dense-grid constrained-control optimum, NIST Type-T values, orbital conservation, NASA shock values, flash and pharmacokinetic balances, simplex corners, Erlang C, collision-free RRT edges, trajectory limits and cyclic-convolution OFDM recovery. Every default, preset, enum and individual scalar boundary is checked for finite output or a model-specific validation error. These bounded tests and the reference badge do not imply exhaustive or professional/clinical validation.

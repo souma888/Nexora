@@ -13,6 +13,7 @@ let trace,
   debounce;
 const definition = Object.hasOwn(algorithms, id) ? algorithms[id] : null;
 const fields = {};
+const breakpoints = new Set();
 let analysisTools;
 let runTools;
 const node = (tag, text) => {
@@ -302,7 +303,26 @@ function initialize() {
     'space-complexity': definition.space,
   }))
     $(element).textContent = text;
-  definition.lines.forEach((line) => $('pseudocode').append(node('li', line)));
+  definition.lines.forEach((line, index) => {
+    const li = node('li'),
+      b = node('button', line);
+    b.type = 'button';
+    b.className = 'quiet';
+    b.setAttribute('aria-pressed', 'false');
+    b.title = 'Toggle breakpoint';
+    b.addEventListener('click', () => {
+      if (breakpoints.has(index)) breakpoints.delete(index);
+      else breakpoints.add(index);
+      b.setAttribute('aria-pressed', String(breakpoints.has(index)));
+      b.classList.toggle('has-breakpoint', breakpoints.has(index));
+    });
+    li.append(b);
+    $('pseudocode').append(li);
+  });
+  const studio = node('a', 'Build custom graphs, arrays and measure scaling ↗');
+  studio.href = '/simulation.html?lab=dsastudio';
+  studio.className = 'studio-link';
+  $('pseudocode').before(studio);
   for (const algo of Object.values(algorithms)) {
     const option = node('option', algo.title);
     option.value = algo.id;
@@ -448,7 +468,8 @@ function initialize() {
       position++;
       render();
     }
-    if (position === trace.frames.length - 1) pause();
+    if (position === trace.frames.length - 1 || breakpoints.has(trace.frames[position].line))
+      pause();
     else timer = setTimeout(tick, Number($('speed').value));
   };
   $('play').addEventListener('click', () => {

@@ -1,6 +1,7 @@
 import { parameterSpace, applyParameters } from '../../backend/parameter-space.js';
 import { resolveLab } from '../../backend/platform.js';
 import { analyzeParameters, fitParameters } from '../../backend/numerical-tools.js';
+import { benchmarkDsa } from '../../backend/custom-dsa.js';
 
 self.onmessage = async ({ data }) => {
   const { token, model, input, task = 'solve', options = {} } = data;
@@ -13,6 +14,8 @@ self.onmessage = async ({ data }) => {
       .map(([key]) => key);
     let result;
     if (task === 'solve') result = solve(input);
+    else if (task === 'benchmark' && model === 'dsastudio')
+      result = benchmarkDsa(input.algorithm, options);
     else if (task === 'analysis')
       result = analyzeParameters(evaluate, space.values, options.bounds, options.metric, options);
     else if (task === 'fit')

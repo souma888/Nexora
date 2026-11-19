@@ -6,7 +6,7 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 
 <!-- catalog-summary:start -->
 
-**464 working labs across 26 disciplines.**
+**471 working labs across 26 disciplines.**
 <!-- catalog-summary:end -->
 
 ## What works today
@@ -21,6 +21,7 @@ A browser-based engineering laboratory for exploring models, inspecting numerica
 - **Civil infrastructure, electrical machines and semiconductors:** geotechnical/water/traffic models, machine equivalent circuits, sequence faults and relay curves, transistor operating points and stateful timing circuits. [All 90 requested topics, assumptions and verification](docs/ENGINEERING_DEPTH_RELEASE.md).
 - **Optics, DSP and applied systems:** ray optics and fields, FFT/STFT, filter design, state feedback and constrained MPC, instrumentation timing, manufacturing, orbital mechanics, separations and operations research. Biomedical, robotics, vehicle dynamics and digital-link models include explicit calibration and scope limits. [Topics 215–300, examples and verification](docs/EXPLORATION_RELEASE.md).
 - Mechanics, circuits, control, signals, thermofluids, robotics, materials, computation, communications, energy, aerospace, chemical processes, reliability, and algorithm/data-structure traces.
+- **Build editable systems:** nonlinear SPICE-lite transients, triangular plane-stress/modal/thermal FEM, control block diagrams, planar constrained mechanisms, and custom graph/array algorithms with breakpoints and empirical scaling. [Builder guide and limits](docs/BUILDERS.md).
 - **Build a truss:** define nodes, bars, supports and loads. A cancellable worker assembles stiffness equations and recovers displacement, member force, stress, reactions and strain energy.
 - **Analysis studio:** bounded sweeps, endpoint sensitivity tornadoes, seeded uncertainty propagation, CSV parameter fitting and a TensorFlow.js curve surrogate.
 - **Build a DC circuit:** enter resistors and independent voltage/current sources. The solver assembles modified nodal equations, solves them with scaled partial pivoting, and reports branch currents, absorbed power, and equation residuals.
@@ -67,9 +68,9 @@ TypeScript checks all backend JavaScript and API modules through `checkJs`, with
 
 ## Depth and limits
 
-Analytical solutions are deliberate where exact closed forms exist. Numerical methods include bisection/Newton, Euler/RK4, finite-difference mesh convergence, feedback integration, the circuit builder’s assembled linear solve, and user-defined truss finite elements. Algorithm labs expose intermediate states rather than just final answers. [Engineering notes](docs/ENGINEERING_NOTES.md) explain the implementation and tradeoffs.
+Analytical solutions are deliberate where exact closed forms exist. Numerical methods include bisection/Newton, Euler/RK4, finite-difference mesh convergence, feedback integration, assembled MNA with nonlinear Newton iterations and trapezoidal C/L companions, triangular continuum/truss FEM, and projected multibody constraints. Algorithm labs expose intermediate states rather than just final answers. [Engineering notes](docs/ENGINEERING_NOTES.md) explain the implementation and tradeoffs.
 
-This remains a collection of bounded educational models. The circuit builder has at most 20 ideal DC components and nodes 0–8; the project scheduler ignores resource constraints. Other labs may have fixed geometry, six-node algorithm graphs, or finite trace lengths. The truss supports 12 nodes/24 bars with linear axial elements; there is no general multiphysics editor. Saved runs are local to one browser, not synchronized accounts. Registered unit products, quotients and integer powers are dimension checked; unsupported empirical unit strings retain explicit canonical labels. Treat results as learning aids, not certified design calculations.
+This remains a collection of bounded educational models. The original DC circuit builder has at most 20 ideal components and nodes 0–8; SPICE-lite separately supports 40 nonlinear/transient parts and nodes 0–12. The project scheduler ignores resource constraints. Other labs may have fixed geometry, six-node algorithm graphs, or finite trace lengths. The truss supports 12 nodes/24 bars with linear axial elements; the separate 2D mesh editor supports static plane stress, lumped-mass modes and steady heat on shared geometry, without coupled multiphysics. Saved runs are local to one browser, not synchronized accounts. Registered unit products, quotients and integer powers are dimension checked; unsupported empirical unit strings retain explicit canonical labels. Treat results as learning aids, not certified design calculations.
 
 ## Documentation and provenance
 

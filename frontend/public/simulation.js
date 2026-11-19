@@ -1,5 +1,7 @@
 import { readFields, setMetric, setupWorkbench } from './workbench.ts';
 import { formControls } from './form-fields.ts';
+import { mountBuilderEditor } from './builder-editor.js';
+import './builders.css';
 import { setActiveDiscipline } from './shell.ts';
 import { models } from '../../backend/waves.js';
 import { validate } from '../../backend/contract.js';
@@ -7,6 +9,7 @@ import { disciplines } from '../../backend/disciplines.js';
 import { renderModelVisual, renderModelTable, highlightModelTable } from './model-visuals.js';
 
 const byId = (id) => document.getElementById(id);
+let projectEditor;
 const formatter = new Intl.NumberFormat('en', { maximumFractionDigits: 4 });
 const format = (value) =>
   value !== 0 && (Math.abs(value) < 0.001 || Math.abs(value) >= 100000)
@@ -136,6 +139,7 @@ function drawPlot(definition, data) {
     ].join(' · ');
     byId('wave-crosshair').setAttribute('d', `M${xAt(point.x)} ${top}V${bottom}`);
     renderModelVisual(byId('model-visual'), definition, data, Number(probe.value));
+    projectEditor?.update(data, Number(probe.value));
     highlightModelTable(byId('model-table'), data, Number(probe.value));
   };
   probe.oninput = inspect;
@@ -339,6 +343,8 @@ function initialize(definition) {
         : validate,
     payload: () => readFields(form),
     onReset() {
+      projectEditor?.invalidate?.();
+      projectEditor?.sync();
       pause();
       resetProbe = true;
       byId('wave-probe').value = '0';
@@ -347,6 +353,7 @@ function initialize(definition) {
       byId('lab-preset').value = 'default';
     },
     onInvalid() {
+      projectEditor?.invalidate?.();
       void document.fonts.ready.then(reveal);
       pause();
       byId('preview-toggle').disabled = true;
@@ -391,7 +398,7 @@ function initialize(definition) {
       warnings.textContent = data.warnings?.join(' ') ?? '';
       renderModelTable(byId('model-table'), data);
       drawPlot(definition, data);
-      byId('model-actions').hidden = !data.visualization?.frames;
+      byId('model-actions').hidden = !data.visualization?.frames || definition.editor === 'dsa';
     },
   });
   byId('preview-step').textContent = definition.stepAction ?? 'Next pose';
@@ -500,6 +507,7 @@ function initialize(definition) {
       if (result) drawPlot(definition, result);
     });
   }).observe(byId('wave-plot').parentElement);
+  projectEditor = mountBuilderEditor({ definition, form, applyInputs });
   byId('load-example').addEventListener('click', () => {
     if (definition.exampleInputs) {
       applyInputs(definition.exampleInputs);
@@ -514,6 +522,8 @@ function initialize(definition) {
         value = Number(raw);
       if (raw === null) continue;
       if (field.type === 'enum' && field.options.includes(raw))
+        formControls(form).namedItem(key).value = raw;
+      else if (field.type === 'text' && raw.length <= field.maxLength)
         formControls(form).namedItem(key).value = raw;
       else if (
         field.type !== 'enum' &&

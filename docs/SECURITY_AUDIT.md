@@ -2,6 +2,10 @@
 
 Scope: current browser entry points, shared model validation, numerical/algorithm dispatch, run storage/imports, CSV exports and production headers. This is a code review plus regression testing, not a penetration-test certification.
 
+## Editable project models
+
+Builder JSON is capped at 64,000 characters and validated by each solver with finite numeric bounds, bounded graph/mesh sizes and unique IDs. Device/block/joint types come from explicit allowlists; no project executes code. Layout positions receive finite coordinate validation. `builder-editor.js` uses DOM text for property labels and shared HTML escaping for SVG labels; `builder-visuals.js` escapes project labels and messages. Numerical geometry comes from validated results or finite editor coordinates. Imported files are size limited. Invalid partially edited geometry is shown as a validation message; it is not executed.
+
 ## Input boundaries
 
 `contract.js` checks finite numeric ranges, integer/enum/list/text shapes and bounds before calling model-owned validation hooks. Numerical HTTP requests select registered models with own-property checks. Every recent engineering model is exposed through `/api/waves`; `/api/catalog` cross-references the executable registry. Algorithm validators separately bound their arrays, commands, texts and edge lists.

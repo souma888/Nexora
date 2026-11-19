@@ -86,6 +86,7 @@ export interface Definition<F extends Fields> {
   predict?: string;
   example?: string;
   exampleInputs?: Partial<InputValues<F>>;
+  editor?: 'spice' | 'fem' | 'control' | 'mechanism' | 'dsa';
   equation?: string;
   limits?: string;
   prediction?: [string[], number, string];

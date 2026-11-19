@@ -9,6 +9,7 @@ import { initStudio } from './studio.js';
 import { subjectArt, controlArt, expansionArt } from './studio-art.js';
 import { engineeringThumbnail } from './engineering-art.js';
 import { explorationThumbnail } from './exploration-art.js';
+import { builderThumbnail } from './builder-visuals.js';
 
 const form = document.getElementById('catalog-filters');
 const search = document.getElementById('lab-search');
@@ -94,7 +95,8 @@ const labs = catalog.map((entry) => {
 
 function thumbnail({ drawing, graphic, step, href, groups, topic }) {
   const id = new URL(href, location.origin).searchParams.get('lab');
-  const engineeringArt = explorationThumbnail(id) ?? engineeringThumbnail(id);
+  const engineeringArt =
+    builderThumbnail(id) ?? explorationThumbnail(id) ?? engineeringThumbnail(id);
   if (engineeringArt) return engineeringArt;
   if (
     groups.includes('networks') ||

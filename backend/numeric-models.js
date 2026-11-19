@@ -1,4 +1,5 @@
 import { customModels } from './custom-labs.js';
+import { builderModels } from './builder-labs.js';
 import { newExplorationModels } from './exploration-release.js';
 import { newEngineeringModels } from './engineering-release.js';
 import { networkModels } from './networks-os.js';
@@ -33,6 +34,7 @@ import { chemicalModels } from './chemical-process.js';
 import { industrialModels } from './industrial.js';
 
 export const models = {
+  ...builderModels,
   ...newExplorationModels,
   ...newEngineeringModels,
   ...networkModels,

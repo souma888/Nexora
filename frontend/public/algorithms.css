@@ -207,3 +207,24 @@ textarea.algorithm-input {
     height: auto !important;
   }
 }
+
+.algorithm-code li button {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  white-space: normal;
+  padding: 4px 6px;
+  min-height: 32px;
+  color: inherit;
+  background: transparent;
+  border-color: transparent;
+}
+.algorithm-code li button.has-breakpoint::before {
+  content: '● ';
+  color: var(--brand);
+}
+.algorithm-code .studio-link {
+  display: block;
+  margin-bottom: 12px;
+  font: 12px/1.6 var(--mono);
+}
