@@ -1,6 +1,36 @@
 // Canonical discipline labels, grouping and icons.
 export const disciplineDefinitions = [
   {
+    id: 'optics',
+    label: 'Optics & Electromagnetics',
+    group: 'CIRCUITS & SYSTEMS',
+    path: 'M3 12h18M12 3v18M4 4l16 16M4 20 20 4M9 7q6 5 0 10',
+  },
+  {
+    id: 'embedded',
+    label: 'Embedded & Instrumentation',
+    group: 'CIRCUITS & SYSTEMS',
+    path: 'M6 6h12v12H6ZM9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4M9 12h6',
+  },
+  {
+    id: 'manufacturing',
+    label: 'Manufacturing',
+    group: 'PHYSICAL ENGINEERING',
+    path: 'M3 21h18M5 21V9h5v5h4V5h5v16M3 4h8m-4 0v5',
+  },
+  {
+    id: 'biomedical',
+    label: 'Biomedical Engineering',
+    group: 'PHYSICAL ENGINEERING',
+    path: 'M2 12h5l3-8 4 16 3-8h5M4 3h16v18H4Z',
+  },
+  {
+    id: 'automotive',
+    label: 'Automotive & Vehicle Dynamics',
+    group: 'PHYSICAL ENGINEERING',
+    path: 'M3 16v-6l3-5h12l3 5v6ZM3 10h18M6 16v4h3v-4m6 0v4h3v-4M6 13h2m8 0h2',
+  },
+  {
     id: 'networks',
     label: 'Networks & Operating Systems',
     group: 'COMPUTING & MACHINES',

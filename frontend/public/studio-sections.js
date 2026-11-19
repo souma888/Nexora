@@ -1,6 +1,81 @@
 import { disciplines } from '../../backend/disciplines.js';
 // Editorial metadata only. Preview data always comes from the existing solvers.
 export const studioSections = {
+  optics: {
+    title: 'Follow the ray.<br>Read the field',
+    description:
+      'Refract a beam, find an interference peak, and connect field geometry to the equations behind light and electromagnetism.',
+    art: 'wave',
+    model: 'snell',
+    parameters: ['incidence', 'n1'],
+    prompt:
+      'Move the incident angle through the glass-to-air critical angle. Watch a propagating refracted ray give way to total internal reflection.',
+    paths: [
+      '/simulation.html?lab=thinlens',
+      '/simulation.html?lab=pointcharges',
+      '/simulation.html?lab=waveguide',
+    ],
+  },
+  embedded: {
+    title: 'Measure the signal.<br>Count the time',
+    description:
+      'Make resolution, sampling error, protocol edges and interrupt timing visible. Turn a register setting into a measurable response.',
+    art: 'chip',
+    model: 'pwmfilter',
+    parameters: ['duty', 'cutoff'],
+    prompt:
+      'Change duty and filter cutoff to trade ripple against response. The preview solves the periodic RC waveform rather than smoothing an illustration.',
+    paths: [
+      '/simulation.html?lab=serialtiming',
+      '/simulation.html?lab=strainbridge',
+      '/simulation.html?lab=sensorallan',
+    ],
+  },
+  manufacturing: {
+    title: 'Shape the process.<br>Understand the tradeoff',
+    description:
+      'Connect cutting forces, thermal cycles, dimensional variation and production time. Inspect the assumptions before making a process decision.',
+    art: 'motor',
+    model: 'merchantcircle',
+    parameters: ['rake', 'friction'],
+    prompt:
+      'Change rake angle and tool–chip friction. Compare the predicted shear angle, cutting force and thrust in the Merchant model.',
+    paths: [
+      '/simulation.html?lab=tolerancestack',
+      '/simulation.html?lab=weldrosenthal',
+      '/simulation.html?lab=additivebuild',
+    ],
+  },
+  biomedical: {
+    title: 'Model the pulse.<br>Question the assumptions',
+    description:
+      'Explore membrane excitation, fluid reservoirs, transport and population dynamics through bounded educational models.',
+    art: 'wave',
+    model: 'windkessel',
+    parameters: ['compliance', 'resistance'],
+    prompt:
+      'Change arterial compliance and resistance. Compare pulse pressure and mean pressure in a lumped Windkessel reservoir.',
+    paths: [
+      '/simulation.html?lab=hodgkinhuxley',
+      '/simulation.html?lab=pharmacokinetics',
+      '/simulation.html?lab=sirmodel',
+    ],
+  },
+  automotive: {
+    title: 'Feel the road.<br>Balance the energy',
+    description:
+      'Connect suspension motion, tire force, braking load transfer and EV energy use. Compare ideal models with their stated operating limits.',
+    art: 'motor',
+    model: 'evrange',
+    parameters: ['speed', 'regeneration'],
+    prompt:
+      'Raise cruise speed and change regenerative recovery. Drag losses and recoverable stopping energy affect the budget in different ways.',
+    paths: [
+      '/simulation.html?lab=quartercar',
+      '/simulation.html?lab=tireslip',
+      '/simulation.html?lab=brakingtransfer',
+    ],
+  },
   networks: {
     title: 'Follow the packet.<br>Inspect the scheduler',
     description:

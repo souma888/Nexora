@@ -1,5 +1,9 @@
 # Engineering Validation Policy
 
+## Optics, intelligent systems and applied engineering
+
+Topics 215–300 use 84 new labs and two existing routes. [EXPLORATION_RELEASE.md](EXPLORATION_RELEASE.md) maps all 86 topics, examples, assumptions and primary references. Reference checks include a direct DFT against FFT, CARE residuals, a dense-grid constrained-control optimum, NIST Type-T values, orbital conservation, NASA shock values, flash and pharmacokinetic balances, simplex corners, Erlang C, collision-free RRT edges, trajectory limits and cyclic-convolution OFDM recovery. Every default, preset, enum and individual scalar boundary is checked for finite output or a model-specific validation error. These bounded tests and the reference badge do not imply exhaustive or professional/clinical validation.
+
 ## Algorithms, computing systems and machine design
 
 The 56 new labs and two reused mechanical labs are documented in [MACHINE_SYSTEMS_RELEASE.md](MACHINE_SYSTEMS_RELEASE.md). `tests/deep-algorithms.test.js` uses independent invariant reconstruction, enumeration, cuts, removals and naive string/geometry references. `tests/machine-systems.test.js` checks discrete protocol/resource invariants, standard digest vectors, exhaustive coding paths, SI conversions and mechanical conservation/limiting cases. Desktop/mobile workflows and representative visual/accessibility checks are in `e2e/machine-systems.spec.js`. These implementation checks do not certify network protocol conformance, secure encryption or an engineering design.
