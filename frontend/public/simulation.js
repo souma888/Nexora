@@ -1,4 +1,5 @@
 import { readFields, setMetric, setupWorkbench } from './workbench.ts';
+import { formControls } from './form-fields.ts';
 import { setActiveDiscipline } from './shell.ts';
 import { models } from '../../backend/waves.js';
 import { validate } from '../../backend/contract.js';
@@ -33,11 +34,18 @@ function drawPlot(definition, data) {
   const values = series.flatMap((point) =>
     traces.map((trace) => point[trace]).filter(Number.isFinite),
   );
-  const lowY = Math.min(0, ...values);
-  const highY = Math.max(0, ...values);
+  const logX = definition.plot.xScale === 'log' && lowX > 0;
+  const logY = definition.plot.yScale === 'log' && values.length > 0 && values.every((v) => v > 0);
+  const lowY = logY ? Math.min(...values) : Math.min(0, ...values);
+  const highY = logY ? Math.max(...values) : Math.max(0, ...values);
   const yRange = highY - lowY || 1;
-  const xAt = (x) => left + ((x - lowX) / (highX - lowX || 1)) * (right - left);
-  const yAt = (y) => bottom - ((y - lowY) / yRange) * (bottom - top);
+  const xAt = (x) =>
+    left +
+    (logX ? Math.log(x / lowX) / Math.log(highX / lowX) : (x - lowX) / (highX - lowX || 1)) *
+      (right - left);
+  const yAt = (y) =>
+    bottom -
+    (logY ? Math.log(y / lowY) / Math.log(highY / lowY) : (y - lowY) / yRange) * (bottom - top);
   const points = (key) =>
     series
       .flatMap((point, i) => {
@@ -51,8 +59,10 @@ function drawPlot(definition, data) {
   const tick = (x, y, value, anchor) =>
     `<text x="${x}" y="${y}" text-anchor="${anchor}">${format(value)}</text>`;
   const grid = Array.from({ length: 5 }, (_, index) => {
-    const xValue = lowX + ((highX - lowX) * index) / 4;
-    const yValue = lowY + (yRange * index) / 4;
+    const xValue = logX
+      ? lowX * (highX / lowX) ** (index / 4)
+      : lowX + ((highX - lowX) * index) / 4;
+    const yValue = logY ? lowY * (highY / lowY) ** (index / 4) : lowY + (yRange * index) / 4;
     const x = xAt(xValue),
       y = yAt(yValue);
     return `<path d="M${left} ${y}H${right} M${x} ${top}V${bottom}" stroke="var(--grid)"/>
@@ -100,11 +110,16 @@ function drawPlot(definition, data) {
         `<circle cx="${xAt(point.x)}" cy="${yAt(point.sample)}" r="3.6" fill="var(--result)" stroke="var(--plot-bg)"/>`,
     )
     .join('');
-  plot.innerHTML = `${grid}<path d="M${left} ${yAt(0)}H${right}" stroke="var(--muted)"/>
+  plot.innerHTML = `${grid}<path d="M${left} ${logY ? bottom : yAt(0)}H${right}" stroke="var(--muted)"/>
     ${curves}${locus}${markers}<path id="wave-crosshair" class="crosshair"/>`;
   const axis = (label, unit) => (unit ? `${label} (${unit})` : label);
+  const mixedUnits = traces.some((key) => units.series[key] !== units.series.y);
   byId('axis-labels').textContent =
-    `${axis(definition.plot.x, units.series.x)} → ${axis(definition.plot.y, units.series.y)}`;
+    `${axis(definition.plot.x, units.series.x)}${logX ? ' [log]' : ''} → ` +
+    (mixedUnits
+      ? traces.map((key) => axis(definition.plot.traces[key], units.series[key])).join(' · ')
+      : axis(definition.plot.y, units.series.y)) +
+    (logY ? ' [log]' : '');
   const probe = byId('wave-probe');
   probe.max = series.length - 1;
   if (!Number.isFinite(Number(probe.value))) probe.value = '0';
@@ -128,7 +143,8 @@ function drawPlot(definition, data) {
     const x =
       ((event.clientX - plot.getBoundingClientRect().left) / plot.getBoundingClientRect().width) *
       width;
-    const target = lowX + ((x - left) / (right - left)) * (highX - lowX);
+    const fraction = Math.max(0, Math.min(1, (x - left) / (right - left)));
+    const target = logX ? lowX * (highX / lowX) ** fraction : lowX + fraction * (highX - lowX);
     let closest = 0;
     series.forEach((p, i) => {
       if (Math.abs(p.x - target) < Math.abs(series[closest].x - target)) closest = i;
@@ -291,7 +307,7 @@ function initialize(definition) {
   const updateVisibility = () => {
     for (const row of form.querySelectorAll('[data-conditional]')) {
       const condition = inputs[row.dataset.conditional].visibleWhen;
-      row.hidden = form.elements.namedItem(condition.key).value !== condition.is;
+      row.hidden = formControls(form).namedItem(condition.key).value !== condition.is;
     }
   };
   updateVisibility();
@@ -309,7 +325,7 @@ function initialize(definition) {
   };
   const syncBits = () => {
     for (const button of form.querySelectorAll('[data-bit]')) {
-      const value = form.elements.namedItem(button.dataset.bit).value;
+      const value = formControls(form).namedItem(button.dataset.bit).value;
       button.textContent = value;
       button.setAttribute('aria-pressed', String(value === '1'));
     }
@@ -484,7 +500,12 @@ function initialize(definition) {
       if (result) drawPlot(definition, result);
     });
   }).observe(byId('wave-plot').parentElement);
-  byId('load-example').addEventListener('click', () => byId('reset').click());
+  byId('load-example').addEventListener('click', () => {
+    if (definition.exampleInputs) {
+      applyInputs(definition.exampleInputs);
+      byId('lab-preset').value = 'Worked reference';
+    } else byId('reset').click();
+  });
   byId('experiment').hidden = false;
   {
     const query = new URLSearchParams(location.search);
@@ -493,7 +514,7 @@ function initialize(definition) {
         value = Number(raw);
       if (raw === null) continue;
       if (field.type === 'enum' && field.options.includes(raw))
-        form.elements.namedItem(key).value = raw;
+        formControls(form).namedItem(key).value = raw;
       else if (
         field.type !== 'enum' &&
         field.type !== 'integer-list' &&
@@ -503,7 +524,7 @@ function initialize(definition) {
         value <= field.max &&
         (!field.integer || Number.isInteger(value))
       )
-        form.elements.namedItem(key).value = String(value);
+        formControls(form).namedItem(key).value = String(value);
     }
   }
   analyze();

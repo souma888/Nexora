@@ -1,4 +1,5 @@
 import { learningTools } from './learning-tools.ts';
+import { formControls } from './form-fields.ts';
 import { advancedTools } from './advanced-tools.ts';
 import { solverClient } from './worker-client.ts';
 import { attachUnitControls } from './unit-controls.ts';
@@ -42,7 +43,7 @@ export const readFields = (form: HTMLFormElement): Inputs =>
       .map(([key, value]) => [
         key,
         key === 'case' ||
-        (form.elements.namedItem(key) as HTMLElement | null)?.dataset.valueType === 'string'
+        (formControls(form).namedItem(key) as HTMLElement | null)?.dataset.valueType === 'string'
           ? String(value)
           : Number(value),
       ]),
@@ -279,7 +280,7 @@ export function setupWorkbench<Result extends Report>({
     clearFieldErrors();
     const { values, message, key } = validate(model.definition, unitControls.canonical(payload()));
     if (!values || [...sliders.keys()].some((input) => !input.validity.valid)) {
-      if (key) markFieldError(form.elements.namedItem(key));
+      if (key) markFieldError(formControls(form).namedItem(key));
       for (const field of sliders.keys()) if (!field.validity.valid) markFieldError(field);
       status.dataset.error = 'true';
       status.textContent = `${message ?? 'Enter values within the allowed ranges.'} The last valid result is still shown.`;
@@ -348,7 +349,7 @@ export function setupWorkbench<Result extends Report>({
     form.reset();
     onReset?.();
     for (const [key, value] of Object.entries(input)) {
-      const field = form.elements.namedItem(key);
+      const field = formControls(form).namedItem(key);
       if (
         field instanceof HTMLInputElement ||
         field instanceof HTMLSelectElement ||

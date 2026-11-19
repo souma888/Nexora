@@ -1,4 +1,5 @@
 import { compatibleUnits, convert } from '../../backend/units.ts';
+import { formControls } from './form-fields.ts';
 export function snapUnitBoundary(value: number, min: number, max: number) {
   for (const edge of [min, max])
     if (
@@ -23,7 +24,7 @@ export function attachUnitControls(form: HTMLFormElement, fields: Record<string,
   for (const [key, schema] of Object.entries(fields)) {
     if (schema.type !== 'number' || schema.integer || !schema.unit) continue;
     const options = compatibleUnits(schema.unit),
-      field = form.elements.namedItem(key);
+      field = formControls(form).namedItem(key);
     if (options.length < 2 || !(field instanceof HTMLInputElement)) continue;
     const select = document.createElement('select');
     select.className = 'unit-select';
