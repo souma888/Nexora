@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { builderModels } from '../backend/builder-labs.js';
 const open = async (page, id) => {
-  await page.goto(`/simulation.html?lab=${id}`);
+  await page.goto(`/simulation.html?lab=${id}`, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('#status')).toHaveText('Live results', { timeout: 20000 });
 };
 for (const [id, m] of Object.entries(builderModels))
